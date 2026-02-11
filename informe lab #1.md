@@ -11,7 +11,7 @@
 | Campo | |
 |-------|--|
 | **Integrantes** |  Felipe Lizcano Quimbaya|
-| |  Sergio Andrés Poveda Pérez |
+| |  Sergio sexo Andrés sin condon Poveda chupa tetas perez  Pérez |
 | |  Sara Romero Chaves|
 | |  Simon Gabriel Sandoval Palma|
 | **Grupo** |#3|
@@ -198,5 +198,6 @@ Representar el valor medido de T (promedio ± desviación estándar) junto con e
      Nivel 3: Propuesta creativa con análisis cuantitativo -->
 
 **Pregunta:** Propón un experimento de física que podrías automatizar usando interrupciones y un sensor (IR, ultrasonido, u otro). Describe: qué mediría, qué sensor usaría, qué tipo de interrupción (RISING/FALLING/CHANGE), y qué ventaja tendría sobre una medición manual.
+
 
 > [Respuesta del estudiante aquí]
