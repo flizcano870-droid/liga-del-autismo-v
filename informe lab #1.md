@@ -11,7 +11,7 @@
 | Campo | |
 |-------|--|
 | **Integrantes** |  Felipe Lizcano Quimbaya|
-| |  Sergio sexo Andrés sin condon Poveda chupa tetas perez  Pérez |
+| |  Sergio Andrés Pérez |
 | |  Sara Romero Chaves|
 | |  Simon Gabriel Sandoval Palma|
 | **Grupo** |#3|
@@ -201,3 +201,4 @@ Representar el valor medido de T (promedio ± desviación estándar) junto con e
 
 
 > [Respuesta del estudiante aquí]
+
