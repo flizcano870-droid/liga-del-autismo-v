@@ -71,7 +71,7 @@
 
 ### Parte 3: Período del Péndulo (Sensor IR)
 
-**Longitud de cuerda L = ______ m**
+**Longitud de cuerda L = 0,753 m**
 
 | Medición | T medido [μs] | T medido [s] |
 |----------|---------------|--------------|
@@ -201,4 +201,5 @@ Representar el valor medido de T (promedio ± desviación estándar) junto con e
 
 
 > [Respuesta del estudiante aquí]
+
 
