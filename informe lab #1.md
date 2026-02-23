@@ -133,7 +133,7 @@ Diagrama de barras o puntos con los datos de la Tabla 3 (delay de 10, 100, 200 y
 
 **Interpretación:** ¿El tiempo de reacción depende del valor del delay? ¿Qué demuestra esto sobre cómo funcionan las interrupciones?
 
-> [Respuesta del estudiante aquí]
+> [El tiempo de reacción no depende del valor del delay, ya que los datos obtenidos para los diferentes retardos son bastante cercanos entre sí. El caso del delay de 500, que presenta una medición más alejada que las demás, se atribuye a errores experimentales asociados al pulsador utilizado, este no registraba correctamente algunas pulsaciones, lo que ocasionó que se midieran tiempos de reacción mayores a los reales. Las interrupciones permiten capturar eventos de forma asíncrona y con alta precisión temporal, ya que el instante de ocurrencia del evento es registrado por hardware en el momento exacto, independientemente de que el programa principal se encuentre ejecutando un delay u otra tarea. Esto garantiza que la medición del tiempo de reacción no dependa del flujo del programa, a diferencia del método por polling.]
 
 ### Gráfica 2: T experimental vs T teórico (Péndulo)
 
@@ -150,9 +150,9 @@ Representar el valor medido de T (promedio ± desviación estándar) junto con e
 
 ![Gráfica 3 — T² vs L](imagenes/grafica-3.png)
 
-**Ecuación de ajuste lineal:** T² = _______ · L + _______
+**Ecuación de ajuste lineal:** T² = ___ · L + _______
 
-**Pendiente experimental:** _______ s²/m
+**Pendiente experimental:** ___4π²/g___ s²/m
 
 **Pendiente teórica ($4\pi^2/g$):** _______ s²/m
 
