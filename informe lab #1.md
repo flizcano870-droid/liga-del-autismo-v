@@ -152,7 +152,7 @@ Representar el valor medido de T (promedio ± desviación estándar) junto con e
 
 **Ecuación de ajuste lineal:** T² = ___ · L + _______
 
-**Pendiente experimental:** ___4π²/g___ s²/m
+**Pendiente experimental:** _____ s²/m
 
 **Pendiente teórica ($4\pi^2/g$):** _______ s²/m
 
@@ -168,7 +168,7 @@ Representar el valor medido de T (promedio ± desviación estándar) junto con e
 
 **Pregunta 1:** ¿Cuál es la diferencia promedio entre las mediciones de `millis()` y `micros()` en la Tabla 1? ¿Es consistente con la resolución de 1 ms de `millis()`?
 
-> [Respuesta del estudiante aquí]
+> [La diferencia promedio entre las mediciones realizadas con millis() y micros() es de 583,6 µs. Este valor es consistente con la resolución de 1 ms de millis(), ya que dicha función solo mide el tiempo en intervalos enteros de milisegundos, mientras que micros() tiene una resolución mucho mayor. Por ello, es esperable que exista una diferencia menor a 1 ms entre ambas mediciones]
 
 **Pregunta 2:** ¿Qué porcentaje de las pulsaciones en la Tabla 2 presentaron bouncing (`contadorISR > 1`)? ¿Cuál fue el valor máximo de `contadorISR` observado?
 
