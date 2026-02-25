@@ -148,15 +148,15 @@ Representar el valor medido de T (promedio ± desviación estándar) junto con e
 **Eje X:** Longitud L (m)
 **Eje Y:** Período al cuadrado T² (s²)
 
-![Gráfica 3 — T² vs L](imagenes/grafica-3.png)
+![Gráfica 3 — T² vs L](Figure_3.png)
 
-**Ecuación de ajuste lineal:** T² = ___ · L + _______
+**Ecuación de ajuste lineal:** T² = 3,96· L + 0,21
 
-**Pendiente experimental:** _____ s²/m
+**Pendiente experimental:** 3,96 s²/m
 
-**Pendiente teórica ($4\pi^2/g$):** _______ s²/m
+**Pendiente teórica ($4\pi^2/g$):** 4,02s²/m
 
-**Valor de $g$ obtenido:** _______ m/s²
+**Valor de $g$ obtenido:** 10,96 m/s²
 
 ---
 
