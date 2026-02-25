@@ -1,4 +1,4 @@
-<<<<<<< HEAD:informe 1/informe lab #1.md
+
 # Informe de Laboratorio — Sesión 2: Tiempo y Eventos — Mediciones Precisas con Arduino
 
 ---
