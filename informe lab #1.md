@@ -341,6 +341,138 @@ void loop() {
 
 > 
 
+# 🧪 Experimento: Medición de la Velocidad del Sonido
 
+## 🎯 Objetivo
+
+Determinar experimentalmente la velocidad del sonido en el aire midiendo el tiempo que tarda una onda ultrasónica en recorrer una distancia conocida y regresar al sensor.
+
+La relación utilizada es:
+
+v = 2d / t
+
+donde:
+
+- d = distancia al obstáculo  
+- t = tiempo de ida y vuelta  
+
+---
+
+## ⚙️ Fundamento físico
+
+El sonido es una onda mecánica que se propaga en el aire.  
+Cuando una onda sonora encuentra una superficie rígida, se refleja (eco).
+
+En este experimento:
+
+1. El sensor emite un pulso ultrasónico (~40 kHz).
+2. La onda viaja hasta una pared.
+3. Rebota.
+4. Regresa al sensor.
+
+Midiendo el tiempo total del recorrido se puede calcular la velocidad.
+
+---
+
+## 📡 Sensor utilizado
+
+**HC-SR04 (sensor ultrasónico)**
+
+Pines:
+
+- VCC → 5V  
+- GND → GND  
+- TRIG → Pin digital  
+- ECHO → Pin digital con interrupción  
+
+Funcionamiento:
+
+- Se envía un pulso de 10 μs al pin TRIG.
+- El sensor emite la onda ultrasónica.
+- El pin ECHO se pone en HIGH mientras la onda viaja y regresa.
+- La duración del pulso HIGH corresponde al tiempo total del recorrido.
+
+---
+
+## ⚡ Uso de interrupciones
+
+Se utiliza una interrupción externa en el pin ECHO configurada en:
+
+**CHANGE**
+
+Esto permite:
+
+- Detectar el flanco RISING (inicio del pulso).
+- Detectar el flanco FALLING (fin del pulso).
+
+El tiempo se calcula como:
+
+t = t_final − t_inicial
+
+usando micros() para obtener precisión en microsegundos.
+
+---
+
+## 🧠 Procedimiento experimental
+
+### 1️⃣ Montaje
+
+- Colocar el sensor frente a una pared.
+- Medir la distancia d con una regla (en metros).
+
+---
+
+### 2️⃣ Generación del pulso
+
+- Arduino envía pulso de 10 μs al TRIG.
+- Se activa la medición mediante interrupción.
+
+---
+
+### 3️⃣ Medición del tiempo
+
+- Al detectar RISING → guardar tiempo inicial.
+- Al detectar FALLING → guardar tiempo final.
+- Calcular duración del pulso.
+
+---
+
+### 4️⃣ Cálculo de la velocidad
+
+v = 2d / t
+
+Convertir:
+
+- d en metros  
+- t en segundos  
+
+---
+
+## 📊 Análisis adicional
+
+Se puede comparar con el valor teórico dependiente de la temperatura:
+
+v ≈ 331 + 0.6T
+
+donde T es la temperatura en °C.
+
+También puede analizarse la relación termodinámica:
+
+v = √(γRT / M)
+
+---
+
+## 🚀 Ventajas sobre medición manual
+
+- Precisión del orden de microsegundos.
+- Eliminación del error humano.
+- Imposible medir manualmente tiempos tan pequeños.
+- Permite múltiples mediciones y promedio estadístico.
+
+---
+
+## 🎓 Conclusión
+
+El uso de interrupciones permite medir con alta precisión el tiempo de propagación del sonido, validando experimentalmente la teoría de ondas y mostrando la relación entre velocidad del sonido y condiciones físicas del medio.
 
 
