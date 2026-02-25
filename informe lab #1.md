@@ -316,17 +316,17 @@ void loop() {
 
 ### Dificultad 1: [Descripción breve]
 
-- **Síntoma observado:**
-- **Causa identificada:**
-- **Solución aplicada:**
-- **Lección aprendida:**
+- **Síntoma observado:el circuito presentaba lecturas inestables y variaciones inesperadas en los valores medidos**
+- **Causa identificada: se utilizaron cables que estaban en mal estado **
+- **Solución aplicada: se reemplazaron los cables por otros de mejor calidad**
+- **Lección aprendida: la calidad de los componentes puede afectar significativamente el rendimiento del circuito**
 
 ### Dificultad 2: [Descripción breve]
 
-- **Síntoma observado:**
-- **Causa identificada:**
-- **Solución aplicada:**
-- **Lección aprendida:**
+- **Síntoma observado:El sensor registraba tiempos irregulares y, en algunos casos, detectaba más de un paso por oscilación.**
+- **Causa identificada:El péndulo no se comportaba como una masa puntual. Debido a esto, el sensor detectaba diferentes partes del objeto en momentos distintos, generando múltiples señales o lecturas incorrectas.**
+- **Solución aplicada:Se modificó el código para implementar un mecanismo de eliminación de bouncing (debounce), ignorando las señales que ocurrían dentro de un intervalo de tiempo muy corto después de una detección válida. De esta forma, solo se registró un evento por cada cruce real del péndulo..**
+- **Lección aprendida:En experimentos reales, los sistemas no siempre cumplen las idealizaciones teóricas. Es importante adaptar el montaje experimental a las condiciones reales del objeto para obtener mediciones confiables.**
 
 ---
 
