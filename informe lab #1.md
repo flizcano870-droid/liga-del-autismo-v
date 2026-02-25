@@ -62,10 +62,10 @@
 
 ### Parte 2: Experimento del Delay
 
-| Valor del delay [ms] | Tiempo de reacción medido [μs] | Observaciones |
-|-----------------------|-------------------------------|---------------|
-| 10 (original) |2266772| |
-| 100 |2247896| |
+| Valor del delay [ms] | Tiempo de reacción medido [μs] | Observaciones|
+|-----------------------|-------------------------------|--------------|
+| 10 (original) |2266772| | 
+| 100 |2247896| | se prese|
 | 200 |2114972| |
 | 500 |319246| |
 
@@ -172,11 +172,11 @@ Representar el valor medido de T (promedio ± desviación estándar) junto con e
 
 **Pregunta 2:** ¿Qué porcentaje de las pulsaciones en la Tabla 2 presentaron bouncing (`contadorISR > 1`)? ¿Cuál fue el valor máximo de `contadorISR` observado?
 
-> [Respuesta del estudiante aquí]
+> [El 40% de las pulsaciones presentaron bouncing, el valor maximo observado fue de 4   ]
 
 **Pregunta 3:** Analiza los resultados de la Tabla 3: ¿el delay afectó el tiempo de reacción reportado? Explica por qué o por qué no, en términos del mecanismo de la ISR.
 
-> [Respuesta del estudiante aquí]
+> [El tiempo de reacción no depende del delay para valores pequeños, ya que la medición se realiza en el instante de la primera interrupción. El delay dentro de la ISR solo actúa como un mecanismo de antirrebote bloqueando interrupciones posteriores. Sin emabargo, para delays muy grandes (500), aparentemente la duración excesiva de la ISR introduce latencias en el sistema y aumenta artificialmente el tiempo de reacción promedio.]
 
 ---
 
