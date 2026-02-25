@@ -29,8 +29,8 @@ plt.yticks(np.arange(0.5, 2.5, 0.4))
 
 
 
-plt.xlabel('Periodo al cuadrado (s^2)', fontweight='bold')
-plt.ylabel('Longitud del péndulo (m)', fontweight='bold')
+plt.xlabel('Longitud del péndulo (m)', fontweight='bold')
+plt.ylabel('Periodo al cuadrado (s^2)', fontweight='bold')
 plt.title('T^2 vs L', fontweight='bold', fontsize=16)
 plt.legend()
 
