@@ -139,7 +139,7 @@ Diagrama de barras o puntos con los datos de la Tabla 3 (delay de 10, 100, 200 y
 
 Representar el valor medido de T (promedio ± desviación estándar) junto con el valor teórico $T = 2\pi\sqrt{L/g}$ para la longitud utilizada. Puede ser un diagrama de barras o un punto con barra de error y una línea horizontal para el valor teórico.
 
-![Gráfica 2 — T experimental vs teórico](imagenes/grafica-2.png)
+![Gráfica 2 — T experimental vs teórico](imagenes/Figure_2.png)
 
 ### Gráfica 3 (solo si se realizó el Reto 3): T² vs L
 
