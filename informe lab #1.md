@@ -191,9 +191,121 @@ Representar el valor medido de T (promedio ± desviación estándar) junto con e
 ### lab-02-parte3-pendulo.ino (TODOs completados)
 
 ```cpp
-// Pegar aquí el código completo de la Parte 3 con los 3 TODOs resueltos y comentados
-```
+// // ============================================================================
+// Lab 02 - Parte 3: Medición de Período de Péndulo con Sensor IR
+// ============================================================================
 
+// Pin digital donde está conectado el sensor IR
+const int pinSensorIR = 2;    
+
+//  VARIABLES COMPARTIDAS CON LA ISR 
+// Se declaran como volatile porque las variables se modifican dentro de la interrupcion y se leen en el loop principal
+volatile unsigned int contadorDetecciones = 0;
+// Cuenta cuántas veces el péndulo ha pasado por el sensor IR.
+volatile unsigned long tiempoPrimeraDeteccion = 0;
+// Tiempo (en microsegundos) del primer paso del pendulo por el sensor (inicio del período)
+volatile unsigned long tiempoSegundaDeteccion = 0;
+// Tiempo del segundo paso del pendulo por el sensor (medio período)
+volatile unsigned long tiempoTerceraDeteccion = 0;
+// Tiempo del tercer paso del pendulo por el sensor (periodo completo)
+volatile bool medicionLista = false;
+// Indica que ya se puede calcular el período.
+volatile unsigned long ultimoTiempo = 0;
+// Guarda el tiempo de la última detección válida.
+int numMedicion = 0;
+// Variable para numerar las mediciones mostradas en pantalla
+
+// ----------INTERRUPCIÓN---------- 
+
+//Se ejecuta automáticamente cada vez que el sensor detecta el paso del péndulo
+void isrSensorIR() {
+  // micros() devuelve el tiempo desde que inició el Arduino en microsegundos
+  unsigned long tiempoActual = micros();
+  // -----FILTRO ANTI-REBOTE----- 
+  // Si el sensor detecta otra señal antes de 200 ms, se ignora.
+  // Esto evita errores por:
+  // Vibraciones del péndulo
+  // Múltiples lecturas en un solo paso ya que el pendulo no es una masa puntual
+  if (tiempoActual - ultimoTiempo < 200000) {
+    return;
+  }
+  // Se actualiza el tiempo de la última detección válida
+  ultimoTiempo = tiempoActual;
+  // Se incrementa el número de pasos del pendulo detectados
+  contadorDetecciones++;
+
+  // ----------REGISTRO DE LOS TIEMPOS---------
+
+  if (contadorDetecciones == 1) {
+    // Primer paso del péndulo por el sensor
+    // Marca el inicio del período
+    tiempoPrimeraDeteccion = tiempoActual;
+  }
+  else if (contadorDetecciones == 2) {
+    // Segundo paso
+    // El péndulo viene de regreso (medio período)
+    tiempoSegundaDeteccion = tiempoActual;
+  }
+  else if (contadorDetecciones == 3) {
+    // Tercer paso
+    // El péndulo vuelve al mismo punto y en el mismo sentido
+    // Se completa un período completo
+    tiempoTerceraDeteccion = tiempoActual;
+    // Se activa la bandera para que el loop procese el cálculo
+    medicionLista = true;
+  }
+}
+
+// ---------- CONFIGURACIÓN INICIAL ----------
+
+void setup() {
+  // Se configura el pin del sensor como entrada digital
+  pinMode(pinSensorIR, INPUT);
+  // Se coloca para poder implementar el monitor serial
+  Serial.begin(9600);
+  delay(2000);
+  // Tabla de resultados
+  Serial.println("===============================================");
+  Serial.println("Medicion de periodo completo del pendulo");
+  Serial.println("===============================================");
+  Serial.println("#\tT(us)\t\tT(ms)\t\tT(s)");
+  // Se activa la interrupción externa en el pin del sensor
+  // FALLING significa que se ejecuta cuando la señal pasa de HIGH a LOW (cuando el péndulo bloquea el haz generado por el sensor)
+  attachInterrupt(digitalPinToInterrupt(pinSensorIR), isrSensorIR, FALLING);
+}
+
+// ---------- LOOP PRINCIPAL ----------
+
+void loop() {
+  // En este punto ya se detectaron los 3 cruces
+  if (medicionLista) {
+    // ---------------------- CÁLCULO DEL PERÍODO ----------------------
+    // Se calcula como: T = t3 - t1
+    unsigned long T_us = tiempoTerceraDeteccion - tiempoPrimeraDeteccion;
+    // Conversión de unidades
+    float T_ms = T_us / 1000.0;       // De microsegundos a milisegundos
+    float T_s  = T_us / 1000000.0;    //  De microsegundos a segundos
+
+    // Se incrementa el número de medición
+    numMedicion++;
+
+    // ---------- RESULTADOS (monitor serial) ----------
+
+    Serial.print(numMedicion);   // Número de medición
+    Serial.print("\t");
+    Serial.print(T_us);          // Período en microsegundos
+    Serial.print("\t\t");
+    Serial.print(T_ms, 2);       // Período en milisegundos (2 decimales)
+    Serial.print("\t\t");
+    Serial.println(T_s, 4);      // Período en segundos (4 decimales)
+
+    // ---------- REINICIO DE VARIABLES (para la siguiente medicion) ----------
+
+    contadorDetecciones = 0;  // Reinicia el contador de cruces
+    medicionLista = false;    // Baja la bandera para esperar otra medición
+  }
+}
+```
 ---
 
 ## 5. Dificultades Encontradas y Soluciones Aplicadas
