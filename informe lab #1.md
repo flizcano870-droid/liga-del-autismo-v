@@ -129,7 +129,7 @@ Error porcentual: 0,0006982168077 %
 
 Diagrama de barras o puntos con los datos de la Tabla 3 (delay de 10, 100, 200 y 500 ms). Si el tiempo de reacción no cambia con el delay, eso demuestra que la ISR captura el evento independientemente de lo que haga el programa principal.
 
-![Gráfica 1 — Tiempo de reacción vs delay](Figure_1.png)
+     ![Gráfica 1 — Tiempo de reacción vs delay](Figure_1.png)
 
 **Interpretación:** ¿El tiempo de reacción depende del valor del delay? ¿Qué demuestra esto sobre cómo funcionan las interrupciones?
 
