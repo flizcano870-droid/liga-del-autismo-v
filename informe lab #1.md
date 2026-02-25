@@ -339,7 +339,7 @@ void loop() {
 **Pregunta:** Propón un experimento de física que podrías automatizar usando interrupciones y un sensor (IR, ultrasonido, u otro). Describe: qué mediría, qué sensor usaría, qué tipo de interrupción (RISING/FALLING/CHANGE), y qué ventaja tendría sobre una medición manual.
 
 
-> [Respuesta del estudiante aquí]
+> 
 
 
 
