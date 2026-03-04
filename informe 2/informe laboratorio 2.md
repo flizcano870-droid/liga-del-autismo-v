@@ -89,19 +89,19 @@
 
 | Condición | raw\_A2 | T\_directa [°C] | raw\_A3 | T\_amplificada [°C] | ΔT = \|T\_dir − T\_amp\| |
 |-----------|--------|----------------|--------|--------------------|--------------------------|
-| Temperatura ambiente estable          | | | | | |
-| LM35 cubierto con mano (30 s)         | | | | | |
-| LM35 cubierto con mano (60 s)         | | | | | |
-| Enfriando con aire (ventilador/soplido)| | | | | |
-| Posición en equilibrio térmico        | | | | | |
+| Temperatura ambiente estable          |39 |19.06 |257 |21.47 |-2.41 |
+| LM35 cubierto con mano (30 s)         |58 |28.35 | 330|27.57 |0.78 |
+| LM35 cubierto con mano (60 s)         |65 | 31.77|399 |33.34 |-1.57 |
+| Enfriando con aire (ventilador/soplido)|33 |16.13 |233 | 19.47| -3.34|
+| Posición en equilibrio térmico        |37 | 18.08|243 |20.3 |-2.22 |
 
 **Estadísticas — condición de equilibrio térmico (N ≥ 10 lecturas consecutivas):**
 
 | Estadística | T\_directa [°C] | T\_amplificada [°C] |
 |-------------|----------------|-------------------|
-| Promedio    | | |
-| Desv. estándar | | |
-| Rango (max − min) | | |
+| Promedio    | 15.80| 17.20 |
+| Desv. estándar |0.91 |0.10 |
+| Rango (max − min) | 2.93|0.5 |
 
 ### Tabla 5: LDR — Tres Condiciones de Iluminación (Parte 3)
 
