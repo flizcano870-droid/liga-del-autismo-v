@@ -35,4 +35,5 @@ plt.ylabel('Voltage (V)', fontweight='bold')
 plt.title('Voltaje ADC vs Posición del Potenciómetro', fontweight='bold')
 plt.legend(fontsize=8)
 
+plt.tight_layout()
 plt.show()
