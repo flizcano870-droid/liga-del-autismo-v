@@ -136,7 +136,7 @@
 
 Puntos experimentales como diagrama de dispersión. Superponer la recta teórica $V = \text{raw} \times (5{,}000\,\text{V} / 1023)$. Incluir la ecuación del ajuste lineal y el coeficiente $R^2$.
 
-![Gráfica 1 — Linealidad ADC: Voltaje vs raw del potenciómetro](Figure_1.png)
+![Gráfica 1 — Linealidad ADC: Voltaje vs raw del potenciómetro](Figure_1.jpg)
 
 **Interpretación:** ¿Los datos experimentales confirman la linealidad del ADC? ¿Cuál es el mayor error observado y en qué punto del rango ocurre?
 
