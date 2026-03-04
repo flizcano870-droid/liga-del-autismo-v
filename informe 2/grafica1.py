@@ -20,3 +20,9 @@ y_teorico = pendiente * x_teorico + intercepto
 plt.scatter(x, y, label='Datos', color='blue', marker='o', s=80)
 plt.plot(x_teorico, y_teorico, label='Recta teórica', color='blue', linewidth=2)
 
+plt.xlabel('raw data', fontweight='bold')
+plt.ylabel('Voltage (V)', fontweight='bold')
+plt.title('Voltaje ADC vs Posición del Potenciómetro', fontweight='bold')
+plt.legend()
+
+plt.show()
