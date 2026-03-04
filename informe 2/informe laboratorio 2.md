@@ -89,11 +89,11 @@
 
 | Condición | raw\_A2 | T\_directa [°C] | raw\_A3 | T\_amplificada [°C] | ΔT = \|T\_dir − T\_amp\| |
 |-----------|--------|----------------|--------|--------------------|--------------------------|
-| Temperatura ambiente estable          |39 |19.06 |257 |21.47 |-2.41 |
+| Temperatura ambiente estable          |39 |19.06 |257 |21.47 |2.41 |
 | LM35 cubierto con mano (30 s)         |58 |28.35 | 330|27.57 |0.78 |
-| LM35 cubierto con mano (60 s)         |65 | 31.77|399 |33.34 |-1.57 |
-| Enfriando con aire (ventilador/soplido)|33 |16.13 |233 | 19.47| -3.34|
-| Posición en equilibrio térmico        |37 | 18.08|243 |20.3 |-2.22 |
+| LM35 cubierto con mano (60 s)         |65 | 31.77|399 |33.34 |1.57 |
+| Enfriando con aire (ventilador/soplido)|33 |16.13 |233 | 19.47|3.34|
+| Posición en equilibrio térmico        |37 | 18.08|243 |20.3 |2.22 |
 
 **Estadísticas — condición de equilibrio térmico (N ≥ 10 lecturas consecutivas):**
 
@@ -107,9 +107,9 @@
 
 | Condición | raw (0–1023) | Voltaje [V] | Comportamiento esperado |
 |-----------|-------------|-------------|------------------------|
-| Oscuridad total (LDR tapado con mano) | | | raw bajo → V bajo |
-| Iluminación ambiente (sin intervención) | | | valor intermedio |
-| Luz directa de linterna cercana | | | raw alto → V alto |
+| Oscuridad total (LDR tapado con mano) |523|2.556| raw bajo → V bajo |
+| Iluminación ambiente (sin intervención) |730|3.568| valor intermedio |
+| Luz directa de linterna cercana |1021|4.990 | raw alto → V alto |
 
 ### Tabla 6: Termostato — Comportamiento del Umbral de Control (Parte 6)
 
