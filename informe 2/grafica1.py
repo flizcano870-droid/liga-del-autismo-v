@@ -28,7 +28,7 @@ texto=(
 
 )
 
-plt.text(0.15, 0.79, texto, transform=plt.gca().transAxes, fontsize=8, 
+plt.text(0.1, 0.79, texto, transform=plt.gca().transAxes, fontsize=8, 
          verticalalignment='bottom', horizontalalignment='center', bbox=dict(facecolor='white', alpha=0.5, linewidth=0.5, edgecolor='grey', boxstyle='round'))    
 plt.xlabel('raw data (0–1023)', fontweight='bold')
 plt.ylabel('Voltage (V)', fontweight='bold')
