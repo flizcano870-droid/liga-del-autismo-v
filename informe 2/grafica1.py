@@ -17,9 +17,9 @@ y_teorico1 = pendiente1 * x_teorico + intercepto
 y_teorico2= pendiente2 * x_teorico + intercepto2
 
 plt.scatter(x, y,  color='darkblue', marker='o', s=50)
-plt.scatter(x, y_2,  color='coral', marker='o', s=15)
+plt.scatter(x, y_2,  color='coral', marker='v', s=30)
 plt.plot(x_teorico, y_teorico1, label=f'Regresión experimental;  y = {pendiente1:.4f}x + ({intercepto:.4f})', color='darkblue', linewidth=2.5)
-plt.plot(x_teorico, y_teorico2, label=f'Regresión teórica;  y = {pendiente2:.4f}x + ({intercepto2:.4f})', color='coral', linewidth=1)
+plt.plot(x_teorico, y_teorico2, label=f'Regresión teórica;  y = {pendiente2:.4f}x + ({intercepto2:.4f})', color='coral', linewidth=1, linestyle='--')
 
 texto=(
     
