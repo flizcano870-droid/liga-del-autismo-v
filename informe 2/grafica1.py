@@ -17,12 +17,18 @@ print(f"   R² = {r_value**2:.4f}")
 x_teorico = np.linspace(min(x), max(x), 100)
 y_teorico = pendiente * x_teorico + intercepto
 
-plt.scatter(x, y, label='Datos', color='blue', marker='o', s=80)
-plt.plot(x_teorico, y_teorico, label='Recta teórica', color='blue', linewidth=2)
+plt.scatter(x, y, label='Datos', color='darkblue', marker='o', s=50)
+plt.plot(x_teorico, y_teorico, label=f'Recta teórica', color='navy', linewidth=1.5)
 
+texto=(
+    f"   y = {pendiente:.4f}x + {intercepto:.4f} \n"
+    f"   R² = {r_value**2:.4f}"
+)
+
+plt.text(0.2, 0.9, texto, transform=plt.gca().transAxes, fontsize=8, 
+         verticalalignment='top', horizontalalignment='center', bbox=dict(facecolor='white', alpha=0.5, linewidth=0.5))    
 plt.xlabel('raw data', fontweight='bold')
 plt.ylabel('Voltage (V)', fontweight='bold')
 plt.title('Voltaje ADC vs Posición del Potenciómetro', fontweight='bold')
-plt.legend()
 
 plt.show()
