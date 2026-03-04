@@ -50,8 +50,8 @@
 | 18 | 9| 7| 2|
 | 19 | 10| 7| 2|
 | 20 | 10| 7| 2|
-| **Promedio flancos espurios** | 1.86 |
-| **Máximo flancos espurios**   | 3 |
+| **Promedio flancos espurios** |-|-| 1.86 |
+| **Máximo flancos espurios**   |-|-| 3 |
 
 ### Tabla 2: Debouncing por Hardware — contadorISR con Capacitor 100 nF (Parte 1, Fase B)
 
@@ -69,7 +69,7 @@
 | 10 |1|NO|
 | **Promedio contadorISR** |1,3| — |
 
-**Para comparación:** Promedio de contadorISR SIN capacitor (dato de trabajo autónomo S2): __EL promedio del contador ISR sin capacitor fue de 1,5 lo que muestra que al utilizar este se reduce el bouncing sin embargo no se elimina_________
+**Para comparación:** Promedio de contadorISR SIN capacitor (dato de trabajo autónomo S2): EL promedio del contador ISR sin capacitor fue de 1,5 lo que muestra que al utilizar este se reduce el bouncing sin embargo no se elimina
 
 ### Tabla 3: ADC Potenciómetro — Verificación de Linealidad (Parte 2)
 
