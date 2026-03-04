@@ -30,43 +30,43 @@
 
 | Pulsación | contadorBruto | contadorDebounce | Flancos espurios (bruto − debounce) |
 |-----------|--------------|-----------------|--------------------------------------|
-| 1  |0 | 0| 0|
-| 2  |0 |0 | 0|
-| 3  | 3| 1| 2|
-| 4  | 3|1 | 2|
-| 5  |3 | 1| 2|
-| 6  | 4| 2| 2|
-| 7  | 4| 2| 2|
-| 8  | 5| 3| 2|
-| 9  | 5| 3| 2|
-| 10 | 6| 4| 2|
-| 11 | 6| 4| 2|
-| 12 | 7| 5| 2|
-| 13 | 7| 5| 2|
-| 14 | 7| 5| 2|
-| 15 | 8| 6| 2|
-| 16 | 8| 6| 2|
-| 17 | 9| 6| 3|
-| 18 | 9| 7| 2|
-| 19 | 10| 7| 2|
-| 20 | 10| 7| 2|
-| **Promedio flancos espurios** | 1.86|
-| **Máximo flancos espurios**   | 3 |
+| 1  |0 | 0| |
+| 2  |0 |0 | |
+| 3  | 3| 1| |
+| 4  | 3|1 | |
+| 5  |3 | 1| |
+| 6  | 4| 2| |
+| 7  | 4| 2| |
+| 8  | 5| 3| |
+| 9  | 5| 3| |
+| 10 | 6| 4| |
+| 11 | 6| 4| |
+| 12 | 7| 5| |
+| 13 | 7| 5| |
+| 14 | 7| 5| |
+| 15 | 8| 6| |
+| 16 | 8| 6| |
+| 17 | 9| 6| |
+| 18 | 9| 7| |
+| 19 | 10| 7| |
+| 20 | 10| 7| |
+| **Promedio flancos espurios** | — | — | |
+| **Máximo flancos espurios**   | — | — | |
 
 ### Tabla 2: Debouncing por Hardware — contadorISR con Capacitor 100 nF (Parte 1, Fase B)
 
 | Pulsación | contadorISR (con 100 nF) | ¿Bouncing? (ISR > 1) |
 |-----------|------------------------|----------------------|
-| 1  | | |
-| 2  | | |
-| 3  | | |
-| 4  | | |
-| 5  | | |
-| 6  | | |
-| 7  | | |
-| 8  | | |
-| 9  | | |
-| 10 | | |
+| 1  |1|NO|
+| 2  |1|NO|
+| 3  |1|NO|
+| 4  |1|NO|
+| 5  |3|SI|
+| 6  |2|SI|
+| 7  |1|NO|
+| 8  |1|NO|
+| 9  |1|NO|
+| 10 |1|NO|
 | **Promedio contadorISR** | | — |
 
 **Para comparación:** Promedio de contadorISR SIN capacitor (dato de trabajo autónomo S2): ___________
