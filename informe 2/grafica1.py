@@ -16,23 +16,23 @@ x_teorico = np.linspace(min(x), max(x), 100)
 y_teorico1 = pendiente1 * x_teorico + intercepto
 y_teorico2= pendiente2 * x_teorico + intercepto2
 
-plt.scatter(x, y, label='Datos', color='darkblue', marker='o', s=50)
-plt.scatter(x, y_2, label='Datos 2', color='tomato', marker='o', s=15)
-plt.plot(x_teorico, y_teorico1, label=f'Recta teórica', color='darkblue', linewidth=2)
-plt.plot(x_teorico, y_teorico2, label=f'Recta teórica 2', color='tomato', linewidth=1)
+plt.scatter(x, y,  color='darkblue', marker='o', s=50)
+plt.scatter(x, y_2,  color='coral', marker='o', s=15)
+plt.plot(x_teorico, y_teorico1, label=f'Regresión experimental;  y = {pendiente1:.4f}x + ({intercepto:.4f})', color='darkblue', linewidth=2.5)
+plt.plot(x_teorico, y_teorico2, label=f'Regresión teórica;  y = {pendiente2:.4f}x + ({intercepto2:.4f})', color='coral', linewidth=1)
 
 texto=(
-    f"   y_medido = {pendiente1:.4f}x + ({intercepto:.4f}) \n"
+    
     f"   R²_medido = {r_value**2:.4f} \n"
-    f"   y_teorico = {pendiente2:.4f}x + ({intercepto:.4f}) \n"
-    f"   R²_teorico = {r_value2**2:.4f}"
+    f"   R²_teórico = {r_value2**2:.4f}"
 
 )
 
-plt.text(0.2, 0.9, texto, transform=plt.gca().transAxes, fontsize=8, 
-         verticalalignment='top', horizontalalignment='center', bbox=dict(facecolor='white', alpha=0.5, linewidth=0.5))    
-plt.xlabel('raw data', fontweight='bold')
+plt.text(0.15, 0.79, texto, transform=plt.gca().transAxes, fontsize=8, 
+         verticalalignment='bottom', horizontalalignment='center', bbox=dict(facecolor='white', alpha=0.5, linewidth=0.5, edgecolor='grey', boxstyle='round'))    
+plt.xlabel('raw data (0–1023)', fontweight='bold')
 plt.ylabel('Voltage (V)', fontweight='bold')
 plt.title('Voltaje ADC vs Posición del Potenciómetro', fontweight='bold')
+plt.legend(fontsize=8)
 
 plt.show()
