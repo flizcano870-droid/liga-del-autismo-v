@@ -10,12 +10,11 @@
 
 | Campo | |
 |-------|--|
-| **Integrantes** | 1. |
-| | 2. |
-| | 3. |
-| | 4. |
-| | 5. |
-| **Grupo** | |
+| **Integrantes** | 1. Felipe Lizcano Quimbaya |
+| | 2. Sergio Andres Poveda Perez|
+| | 3. Sara Romero Chaves|
+| | 4. Simon Gabriel Sandoval Palma |
+| **Grupo** |3|
 | **Fecha de la práctica** | Miércoles 25 de Febrero, 2026 |
 | **Fecha de entrega** | Miércoles 11 de Marzo, 2026, 23:59 (Informe Bloque 1) |
 
