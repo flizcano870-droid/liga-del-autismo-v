@@ -162,7 +162,7 @@ Dos curvas superpuestas: T\_directa (A2) y T\_amplificada (A3), con colores o es
 
 Diagrama de barras con los datos de la columna "Flancos espurios" de la Tabla 1 (20 pulsaciones).
 
-![Gráfica 3 — Histograma de flancos espurios por pulsación](imagenes/grafica-3.png)
+![Gráfica 3 — Histograma de flancos espurios por pulsación](Figure_3.png)
 
 **Interpretación:** ¿El bouncing es un fenómeno ocasional o sistemático para el botón utilizado? ¿En qué rango de valores se concentra la distribución?
 
