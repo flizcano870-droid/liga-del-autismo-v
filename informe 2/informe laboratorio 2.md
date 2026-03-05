@@ -166,7 +166,7 @@ Diagrama de barras con los datos de la columna "Flancos espurios" de la Tabla 1 
 
 **Interpretación:** ¿El bouncing es un fenómeno ocasional o sistemático para el botón utilizado? ¿En qué rango de valores se concentra la distribución?
 
-> [El bouncing es un fenomeno sistematico para el botón utilizado, esto se puede interpretar gracias a que la distribución se concentra en 2 flancos espurios]
+> [El bouncing es un fenomeno sistematico para el botón utilizado, esto se puede interpretar gracias a que la distribución se concentra en 2 flancos espurios, si fuera un fenomeno ocasional la distribución deberia verse concentrada alrededor del valor 0]
 
 ---
 
@@ -188,7 +188,7 @@ Diagrama de barras con los datos de la columna "Flancos espurios" de la Tabla 1 
 
 **(a)** Con los valores de la Tabla 5: ¿el rango de variación del raw entre oscuridad total y luz directa fue ≥ 200 cuentas? ¿En qué extremo de la escala (raw bajo o raw alto) se espera mayor sensibilidad a pequeños cambios de iluminación? Justifica con base en la forma de la curva $R_\text{LDR}$ vs $E$ y la región donde la pendiente $|dR/dE|$ es mayor.
 
-> [si.El rango fue de 498 cuentas (1021 − 523). Se espera mayor sensibilidad a pequeños cambios de iluminación en el extremo de raw bajo (oscuridad total) porque en esa región la curva $R_\text{LDR}$ vs $E$ es más empinada, lo que significa que la pendiente $|dR/dE|$ es mayor. Esto implica que pequeñas variaciones en la iluminancia $E$ producirán cambios más significativos en la resistencia del LDR, y por ende en el raw medido.]
+> [Si.El rango fue de 498 cuentas (1021 − 523). Se espera mayor sensibilidad a pequeños cambios de iluminación en el extremo de raw bajo (oscuridad total) porque en esa región la curva $R_\text{LDR}$ vs $E$ es más empinada, lo que significa que la pendiente $|dR/dE|$ es mayor. Esto implica que pequeñas variaciones en la iluminancia $E$ producirán cambios más significativos en la resistencia del LDR, y por ende en el raw medido.]
 
 **(b)** En el Experimento 1 (trabajo autónomo — ley del inverso cuadrado): si la curva raw vs distancia no sigue exactamente $V \propto 1/d^2$, identifica al menos dos factores — además de la no linealidad del LDR — que contribuyen a la desviación. ¿Cómo podrías minimizar cada uno?
 
