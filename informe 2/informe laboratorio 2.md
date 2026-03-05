@@ -149,7 +149,7 @@ Puntos experimentales como diagrama de dispersión. Superponer la recta teórica
 
 Dos curvas superpuestas: T\_directa (A2) y T\_amplificada (A3), con colores o estilos de línea diferenciados. El gráfico debe mostrar la secuencia de condiciones térmicas aplicadas (ambient → mano 30 s → mano 60 s → enfriamiento → equilibrio).
 
-![Gráfica 2 — T vs tiempo: canal directo (A2) y amplificado (A3)](imagenes/grafica-2.png)
+![Gráfica 2 — T vs tiempo: canal directo (A2) y amplificado (A3)](Figure_2.png)
 
 **Interpretación:** ¿Las dos curvas siguen la misma tendencia? ¿La diferencia ΔT es consistente con la predicción de la resolución por bit de cada canal?
 
