@@ -262,7 +262,7 @@ Diagrama de barras con los datos de la columna "Flancos espurios" de la Tabla 1 
 
 **Pregunta:** El termostato de la Parte 6 activa un LED cuando `temp > umbral`. En instrumentación real, este comportamiento produce "chattering" (encendido/apagado rápido) cuando la temperatura oscila alrededor del umbral. Propone una modificación al algoritmo que incorpore un umbral de histéresis para eliminar el chattering. Describe: qué parámetros agregarías, cómo cambiaría la lógica del `if`, y qué valor de histéresis (en °C) sería apropiado dado el ruido de medición observado en la Tabla 4 (estadísticas de equilibrio).
 
-> [Respuesta del estudiante aquí]
+> [Se podrian definir 2 parametros adicionales umbral_on y umbral_off ,donde la diferencia entre ambos define la histéresis. La lógica del if se modificaría para encender el LED solo si temp > umbral_on y apagarlo solo si temp < umbral_off. Dado el ruido de medición observado en la Tabla 4, una histéresis de al menos 0,5 °C podría ser apropiada para evitar el chattering, ya que es mayor que la desviación estándar del canal amplificado (0,10 °C) y proporciona un margen suficiente para las fluctuaciones de temperatura.]
 
 ---
 
