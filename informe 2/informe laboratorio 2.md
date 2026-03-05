@@ -166,7 +166,7 @@ Diagrama de barras con los datos de la columna "Flancos espurios" de la Tabla 1 
 
 **Interpretación:** ¿El bouncing es un fenómeno ocasional o sistemático para el botón utilizado? ¿En qué rango de valores se concentra la distribución?
 
-> [Respuesta del estudiante aquí]
+> [El bouncing es un fenomeno sistematico para el botón utilizado, esto se puede interpretar gracias a que la distribución se concentra en 2 flancos espurios]
 
 ---
 
