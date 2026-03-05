@@ -178,21 +178,21 @@ Diagrama de barras con los datos de la columna "Flancos espurios" de la Tabla 1 
 
 **Pregunta 1:** Con los datos de las Tablas 1 y 2: ¿qué porcentaje de las 20 pulsaciones generaron al menos un flanco espurio sin debouncing? ¿Cuánto redujo el capacitor de 100 nF el número de eventos espurios en comparación con el contadorISR de S2? Expresa ambos resultados cuantitativamente.
 
-> [Respuesta del estudiante aquí]
+> [El 90% de las pulsaciones generaron al menos un flanco espurio sin debouncing (18 de 20). Con el capacitor de 100 nF, el número de eventos espurios se redujo a un 10% (2 de 20), lo que representa una reducción del 80% en la cantidad de eventos espurios.]
 
 **Pregunta 2:** Un experimento requiere detectar variaciones de temperatura de 0,2 °C. Con los datos estadísticos de la Tabla 4 (condición de equilibrio): ¿qué canal (directo A2 o amplificado A3) es más adecuado? Justifica con la resolución en °C/bit de cada canal ($0{,}49\,°C/\text{bit}$ para A2; $0{,}098\,°C/\text{bit}$ para A3) y con los valores de desviación estándar medidos.
 
-> [Respuesta del estudiante aquí]
+> [El canal amplificado A3 es más adecuado para detectar variaciones de temperatura de 0,2 °C, ya que su resolución de 0,098 °C/bit es menor que la variación que se desea detectar. Además, la desviación estándar del canal amplificado (0,10 °C) es significativamente menor que la del canal directo (0,91 °C), lo que indica que el canal amplificado tiene un nivel de ruido más bajo y es más preciso para medir pequeñas variaciones de temperatura.]
 
 **Pregunta 3:** El LDR sigue una ley de potencias $R_\text{LDR} = A \cdot E^{-\gamma}$ en su respuesta a la iluminancia.
 
 **(a)** Con los valores de la Tabla 5: ¿el rango de variación del raw entre oscuridad total y luz directa fue ≥ 200 cuentas? ¿En qué extremo de la escala (raw bajo o raw alto) se espera mayor sensibilidad a pequeños cambios de iluminación? Justifica con base en la forma de la curva $R_\text{LDR}$ vs $E$ y la región donde la pendiente $|dR/dE|$ es mayor.
 
-> [Respuesta del estudiante aquí]
+> [si.El rango fue de 498 cuentas (1021 − 523). Se espera mayor sensibilidad a pequeños cambios de iluminación en el extremo de raw bajo (oscuridad total) porque en esa región la curva $R_\text{LDR}$ vs $E$ es más empinada, lo que significa que la pendiente $|dR/dE|$ es mayor. Esto implica que pequeñas variaciones en la iluminancia $E$ producirán cambios más significativos en la resistencia del LDR, y por ende en el raw medido.]
 
 **(b)** En el Experimento 1 (trabajo autónomo — ley del inverso cuadrado): si la curva raw vs distancia no sigue exactamente $V \propto 1/d^2$, identifica al menos dos factores — además de la no linealidad del LDR — que contribuyen a la desviación. ¿Cómo podrías minimizar cada uno?
 
-> [Respuesta del estudiante aquí]
+> [La luz ambiente puede afectar la medición, especialmente a distancias largas donde la señal del LDR es más débil. Para minimizar este factor, se podría realizar la calibración y las mediciones en un entorno controlado con iluminación constante o utilizando una caja opaca para eliminar la luz ambiental. La alineación entre la fuente de luz y el LDR también puede influir, ya que una mala alineación puede reducir la cantidad de luz que incide sobre el sensor. Para minimizar este factor, se podría utilizar un soporte fijo para mantener la fuente de luz y el LDR alineados durante todas las mediciones.]
 
 ---
 
