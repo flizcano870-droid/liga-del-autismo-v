@@ -153,7 +153,7 @@ Dos curvas superpuestas: T\_directa (A2) y T\_amplificada (A3), con colores o es
 
 **Interpretación:** ¿Las dos curvas siguen la misma tendencia? ¿La diferencia ΔT es consistente con la predicción de la resolución por bit de cada canal?
 
-> [Respuesta del estudiante aquí]
+> [Si, ambas curvas tienen el mismo comportamiento fisico: en la etapa de calentamiento la temperatura aumenta progresivamente, en la etapa de enfriamiento en ambas graficas se observa un decaimineto ]
 
 ### Gráfica 3: Histograma de Flancos Espurios por Pulsación (Tabla 1)
 
