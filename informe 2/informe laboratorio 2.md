@@ -115,9 +115,9 @@
 
 | Condición del ensayo | raw\_umbral (A0) | Temp\_umbral [°C] | raw\_temp (A2) | Temp\_actual [°C] | Estado LED |
 |----------------------|----------------|-----------------|--------------|-----------------|-----------|
-| Umbral mayor que temperatura ambiente    | | | | | APAGADO |
-| Umbral igual a temperatura ambiente (frontera) | | | | | — |
-| LM35 calentado con mano (temp > umbral) | | | | | ENCENDIDO |
+| Umbral mayor que temperatura ambiente    | 1023.00| 500.00| 43.00| 21.02| APAGADO |
+| Umbral igual a temperatura ambiente (frontera) | 41.00| 20.04| 41.00| 20.04| APAGADO |
+| LM35 calentado con mano (temp > umbral) | 18.00| 8.80| 41.00| 20.04| ENCENDIDO |
 
 **Verificación:** Para al menos una fila, "Temp\_umbral" y "Temp\_actual" deben diferir en ≥ 2°C para demostrar control efectivo.
 
