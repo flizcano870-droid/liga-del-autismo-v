@@ -140,7 +140,7 @@ Puntos experimentales como diagrama de dispersión. Superponer la recta teórica
 
 **Interpretación:** ¿Los datos experimentales confirman la linealidad del ADC? ¿Cuál es el mayor error observado y en qué punto del rango ocurre?
 
-> [Respuesta del estudiante aquí]
+> [Los datos experimentales efectivamente confirman la linealidad del ADC, esto se puede apreciar en la grafica 1. EL mayor error observado fue de 0,2% y se presentó al rededor del rango del 10% de la capacidad de giro del potenciometro ]
 
 ### Gráfica 2: Temperatura LM35 vs Tiempo — Canal Directo y Amplificado (Tabla 4)
 
