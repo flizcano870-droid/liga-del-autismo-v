@@ -140,7 +140,7 @@ Puntos experimentales como diagrama de dispersión. Superponer la recta teórica
 
 **Interpretación:** ¿Los datos experimentales confirman la linealidad del ADC? ¿Cuál es el mayor error observado y en qué punto del rango ocurre?
 
-> [Los datos experimentales efectivamente confirman la linealidad del ADC, esto se puede apreciar en la grafica 1. EL mayor error observado fue de 0,2% y se presentó al rededor del rango del 10% de la capacidad de giro del potenciometro ]
+> [Los datos experimentales efectivamente confirman la linealidad del ADC; esto se puede apreciar en la gráfica 1. El mayor error observado fue de 0,2 % y se presentó alrededor del rango del 10 % de la capacidad de giro del potenciómetro.]
 
 ### Gráfica 2: Temperatura LM35 vs Tiempo — Canal Directo y Amplificado (Tabla 4)
 
@@ -153,7 +153,7 @@ Dos curvas superpuestas: T\_directa (A2) y T\_amplificada (A3), con colores o es
 
 **Interpretación:** ¿Las dos curvas siguen la misma tendencia? ¿La diferencia ΔT es consistente con la predicción de la resolución por bit de cada canal?
 
-> [Si, ambas curvas tienen el mismo comportamiento fisico: en la etapa de calentamiento la temperatura aumenta progresivamente, en la etapa de enfriamiento en ambas graficas se observa un decaimineto ]
+> [Sí, ambas curvas tienen el mismo comportamiento físico: en la etapa de calentamiento la temperatura aumenta progresivamente; en la etapa de enfriamiento ambas gráficas presentan un decaimiento exponencial y, por último, en el equilibrio térmico la temperatura se estabiliza alrededor de la temperatura ambiente. Con esto podemos concluir que la amplificación no altera el fenómeno térmico, solo varía la escala de la señal. La diferencia $\Delta T$ sí es consistente, ya que al realizar la amplificación la medida se vuelve más precisa debido a que ahora se tiene mayor sensibilidad y, por la misma razón, se reduce el error de cuantización.]
 
 ### Gráfica 3: Histograma de Flancos Espurios por Pulsación (Tabla 1)
 
@@ -166,7 +166,7 @@ Diagrama de barras con los datos de la columna "Flancos espurios" de la Tabla 1 
 
 **Interpretación:** ¿El bouncing es un fenómeno ocasional o sistemático para el botón utilizado? ¿En qué rango de valores se concentra la distribución?
 
-> [El bouncing es un fenomeno sistematico para el botón utilizado, esto se puede interpretar gracias a que la distribución se concentra en 2 flancos espurios, si fuera un fenomeno ocasional la distribución deberia verse concentrada alrededor del valor 0]
+> [El bouncing es un fenómeno sistemático para el botón utilizado; esto se puede interpretar gracias a que la distribución se concentra en 2 flancos espurios. Si fuera un fenómeno ocasional, la distribución debería verse concentrada alrededor del valor 0.]
 
 ---
 
