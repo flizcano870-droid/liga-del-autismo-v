@@ -207,7 +207,78 @@ Diagrama de barras con los datos de la columna "Flancos espurios" de la Tabla 1 
 ### Parte 3: Lectura del LDR con Divisor de Voltaje (A1)
 
 ```cpp
-// Pegar aquí el código de la Parte 3 con comentarios
+// // Laboratorio 3 — Parte 3: Sensor de luz (LDR)
+
+// Una LDR (resistencia dependiente de la luz) y una resistencia fija.
+// La LDR cambia su resistencia dependiendo de la iluminación:
+//  - Más luz implica menor resistencia
+//  - Menos luz implica mayor resistencia
+//  ADC (Conversor Analógico-Digital):
+//  Resolución: 10 bits → valores entre 0 y 1023
+//  Referencia: 5 V
+//  Resolución mínima: 5V / 1023 ≈ 4.89 mV por paso
+//  Conversión de lectura a voltaje:
+//  V = raw × (5.0 / 1023.0)
+
+// ---------- DEFINICIÓN DE PINES ---------- 
+
+// Pin analógico donde se conecta la LDR y la resistencia de referencia 
+const int pinLDR = A1;
+
+// ---------- VARIABLES GLOBALES ----------
+
+// Variable que almacena el tiempo de la última medición mostrada
+unsigned long tiempoDisplay = 0;
+// Intervalo entre mediciones (200 ms) lo cual produce 5 mediciones por segundo aproximadamente
+const unsigned long INTERVALO_DISPLAY = 200;
+
+// ---------- FUNCIÓN DE CONFIGURACIÓN ----------
+
+void setup() {
+  // Inicia la comunicación serial entre Arduino y el computador
+  Serial.begin(9600);
+  // Mensajes que aparecerán en el monitor serial
+  Serial.println("==========================================");
+  Serial.println("  Lab 3 — Parte 3: Sensor de luz (LDR)");
+  Serial.println("==========================================");
+  Serial.println();
+  Serial.println("Cambie la iluminacion del LDR");
+  Serial.println("Tapelo con la mano o acerque una linterna.");
+  Serial.println();
+  // Encabezado de las columnas de datos
+  Serial.println("t(ms)\traw(0-1023)\tvoltaje(V)");
+  Serial.println("------------------------------------------");
+  // No es necesario configurar pinMode para pines analógicos ya que analogRead() los configura automaticamente como INPUT 
+}
+ 
+// ---------- BUCLE PRINCIPAL -----------
+
+void loop() {
+  // millis() devuelve el tiempo (en milisegundos), se usa para controlar el intervalo entre medcions
+  if ((millis() - tiempoDisplay) >= INTERVALO_DISPLAY) {
+    // Se actualiza el instante de la última medición
+    tiempoDisplay = millis();
+    
+    // ----- LECTURA DEL ADC -----
+    
+    // analogRead() mide el voltaje presente en el pin analógico A1 y lo convierte en un numero entero entre 0 y 1023
+    int rawADC = analogRead(pinLDR);
+    // ----- CONVERSIÓN A VOLTAJE -----
+    // Convertimos la lectura digital del ADC al voltaje físico
+    float voltaje = rawADC * (5.0 / 1023.0);
+    
+    // ----- ENVÍO DE DATOS AL MONITOR SERIAL -----
+
+    // Se imprime el tiempo actual en milisegundos
+    Serial.print(millis());
+    Serial.print("\t");
+    // Se imprime la lectura del ADC
+    Serial.print(rawADC);
+    Serial.print("\t\t");
+    // Se imprime el voltaje calculado, ",3" significa mostrar 3 decimales
+    Serial.println(voltaje, 3);
+  }
+}
 ```
 
 ### Parte 4: Lectura del LM35 — Canal Directo (A2)
