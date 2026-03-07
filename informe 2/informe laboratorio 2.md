@@ -518,19 +518,21 @@ void loop() {
      Nivel 2: Describe el problema observado y cómo fue resuelto
      Nivel 3: Análisis de causa raíz + lección transferible a futuros laboratorios -->
 
-### Dificultad 1: [Descripción breve]
+### Dificultad 1: 
+Durante el montaje del circuito que utilizaba el amplificador operacional LM324. Al realizar la conexión a tierra del circuito, el Arduino dejaba de responder y el montaje no operaba como se esperaba. Este comportamiento se debía a una conexión incorrecta en la protoboard que provocaba un contacto directo entre las líneas de alimentación y tierra, generando un cortocircuito que afectaba el funcionamiento normal del sistema.
 
-- **Síntoma observado:**
-- **Causa identificada:**
-- **Solución aplicada:**
-- **Lección aprendida:**
+- **Síntoma observado:** Al conectar el circuito con el LM324, el sistema no funcionaba correctamente y el arduino dejaba de responder cuando se conectaba a tierra el circuito.
+- **Causa identificada:** Se identificó un cortocircuito entre las líneas de alimentación y tierra en el montaje del amplificador operacional en la protoboard.
+- **Solución aplicada:** Se utilizó un multímetro para medir la resistencia y asi revisar las conexiones entre VCC y GND. De esta forma se localizaron los puntos donde existía el cortocircuito y se corrigieron las conexiones en la protoboard.
+- **Lección aprendida:** Antes de poner en funcionamiento un circuito con amplificadores operacionales u otros componentes activos, es recomendable verificar con el multímetro que no exista continuidad entre VCC y GND, lo que permite detectar cortocircuitos y evitar daños en los componentes.
 
-### Dificultad 2: [Descripción breve]
+### Dificultad 2: 
+Durante las pruebas del circuito con el amplificador operacional LM324, el sistema no funcionó de manera adecuada y uno de los integrados resultó dañado. Esto ocurrió porque el componente fue conectado sin considerar correctamente la orientación del encapsulado ni la disposición de sus pines, lo que provocó que algunas terminales de alimentación y señal quedaran mal conectadas, afectando el funcionamiento del circuito.
 
-- **Síntoma observado:**
-- **Causa identificada:**
-- **Solución aplicada:**
-- **Lección aprendida:**
+- **Síntoma observado:** El circuito no funcionaba correctamente y uno de los integrados se dañó durante las pruebas.
+- **Causa identificada:** El amplificador operacional fue conectado inicialmente sin identificar correctamente la orientación del encapsulado y el orden de los pines, lo que provocó una conexión incorrecta de las terminales de alimentación y señal.
+- **Solución aplicada:** Se consultó la guia del LM324 para verificar la disposición correcta de los pines y la orientación del integrado en la protoboard, y se volvió a montar el circuito siguiendo el diagrama de pines.
+- **Lección aprendida:** Es recomednable leer el instructivo del componente antes de conectarlo, especialmente para circuitos integrados, verificando la orientación del encapsulado y la función de cada pin para evitar daños en el dispositivo.
 
 *(Agregar más dificultades si aplica)*
 
@@ -607,7 +609,7 @@ $$A = \text{\_\_\_\_\_}\,\Omega \qquad \alpha = \text{\_\_\_\_\_} \qquad R^2 = \
 
 **Longitud de calentamiento:** LM35 cubierto con mano durante 2 minutos  
 **Intervalo de muestreo:** cada 5 s durante 5 minutos tras retirar la mano  
-**$T_\text{amb}$ (temperatura ambiente medida al inicio):** _________ °C
+**$T_\text{amb}$ (temperatura ambiente medida al inicio):** 19,5 °C
 
 | t [s] | T [°C] |
 |-------|--------|
