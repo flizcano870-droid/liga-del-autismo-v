@@ -235,7 +235,7 @@ const unsigned long INTERVALO_DISPLAY = 200;
 // ---------- FUNCIÓN DE CONFIGURACIÓN ----------
 
 void setup() {
-  // Inicia la comunicación serial entre Arduino y el computador
+  // Inicia el monitor serial
   Serial.begin(9600);
   // Mensajes que aparecerán en el monitor serial
   Serial.println("==========================================");
@@ -290,13 +290,224 @@ void loop() {
 ### Parte 5: Lectura del LM35 — Canal Amplificado con LM324 (A3)
 
 ```cpp
-// Pegar aquí el código de la Parte 5 con comentarios
+//  Laboratorio 3 — Parte 5: Sensor de temperatura LM35 con amplificador LM324
+//  Este programa mide la temperatura usando un sensor LM35 de dos maneras:
+//  1) Medición directa del LM35
+//  2) Medición amplificada usando un amplificador operacional LM324
+//  Debido a que los voltajes que el LM35, que son proporcionales a la temperatura, son pequeños se utiliza un amplificador 
+//  operacional LM324 configurado con una ganancia de aproximadamente x5.
+//  Esto permite aumentar la resolución efectiva de la medición del ADC.
+
+// ---------- DEFINICIÓN DE PINES ----------
+
+// Pin analógico donde se conecta la salida directa del LM35
+const int pinLM35 = A2;
+// Pin analógico donde se conecta la salida del amplificador LM324
+const int pinLM35amp = A3;
+
+// ---------- VARIABLES ----------
+
+// Variables para almacenar las lecturas del ADC
+int rawLM35;
+int rawLM35amp;
+// Variables para almacenar las temperaturas calculadas
+float tempDirecta;
+float tempAmplificada;
+// Variable para guardar el tiempo actual del programa
+unsigned long tiempo;
+
+// ---------- CONFIGURACIÓN INICIAL ----------
+
+void setup() {
+  // Inicia el monitor serial
+  Serial.begin(9600);
+  // Mensajes que apareceeran en el monitor serial
+  Serial.println("t(ms)\traw_A2\tT_directa(C)\traw_A3\tT_amplificada(C)");
+}
+
+// ---------- BUCLE PRINCIPAL ----------
+
+void loop() {
+  // millis() devuelve el tiempo en milisegundos desde que inició el programa
+  tiempo = millis();
+
+  // ----- LECTURAS DEL ADC -----
+  
+  // Lectura de la señal directa del LM35, esta señal es pequeña porque el sensor produce solo 10 mV por °C
+  rawLM35 = analogRead(pinLM35);
+  // Lectura de la señal amplificada por el LM324, esta señal es aproximadamente 5 veces mayor
+  rawLM35amp = analogRead(pinLM35amp);
+
+  // ----- CONVERSIÓN A TEMPERATURA -----
+
+  // Primero convertimos el valor del ADC a voltaje:
+  // V = raw × (5.0 / 1023.0)
+  // Luego convertimos voltaje a temperatura usando:
+  // °C = V × 100
+  tempDirecta = rawLM35 * (5.0 / 1023.0) * 100.0;
+  // En el caso amplificado:
+  // el LM324 aumenta el voltaje aproximadamente 5 veces.
+  // Por lo tanto:
+  // temperatura = (V_amplificado / 5) × 100
+  tempAmplificada = rawLM35amp * (100.0 / 1023.0);
+  
+  // ----- ENVÍO DE DATOS AL MONITOR SERIAL -----
+
+  Serial.print(tiempo);
+  Serial.print("\t");
+  // Valor  del ADC del LM35 directo
+  Serial.print(rawLM35);
+  Serial.print("\t");
+  // Temperatura calculada directamente
+  Serial.print(tempDirecta, 2);
+  Serial.print("\t");
+  // Valor del ADC de la señal amplificada
+  Serial.print(rawLM35amp);
+  Serial.print("\t");
+  // Temperatura calculada usando la señal amplificada
+  Serial.println(tempAmplificada, 2);
+
+  // ----- INTERVALO DE TOMA DE DATOS -----
+
+  // Espera 500 ms antes de la siguiente medición
+  // Esto produce aproximadamente 2 mediciones por segundo
+  delay(500);
+}
 ```
 
 ### Parte 6: Termostato con Umbral Ajustable (A0 + A2 + D13)
 
 ```cpp
-// Pegar aquí el código de la Parte 6 con comentarios
+//  Laboratorio 3 — Parte 6: Sistema integrador — Termostato con umbral ajustable
+// Este programa implementa un sistema de control tipo termostato usando:
+//  - Sensor de temperatura LM35
+//  - Potenciómetro para ajustar el umbral de temperatura
+//  - LED indicador de activación
+//  - Dos botones:
+//        1) Botón de modo (encender/apagar sistema)
+//        2) Botón de reset del sistema
+//
+//  Funcionamiento:
+//    1. El LM35 mide la temperatura ambiente.
+//    2. El potenciómetro establece un valor umbral (temperatura límite).
+//    3. El Arduino compara ambos valores.
+//    4. Si la temperatura medida supera el umbral entonces se enciende el LED.
+//    5. Si es menor entonces el LED permanece apagado.
+
+// ---------- DEFINICIÓN DE PINES ----------
+
+// Pin analógico conectado al potenciómetro, este determina el umbral de activación del sistema
+const int pinUmbral = A0;
+// Pin analógico conectado al sensor de temperatura LM35
+const int pinLM35 = A2;
+// LED que indica si la temperatura supera el umbral
+const int pinLED = 13;
+// Botón para activar o desactivar el sistema
+const int botonModo = 2;
+// Botón para reiniciar el sistema
+const int botonReset = 3;
+
+// ---------- VARIABLES DEL SISTEMA ----------
+
+// Variable que indica si el sistema está activo o no
+bool sistemaActivo = true;
+// Variables para almacenar lecturas del ADC
+int umbral_raw = 0;
+int temp_raw = 0;
+// Variable para guardar la temperatura convertida a °C
+float temperaturaC = 0;
+
+// ---------- CONFIGURACIÓN INICIAL ----------
+
+void setup() {
+  // Inicia el monitor serial
+  Serial.begin(9600);
+  // Configura el LED como salida digital
+  pinMode(pinLED, OUTPUT);
+  // Configuración de los botones como entradas
+  pinMode(botonModo, INPUT);
+  pinMode(botonReset, INPUT);
+  // Mensaje inicial del sistema
+  Serial.println("Sistema de Termostato Iniciado");
+}
+
+// ---------- BUCLE PRINCIPAL DEL SISTEMA ----------
+
+void loop() {
+  
+  // ----- BOTÓN DE CAMBIO DE MODO (D2) -----
+
+  // Cada vez que se presiona cambia el estado de la variable sistemaActivo
+    if (digitalRead(botonModo) == HIGH) {
+    // Cambia el estado del sistema
+    sistemaActivo = !sistemaActivo;
+    Serial.println("Cambio de modo");
+    delay(300);
+  }
+
+  // ----- BOTÓN PARA REINICIAR (D3) -----
+  
+  // Este botón vuelve el sistema a su estado inicial.
+  if (digitalRead(botonReset) == HIGH) {
+    // Reactiva el sistema
+    sistemaActivo = true;
+    // Apaga el LED
+    digitalWrite(pinLED, LOW);
+    Serial.println("Sistema reiniciado");
+    delay(300);
+  }
+  
+  // ----- FUNCIONAMIENTO DEL TERMOSTATO -----
+  
+  if (sistemaActivo) {
+    // Lectura del umbral, se define el punto de activacion del sistema 
+    umbral_raw = analogRead(pinUmbral);
+    // Lectura del sensor de temperatura LM35
+    temp_raw = analogRead(pinLM35);
+    
+    // ----- CONVERSIÓN A TEMPERATURA -----
+
+    // Se realiza igual que en la parte 4 
+    float voltaje = temp_raw * (5.0 / 1023.0);
+    temperaturaC = voltaje * 100.0;
+    
+    // ----- COMPARACIÓN DEL TERMOSTATO -----
+    
+    // Se comparan directamente los valores RAW del ADC.
+    // Si la temperatura medida supera el umbral se activa el led 
+    if (temp_raw > umbral_raw) {
+      digitalWrite(pinLED, HIGH);
+    } else {
+      digitalWrite(pinLED, LOW);
+    }
+    // 
+    // ----- DATOS EN EL MONITOR SERIAL -----
+    
+    // Se imprimen los valores
+    Serial.print("Umbral raw: ");
+    Serial.print(umbral_raw);
+    Serial.print(" | Temp raw: ");
+    Serial.print(temp_raw);
+    Serial.print(" | Temp (C): ");
+    Serial.print(temperaturaC);
+    Serial.print(" | LED: ");
+    // Estado del LED
+    if (digitalRead(pinLED) == HIGH) {
+      Serial.println("ENCENDIDO");
+    } else {
+      Serial.println("APAGADO");
+    }
+  } else {
+    
+    // ----- SISTEMA DESACTIVADO -----
+    
+    // Cuando el sistema está desactivado el LED permanece apagado
+    digitalWrite(pinLED, LOW);
+    Serial.println("Sistema desactivado");
+  }
+  // Intervalo entre mediciones
+  delay(200);
+}
 ```
 
 ---
