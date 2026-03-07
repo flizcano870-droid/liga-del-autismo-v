@@ -30,26 +30,26 @@
 
 | Pulsación | contadorBruto | contadorDebounce | Flancos espurios (bruto − debounce) |
 |-----------|--------------|-----------------|--------------------------------------|
-| 1  |0 | 0| 0|
-| 2  |0 |0 | 0|
-| 3  | 3| 1| 2|
-| 4  | 3|1 | 2|
-| 5  |3 | 1| 2|
-| 6  | 4| 2| 2|
-| 7  | 4| 2| 2|
-| 8  | 5| 3| 2|
-| 9  | 5| 3| 2|
-| 10 | 6| 4| 2|
-| 11 | 6| 4| 2|
-| 12 | 7| 5| 2|
-| 13 | 7| 5| 2|
-| 14 | 7| 5| 2|
-| 15 | 8| 6| 2|
-| 16 | 8| 6| 2|
-| 17 | 9| 6| 3|
-| 18 | 9| 7| 2|
-| 19 | 10| 7| 2|
-| 20 | 10| 7| 2|
+| 1  |0|0|0|
+| 2  |0|0|0|
+| 3  |3|1|2|
+| 4  |3|1|2|
+| 5  |3|1|2|
+| 6  |4|2|2|
+| 7  |4|2|2|
+| 8  |5|3|2|
+| 9  |5|3|2|
+| 10 |6|4|2|
+| 11 |6|4|2|
+| 12 |7|5|2|
+| 13 |7|5|2|
+| 14 |7|5|2|
+| 15 |8|6|2|
+| 16 |8|6|2|
+| 17 |9|6|3|
+| 18 |9|7|2|
+| 19 |10|7|2|
+| 20 |10|7|2|
 | **Promedio flancos espurios** |-|-| 1.86 |
 | **Máximo flancos espurios**   |-|-| 3 |
 
@@ -284,7 +284,58 @@ void loop() {
 ### Parte 4: Lectura del LM35 — Canal Directo (A2)
 
 ```cpp
-// Pegar aquí el código de la Parte 4 con comentarios
+  //  Laboratorio 3 — Parte 4: Sensor de temperatura LM35 (lectura directa)
+//  Este programa mide la temperatura usando un sensor LM35 conectado directamente a una entrada anológica 
+//  El LM35 es un sensor de temperatura analógico cuya salida de voltaje es proporcional a la temperatura medida 
+//  Su característica principal es: 10mV por °c
+//  Se utiliza su ADC de 10 bits para convertir este voltaje en un valor digital entre 0 y 1023.
+//  Para convertir la lectura digital a temperatura se usa: T(°C) = raw × (500 / 1023)
+
+// ---------- DEFINICIÓN DE PINES ----------
+
+// Pin analógico donde se conecta la salida del sensor LM35
+const int pinLM35 = A2;
+
+// ---------- CONFIGURACIÓN INICIAL ----------
+
+void setup() {
+  // Inicia el monitor serial 
+  Serial.begin(9600);
+  Serial.println("t(ms)\traw\ttempC");
+}
+
+// ---------- BUCLE PRINCIPAL DEL PROGRAMA ----------
+
+void loop() {
+
+  // ----- MEDICIÓN DEL TIEMPO -----
+ 
+  // millis() devuelve el tiempo en milisegundos desde que comenzó a ejecutarse el programa
+  unsigned long t = millis();
+  
+  // ----- LECTURA DEL SENSOR LM35 -----
+  
+  // analogRead() mide el voltaje presente en el pin A2 y lo convierte en un número entero entre 0 y 1023
+  int rawLM35 = analogRead(pinLM35);
+  
+  // ----- CONVERSIÓN A TEMPERATURA -----
+  
+  // Primero se convierte el valor RAW del ADC a temperatura usando la relación del LM35.
+  float tempC = rawLM35 * (500.0 / 1023.0);
+  
+  // ----- DATOS EN EL MONITOR SERIAL -----
+
+  Serial.print(t);
+  Serial.print("\t");
+  Serial.print(rawLM35);
+  Serial.print("\t");
+  Serial.println(tempC);
+  
+  // ----- INTERVALO DE MUESTREO -----
+  
+  // Espera 500 ms antes de la siguiente medición, esto produce aproximadamente 2 mediciones por segundo
+  delay(500);
+}
 ```
 
 ### Parte 5: Lectura del LM35 — Canal Amplificado con LM324 (A3)
