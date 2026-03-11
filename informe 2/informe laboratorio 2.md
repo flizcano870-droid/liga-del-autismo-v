@@ -695,7 +695,7 @@ $$A = \text{\_\_\_\_\_}\,\Omega \qquad \alpha = \text{\_\_\_\_\_} \qquad R^2 = \
 
 **Gráfica:** T(t) vs t con la curva de ajuste superpuesta.
 
-![Exp. 2 — Enfriamiento de Newton: T vs tiempo](imagenes/exp2-enfriamiento-newton.png)
+![Exp. 2 — Enfriamiento de Newton: T vs tiempo](Figure_reto2.png)
 
 ---
 
