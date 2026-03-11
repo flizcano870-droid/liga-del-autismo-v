@@ -688,8 +688,8 @@ $$A = \text{\_\_\_\_\_}\,\Omega \qquad \alpha = \text{\_\_\_\_\_} \qquad R^2 = \
 
 | Parámetro | Valor |
 |-----------|-------|
-| $T_\text{amb}$ ajustado [°C] |19.26 |
-| $T_0$ [°C] | 29.1|
+| $T_\text{amb}$ ajustado [°C] |19.27 |
+| $T_0$ [°C] | 29.45|
 | $k$ [s⁻¹] |0.02 |
 | $t_{1/2} = \ln(2)/k$ [s] |26.6|
 
