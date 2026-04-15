@@ -671,29 +671,29 @@ Durante las pruebas del circuito con el amplificador operacional LM324, el siste
 
 | Estadística | T\_directa (A2) [°C] | T\_amplificada (A3) [°C] |
 |-------------|---------------------|------------------------|
-| Promedio    | 40,82 | |
-| Desv. estándar | | |
-| Rango (max − min) | | |
+| Promedio    | 19.95 |24.67 |
+| Desv. estándar |1.533 |1.463 |
+| Rango (max − min) |23.46-17.60 |27.76-22.29 |
 
 #### Condición B: LM35 cubierto con mano abierta
 
 | Estadística | T\_directa (A2) [°C] | T\_amplificada (A3) [°C] |
 |-------------|---------------------|------------------------|
-| Promedio    | | |
-| Desv. estándar | | |
-| Rango (max − min) | | |
+| Promedio    |27.59 |32.66 |
+| Desv. estándar |1.975 | 1.912|
+| Rango (max − min) |31.28-21.51  |34.51-26.69 |
 
 #### Condición C: LM35 sobre superficie fría (vaso con agua fría)
 
 | Estadística | T\_directa (A2) [°C] | T\_amplificada (A3) [°C] |
 |-------------|---------------------|------------------------|
-| Promedio    | | |
-| Desv. estándar | | |
-| Rango (max − min) | | |
+| Promedio    |17.09 | 21.55|
+| Desv. estándar | 1.656|2.208 |
+| Rango (max − min) |20.04-9.29 |31.09-14.27 |
 
 **Análisis:** ¿El canal amplificado tiene mayor o menor desviación estándar que el directo? ¿La amplificación se justifica dado el nivel de ruido observado?
 
-> [Respuesta del estudiante aquí]
+> En los primeros dos casos (ambiente y cubierto con mano abierta) el canal amplificado tiene una desviación estándar ligeramente menor que el canal directo; mientras que en la condición de superficie fría, el canal amplificado tiene una desviación estándar mayor. 
 
 ---
 
