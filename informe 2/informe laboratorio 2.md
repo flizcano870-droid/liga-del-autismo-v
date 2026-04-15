@@ -611,11 +611,11 @@ Durante las pruebas del circuito con el amplificador operacional LM324, el siste
 
 | Hojas sobre la LDR | `raw` en A1 |
 |:-------------------:|:-----------:|
-| 0 (sin hojas) | |
-| 1 | |
-| 2 | |
-| 3 | |
-| 4 | |
+| 0 (sin hojas) | 805 |
+| 1 | 637 |
+| 2 | 550 |
+| 3 | 465 |
+| 4 | 414 |
 
 *Criterio mínimo: secuencia monótonamente decreciente (cada fila ≤ fila anterior).*
 ---
