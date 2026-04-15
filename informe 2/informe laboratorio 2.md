@@ -604,56 +604,20 @@ Durante las pruebas del circuito con el amplificador operacional LM324, el siste
 ## Anexo: Trabajo Autónomo
 
 <!-- Los tres experimentos son OBLIGATORIOS y sus datos se incluyen en este informe -->
+### Actividad 7 — Contador de Hojas con LDR
 
-### Experimento 1: Medidor de Distancia con LDR — Calibración Empírica (OBLIGATORIO)
+**Tabla 7 — Contador de Hojas: Respuesta Monótona de la LDR**
 
-#### Fase 1 y 2: Tabla de Calibración y Parámetros del Ajuste Log-Log
 
-| $d$ [cm] | raw | $R_\text{LDR}$ [kΩ] $= 10 \times (1023 - \text{raw})/\text{raw}$ |
-|----------|-----|-------------------------------------------------------------------|
-| 5  | | |
-| 8  | | |
-| 12 | | |
-| 16 | | |
-| 20 | | |
-| 25 | | |
-| 30 | | |
-| 40 | | |
-| 50 | | |
-| 60 | | |
+| Hojas sobre la LDR | `raw` en A1 |
+|:-------------------:|:-----------:|
+| 0 (sin hojas) | |
+| 1 | |
+| 2 | |
+| 3 | |
+| 4 | |
 
-**Constantes de calibración obtenidas por regresión lineal en escala log-log:**
-
-$$A = \text{\_\_\_\_\_}\,\Omega \qquad \alpha = \text{\_\_\_\_\_} \qquad R^2 = \text{\_\_\_\_\_}$$
-
-**Gráfica:** $\log_{10}(R_\text{LDR})$ vs $\log_{10}(d)$ con recta de regresión y valor de $R^2$.
-
-![Exp. 1 — Calibración log-log: R_LDR vs distancia](imagenes/exp1-calibracion-loglog.png)
-
-#### Fase 4: Validación del Medidor (5 distancias fuera del rango de calibración)
-
-| $d_\text{real}$ [cm] | $d_\text{est}$ [cm] | Error [%] |
-|----------------------|---------------------|----------|
-| | | |
-| | | |
-| | | |
-| | | |
-| | | |
-
-**Preguntas de análisis del Experimento 1:**
-
-**P1:** ¿El ajuste log-log dio una recta? ¿Cuál fue el valor de $R^2$? ¿En qué extremo del rango (distancias cortas o largas) se observa mayor desviación de la recta?
-
-> [Respuesta del estudiante aquí]
-
-**P2:** ¿Los errores de validación son mayores en distancias dentro del rango de calibración o fuera de él? ¿Por qué se espera ese comportamiento (interpolación vs extrapolación)?
-
-> [Respuesta del estudiante aquí]
-
-**P3:** Si cambias la lámpara por otra de diferente potencia y repites la validación sin recalibrar, ¿qué le pasará a $d_\text{est}$? ¿Qué parámetro del modelo ($A$ o $\alpha$) cambia y cuál permanece igual?
-
-> [Respuesta del estudiante aquí]
-
+*Criterio mínimo: secuencia monótonamente decreciente (cada fila ≤ fila anterior).*
 ---
 
 ### Experimento 2: Enfriamiento de Newton — LM35 (OBLIGATORIO)
