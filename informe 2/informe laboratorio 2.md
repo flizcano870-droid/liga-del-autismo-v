@@ -671,7 +671,7 @@ Durante las pruebas del circuito con el amplificador operacional LM324, el siste
 
 | Estadística | T\_directa (A2) [°C] | T\_amplificada (A3) [°C] |
 |-------------|---------------------|------------------------|
-| Promedio    | | |
+| Promedio    | 40,82 | |
 | Desv. estándar | | |
 | Rango (max − min) | | |
 
