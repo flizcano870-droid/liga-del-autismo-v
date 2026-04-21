@@ -10,12 +10,13 @@
 
 | Campo | |
 |-------|--|
-| **Integrantes** | 1. Felipe Lizcano Quimbaya |
-| | 2.Sergio Andres Poveda Perez |
-| | 3.Sara Romero Chavez |
-| | 4.Simon Sandoval Palma |
-| **Grupo** |3|
-| **Fecha de la práctica** |Miercoles 22 de abril 2026 |
+| **Integrantes** | 1. |
+| | 2. |
+| | 3. |
+| | 4. |
+| | 5. |
+| **Grupo** | |
+| **Fecha de la práctica** | |
 | **Fecha de entrega** | Miércoles 8 de Abril, 2026 — 23:59 (Informe Bloque 2: S4, S5, S6) |
 
 ---
@@ -59,6 +60,16 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 | `STATUS` (durante BLINK) | Newline | | | |
 | `FOO` | Newline | | | |
 | `STATUS` | Sin terminador | | | |
+
+---
+
+### Actividad 4 — Comando COUNT
+
+**Evidencia:** Pega a continuación la captura del Monitor Serial mostrando el comando `COUNT` funcionando (antes y después de pulsar el botón).
+
+![COUNT funcionando](imagenes/fig-count.png)
+
+> [Describe cómo verificaste que COUNT incrementa correctamente por cada pulsación.]
 
 ---
 
@@ -112,11 +123,11 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 ## 2. Visualización
 
 
-### Figura 1 — Monitor Serial: salida del sketch de medición (cuatro baudrates)
+### Figura 1 — Monitor Serial: salida del sketch de medición (una captura por baudrate)
 
-![Figura 1 — Salida Monitor Serial con cuatro baudrates](imagenes/fig1-monitor-serial-baudrates.png)
+![Figura 1 — Salida Monitor Serial por baudrate](imagenes/fig1-monitor-serial-baudrates.png)
 
-**Caption:** Captura del Monitor Serial mostrando la salida del sketch de medición. Indicar en el caption: número de bytes transmitidos en cada caso y texto enviado.
+**Caption:** Cuatro capturas del Monitor Serial, una por baudrate (300, 9600, 57600, 115200). Indicar en cada caption: baudrate, número de bytes transmitidos y texto enviado.
 
 **Interpretación:** 
 
@@ -230,17 +241,15 @@ Compara los parsers del protocolo humanizado y el protocolo compacto desde la pe
 
 ```cpp
 // Pega aquí la línea corregida de Serial.begin() con comentario explicativo.
-// Ejemplo:
-// Serial.begin(9600); // Corregido de 4800 — debe coincidir con el Monitor Serial
 ```
 
 ### `lab-04-parte2-humanizado.ino` — Comando COUNT (Actividad 4)
 
 ```cpp
 // Pega aquí las secciones que agregaste:
-// 1. Declaración de la variable contadora
-// 2. Lógica de detección de cambio de estado del botón
-// 3. La rama nueva en el parser (strcmp("COUNT", ...))
+// 1. Declaración de variables
+// 2. Lógica de detección de pulsaciones en loop()
+// 3. La rama nueva en el parser
 // 4. La respuesta formateada con Serial.println()
 ```
 
@@ -249,7 +258,8 @@ Compara los parsers del protocolo humanizado y el protocolo compacto desde la pe
 ```cpp
 // Pega aquí la implementación completa de updateBlink()
 // y las modificaciones a la rama BL en procesarComando().
-// Comenta cada variable de estado: blinking, blinksRemaining, lastToggleMs.
+// Comenta cada variable de estado: blinkActivo, parpadeosPendientes,
+// ultimoCambioMs, estadoLEDParpadeo.
 ```
 
 ### `cliente_menu.py` — Cliente con menú humanizado (Actividad 8, si aplica)
