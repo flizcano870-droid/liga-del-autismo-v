@@ -189,7 +189,7 @@ Calcula el error porcentual promedio entre $t_{\text{medido}}$ y $t_{\text{teór
 
 Con base en la fila STATUS durante BLINK de la Tabla 2: ¿en qué momento exacto respondió el Arduino y por qué? Relaciona la respuesta con la estructura del `loop()` y el uso de `delay()`.
 
-> [Respuesta del estudiante aquí]
+> [Cuando se hacen BLINK 5 se tiene un delay de 500ms, por lo tanto el arduino no responde a los comandos enviados durante ese tiempo, y responde al finalizar el proceso de BLINK 5, esto se debe a que el loop() se encuentra bloqueado por el delay() y no puede procesar los comandos enviados durante ese tiempo. ]
 
 ---
 
