@@ -15,7 +15,7 @@ parametros,covarianza = curve_fit(enfriamiento, x, y)
 x_ajuste=np.linspace(min(x), max(x), 100)
 y_ajuste=enfriamiento(x_ajuste, *parametros)    
 
-plt.plot(x_ajuste, y_ajuste, color='orangered', linewidth=2.5, label=f'Ajuste: T(t) = {parametros[1]:.2f} + ({parametros[0]:.2f} - {parametros[1]:.2f}) * exp(-0.02 * t)')
+plt.plot(x_ajuste, y_ajuste, color='orangered', linewidth=2.5, label=f'Ajuste: T(t) = {parametros[1]:.2f} + ({parametros[0]:.2f} - {parametros[1]:.2f}) * exp({parametros[2]:.2f} * t)')
 plt.scatter(x, y, color='orangered', marker='o', s=20)
 plt.xlabel('Tiempo (s)', fontweight='bold')  
 plt.ylabel('Temperatura (°C)', fontweight='bold')        
