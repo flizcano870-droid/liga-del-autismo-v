@@ -68,7 +68,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 ![COUNT funcionando](imagenes/fig-count.png)
 
-> [Describe cómo verificaste que COUNT incrementa correctamente por cada pulsación.]
+> [Se reinicio el arduino para poder observar el conteo de pulsaciones desde 0, luego se hundió el botón 5 veces y se observa el conteo actualizado a 5 pulsaciones. ]
 
 ---
 
@@ -197,7 +197,7 @@ Con base en la fila STATUS durante BLINK de la Tabla 2: ¿en qué momento exacto
 
 ¿Por qué `cmd2()` es suficiente para identificar comandos en el protocolo compacto pero no lo sería en el protocolo humanizado?
 
-> [Respuesta del estudiante aquí]
+> [Dado que cmd2() tiene una trama de formato fijo, con 2 caracteres para el comando y 5 para el argumento, no es necesario usar strcmp() para comparar toda la cadena, sino que con comparar los primeros 2 caracteres es suficiente para identificar el comando. En cambio, en el protocolo humanizado, los comandos pueden tener diferentes longitudes y formatos, por lo que es necesario usar strcmp() para comparar toda la cadena y asegurarse de que se está identificando correctamente el comando. ]
 
 ---
 
