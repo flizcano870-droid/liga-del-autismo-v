@@ -78,12 +78,12 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 | Trama enviada | Respuesta recibida | Acción en hardware | ¿Respuesta correcta? (Sí/No) |
 |:---------------------|:-------------------|:-------------------|:-----------------------------:|
-| `ST 00000` | | | |
-| `ON 00000` | | | |
-| `OF 00000` | | | |
-| `BL 00003` | | | |
-| `EV 00001` | | | |
-| Trama mal formada | | | |
+| `ST 00000` | L=0, B=0, E=0|sin cambios( led apagado) |si|
+| `ON 00000` |OK 00000 |led encendido |si |
+| `OF 00000` |OK 00000 |se apagó el led |si |
+| `BL 00003` |OK 00000 |se encendió 3 veces el led |sí |
+| `EV 00001` |OK 00005|se hundió el botón 5 veces |si |
+| Trama mal formada |ERM 00000 |no afecta el circuito | sí|
 
 ---
 
@@ -181,7 +181,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 Calcula el error porcentual promedio entre $t_{\text{medido}}$ y $t_{\text{teórico}}$ para los cuatro baudrates. ¿El error es aproximadamente constante en valor absoluto (µs) o en valor relativo (%)? ¿Qué overhead sistemático del sistema podría explicar el patrón observado?
 
-> [Respuesta del estudiante aquí]
+> [El error es aproximandamente constante en el valor relativo , con un promedio de error de 74.39% .Por parte de los experimentadores no se encontro una razon para justificar este promedio de error  ]
 
 ---
 
