@@ -29,10 +29,10 @@
 
 | Baudrate (baud) | Bytes enviados | $t_{\text{medido}}$ (µs) | $t_{\text{teórico}}$ (µs) | Error (%) | Justificación |
 |:----------------|:--------------:|:------------------------:|:-------------------------:|:---------:|:--------------|
-| 300 | | | | | |
-| 9600 | | | | | |
-| 57600 | | | | | |
-| 115200 | | | | | |
+| 300 |57 |3399352 |1900000 |78.91 |Se desconoce la razon del porcentaje de error |
+| 9600 | 57|105772 |59375 |78.14 | Se desconoce la razon del porcentaje de error|
+| 57600 | 57|17024 |9896 |72.03 |Se desconoce la razon del porcentaje de error |
+| 115200 | 57|8336 |4948 |68.47 |Se desconoce la razon del porcentaje de error |
 
 *En "Bytes enviados" registra el número que reporta el sketch en su salida (campo `Bytes:`). Ese valor incluye los bytes del texto más los dos bytes del terminador `\r\n` agregados por `println()`. Usa ese mismo número para calcular $t_{\text{teórico}}$.*
 
@@ -52,13 +52,13 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 | Comando enviado | Terminador usado | Respuesta del Arduino | Acción observada en hardware | Observaciones |
 |:----------------|:----------------:|:----------------------|:-----------------------------|:--------------|
-| `STATUS` | Newline | | | |
-| `LED ON` | Newline | | | |
-| `LED OFF` | Newline | | | |
-| `BLINK 5` | Newline | | | |
-| `STATUS` (durante BLINK) | Newline | | | |
+| `STATUS` | Newline |led=off, botón=libre |led se mantiene apagado  | |
+| `LED ON` | Newline |ok led encendido  |El led se encendio y se mantuvo encendido | |
+| `LED OFF` | Newline |ok led apagado |se apago y se mantuvo asi  | |
+| `BLINK 5` | Newline |ok parpadeando 5 veces...ok parpadeo terminado |El led se encendio y se apago 5 veces  | |
+| `STATUS` (durante BLINK) | Newline |status led=off, , boton=libre |El led se encendio y se apago 5 veces | El resultado de status apareció al finalizar el proceso de blink 5|
 | `FOO` | Newline | | | |
-| `STATUS` | Sin terminador | | | |
+| `STATUS` | Sin terminador | nada|nada | No apareció nada en el serial monitor y no ocurrió nada con el circuito. Al colocar nuevamente el new line, aparecen los "status" colocados durante el no ending line, como si se guardaran para enviarse cuando se reestablece la conexión.|
 
 ---
 
