@@ -109,11 +109,11 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 | # | Trama enviada por Python | Respuesta recibida | ¿Correcto? |
 |:--|:-------------------------|:-------------------|:----------:|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
+| 1 | ST 00000 | OK L=0, B=0, E=0 | sí |
+| 2 | BL 00006 | OK 00000 | sí |
+| 3 | ON 00000 | OK 00000 | sí |
+| 4 | EV 00001 | OK 00000 | sí |
+| 5 | OF 000 | ER 00000 | sí |
 
 *Incluye al menos una trama mal formada entre los intercambios registrados.*
 
