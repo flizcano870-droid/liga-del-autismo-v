@@ -66,7 +66,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 **Evidencia:** Pega a continuación la captura del Monitor Serial mostrando el comando `COUNT` funcionando (antes y después de pulsar el botón).
 
-![COUNT funcionando](imagenes/fig-count.png)
+![COUNT funcionando](count.png)
 
 > [Se reinicio el arduino para poder observar el conteo de pulsaciones desde 0, luego se hundió el botón 5 veces y se observa el conteo actualizado a 5 pulsaciones. ]
 
@@ -93,9 +93,9 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 | Prueba | Versión bloqueante | Versión no bloqueante |
 |:-------|:-------------------|:----------------------|
-| Pulsaciones registradas tras `BL 00005` (5 pulsaciones durante parpadeo) | | |
-| Respuesta a `ST 00000` durante parpadeo: ¿llega inmediatamente? | | |
-| ¿El LED completa el número solicitado de parpadeos? | | |
+| Pulsaciones registradas tras `BL 00005` (5 pulsaciones durante parpadeo) | 0| 5|
+| Respuesta a `ST 00000` durante parpadeo: ¿llega inmediatamente? | no, espera a que termine el parpadeo para mandar el status | sí, es inmediata y registra los eventos ocurridos|
+| ¿El LED completa el número solicitado de parpadeos? | sí | sí |
 
 **Justificación evaluable:** ¿Resolvería `attachInterrupt()` **ambos** problemas observados (pulsaciones perdidas Y falta de respuesta a `ST` durante el parpadeo)?
 
@@ -124,7 +124,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 ### Figura 1 — Monitor Serial: salida del sketch de medición (una captura por baudrate)
 
-![Figura 1 — Salida Monitor Serial por baudrate](imagenes/fig1-monitor-serial-baudrates.png)
+![Figura 1 — Salida Monitor Serial por baudrate](1.png)
 
 **Caption:** Cuatro capturas del Monitor Serial, una por baudrate (300, 9600, 57600, 115200). Indicar en cada caption: baudrate, número de bytes transmitidos y texto enviado.
 
@@ -140,7 +140,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 **Eje Y:** Tiempo de transmisión (µs)
 **Series:** $t_{\text{medido}}$ (puntos sólidos) y $t_{\text{teórico}}$ (puntos vacíos o línea de referencia)
 
-![Figura 2 — Gráfica t_medido vs t_teórico por baudrate](imagenes/fig2-grafica-tiempos.png)
+![Figura 2 — Gráfica t_medido vs t_teórico por baudrate](Figure_1.png)
 
 **Lo que debe demostrar esta gráfica:** Que el tiempo de transmisión es inversamente proporcional al baudrate, y que el tiempo medido se ajusta al modelo teórico con un overhead sistemático pequeño y aproximadamente constante en valor absoluto.
 
@@ -152,7 +152,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 ### Figura 3 — Monitor Serial: sesión del protocolo humanizado
 
-![Figura 3 — Monitor Serial protocolo humanizado](imagenes/fig3-monitor-serial-humanizado.png)
+![Figura 3 — Monitor Serial protocolo humanizado](3.png)
 
 **Caption:** Captura del Monitor Serial mostrando al menos cuatro comandos del protocolo humanizado con sus respuestas. Identificar en el caption que el protocolo es humanizado.
 
@@ -164,7 +164,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 ### Figura 4 — Consola Python: sesión del terminal crudo
 
-![Figura 4 — Consola Python terminal crudo](imagenes/fig4-consola-python-terminal.png)
+![Figura 4 — Consola Python terminal crudo]()
 
 **Caption:** Captura de la consola Python mostrando la sesión completa del terminal crudo con cinco o más intercambios. Indicar en el caption: puerto serial y baudrate usados.
 
