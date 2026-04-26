@@ -164,7 +164,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 ### Figura 4 — Consola Python: sesión del terminal crudo
 
-![Figura 4 — Consola Python terminal crudo]()
+![Figura 4 — Consola Python terminal crudo](captura_experimento_6.png)
 
 **Caption:** Captura de la consola Python mostrando la sesión completa del terminal crudo con cinco o más intercambios. Indicar en el caption: puerto serial y baudrate usados.
 
