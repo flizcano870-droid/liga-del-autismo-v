@@ -35,7 +35,7 @@ import serial  # pip install pyserial
 # =============================================================
 # CONFIGURACIÓN — ajusta PUERTO_SERIAL si es necesario
 # =============================================================
-PUERTO_SERIAL = "/dev/ttyACM0"   # <-- verificar y corregir si es diferente
+PUERTO_SERIAL = "COM6"   # <-- verificar y corregir si es diferente
 BAUDRATE      = 9600
 TIMEOUT_S     = 2                # Tiempo máximo de espera para respuesta
 
