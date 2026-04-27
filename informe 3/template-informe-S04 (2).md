@@ -99,7 +99,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 **Justificación evaluable:** ¿Resolvería `attachInterrupt()` **ambos** problemas observados (pulsaciones perdidas Y falta de respuesta a `ST` durante el parpadeo)?
 
-> [Responde aquí con justificación técnica: indica qué problema resuelve la ISR y cuál no, y por qué `millis()` con scheduling cooperativo es la solución completa.]
+> [No, si se corrigen las pulsaciones perdidas porque la interrupcion detecta el boton en el momento exacto, aunque el programa este "ocupado" con el delay pero no arregla la falta dfe respuesta a 'ST' mientras el arduino esta en el parapadeo con delay ya que el programa queda congelado y no pude leer ni responder comandos seriales y la interrupcion no sirve para leer estos comandos ]
 
 ---
 
@@ -130,7 +130,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 **Interpretación:** 
 
-> [Describe qué se observa. ¿Los tiempos de transmisión disminuyen claramente al aumentar el baudrate?]
+> [Podemos observar de la imagen anterior que efectivamente el  tmedido   disminuye mientras el baudrate aumenta lo que verifica que al aumentar el baudrate el tiempo de transmisión disminuye ]
 
 ---
 
@@ -146,7 +146,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 **Interpretación:**
 
-> [Describe la relación observada entre baudrate y tiempo de transmisión. ¿La gráfica confirma la proporcionalidad inversa? ¿El overhead es aproximadamente constante en µs o en %?]
+> [Podemos observar las rectas con pendiente negativa lo que precisamente nos confirma la relacion de proporcionalidad inversa entre el baudrate y el tiempo de transferencia, de igua manera se observa que la curva medida está siempre por encima de la teórica y la separación entre ambas es casi constante en el eje vertical (en µs), no proporcional y por lo tanto el overhead es aproximadamente constante en valor absoluto no en porcentaje.]
 
 ---
 
@@ -158,7 +158,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 **Interpretación:**
 
-> [¿Se observa claramente la diferencia entre comandos válidos e inválidos? ¿Hay evidencia del comportamiento durante BLINK?]
+> [En la imagen podemos apreciar la respuesta de los comandos validos(respueta previamente programada en hardaware y software) e invalidos( Error: comando invalido). Durante el blink podemos ver en la consola el mensaje de que se esta realizando el proceso y cuando este ha finalizado, en cuanto al hardware efectivame se puede apreciar el parpadeo del LED ]
 
 ---
 
@@ -170,7 +170,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 
 **Interpretación:**
 
-> [¿Python envía y recibe correctamente las tramas de formato fijo? ¿Las respuestas del Arduino son consistentes con las esperadas?]
+> [Se pudo apreciar que Python efectivamente envia y recibe las tramas de forma fijo ( CC NNNNN) y las respuestas del Arduino fueron las esperadas con cada comando valido (ON 00000, ST 00000, OFF 00000, BL 0000N, EV 00001) ]
 
 ---
 
@@ -205,7 +205,7 @@ Con base en la fila STATUS durante BLINK de la Tabla 2: ¿en qué momento exacto
 
 ¿Qué consecuencias concretas tendría usar `delay(1)` (un milisegundo) en lugar de `delay(500)` en el BLINK bloqueante sobre la capacidad del sistema para responder comandos seriales? Estima la frecuencia máxima de comandos que el cliente podría enviar sin pérdida de respuestas en cada caso, asumiendo que cada comando tiene una longitud de 9 caracteres a 9600 baudios.
 
-> [Respuesta del estudiante aquí]
+> [Usar un delay(1) en lugar de delay (500) reduciria drasticamente el tiempo durante el cual el sistema permanece bloqueado sin atender el puerto serial. A 9600 baudios, un comando de 9 caracteres tarda aproximadamente 9.4 ms en trasnmitirse. Con el delay(500), el Arduino puede permanecer hasta 500ms sin leer el buffer serial, en ese intervalo pueden llegar aproximadamete 50 comandos, lo que excede la capacidad del buffer y provoca perdida de datos. Por ello la frecuencia maxxima de comandos que se puede manejar sin perdida de datos es de aproximadamente 2 comandos por segundo. En cambio con delay(1), el sistema solo queda bloqueado por 1ms antes de volver a ejecutar el loop() y revisar el puertoo serial. Dado que este tiempo es mucho menor que e tiempo de llegada de un comando el sistema puede atender el buffer multipkes veces durante la recepcion de cada mensaje. En este caso la frecuencia maxima queda limitada por la velocidad de transmision, siendo aproximadamente 100 comandos por segundo, sin perdida significativa ]
 
 ---
 
