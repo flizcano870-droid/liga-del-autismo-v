@@ -213,7 +213,7 @@ Con base en la fila STATUS durante BLINK de la Tabla 2: ¿en qué momento exacto
 
 ¿Por qué un protocolo textual necesita un delimitador de línea explícito (`\n`) y no puede basarse en pausas de tiempo entre comandos?
 
-> [Respuesta del estudiante aquí]
+> [Un protocolo textual necesita un delimitador de linea explicito, porque la comunicacion serial UART es un flujo continuo de bytes, no una secuencia de mensajes separados de forma natural. El arduino recibe caracteres uno tras otro sin saber donde termina un comando y empieza el siguiente. El delimitador de linea actua como una marca que da fin al mensaje permitiendo saber al sistema cuando debe procesar el comando completo. Intentar usar pausas de tiempo como criterio de separacion es poco confiable ya que e un sistema real los datos pueden variar debido a multiples factores.Una pausa no es una condicion bien definida: puede haber retardos dentro de un mismo comando o , por el contrario, comandos consecutivos pueden llegar sin separacion apreciable y esto introduce ambiguedad, ademas basarse en temporizacion implica introducir umbrales arbitrarios ( "Si pasan x milisegundos, se asume fin del comando) y estos umbrales depeden del contexto y pueden fallar si se cambian las condiciones de operacion (otro baudrate, otro computador, otra carga de procesamiento) ]
 
 ---
 
@@ -221,7 +221,7 @@ Con base en la fila STATUS durante BLINK de la Tabla 2: ¿en qué momento exacto
 
 En el protocolo humanizado, el parser usa `strcmp()` para identificar comandos. En el protocolo compacto, solo compara dos caracteres con `cmd2()`. ¿Cuál de los dos parsers sería más eficiente si el protocolo tuviera 50 comandos distintos? Justifica considerando el número de comparaciones necesarias en el peor caso.
 
-> [Respuesta del estudiante aquí]
+> [Si el protocolo tuviera 50 comandos distintos, el parser del protocolo compacto seria mas eficiente que el del protocolo humanizado. La razon principal es que en el compacto la idetificacion del comando se reduce a comparar un numero fijo y muy pequeño de caracteres( por ejemplos dos con cmd2()) mientras que en el humanizado se deben comparar cadenas completas de strcmp(). En el caso del protocolo humanizado, cada comandose identifica comparando strings completos como "STATUS", "LED ON", "BLINK", etc. En el peor caso, el parser tendría que probar hasta 50 comparaciones con strcmp(). Cada llamada a strcmp() no solo implica una comparación, sino un recorrido carácter por carácter hasta encontrar una diferencia o llegar al final de la cadena. En cambio, en el protocolo compacto, cada comando se identifica únicamente con dos caracteres fijos (por ejemplo, ST, ON, BL, etc.). En el peor caso también habría hasta 50 comparaciones, pero cada comparación es extremadamente barata: solo se revisan dos posiciones del arreglo de caracteres. No hay necesidad de recorrer cadenas completas ni verificar terminadores, lo que reduce significativamente el tiempo de ejecución.se identifica comparando strings completos como "STATUS", "LED ON", "BLINK", etc. En el peor caso, el parser tendría que probar hasta 50 comparaciones con strcmp(). Cada llamada a strcmp() no solo implica una comparación, sino un recorrido carácter por carácter hasta encontrar una diferencia o llegar al final de la cadena. ]
 
 ---
 
@@ -229,7 +229,7 @@ En el protocolo humanizado, el parser usa `strcmp()` para identificar comandos. 
 
 Compara los parsers del protocolo humanizado y el protocolo compacto desde la perspectiva de un sistema embebido con recursos limitados (memoria y velocidad de CPU). ¿Cuál de los dos es más adecuado para una aplicación de producción y por qué?
 
-> [Respuesta del estudiante aquí]
+> [En el protocolo humanizado, los comandos son cadenas de longitud variable (por ejemplo, "STATUS", "LED ON"), lo que obliga al parser a almacenar más texto y a utilizar funciones como strcmp(). Estas funciones recorren carácter por carácter hasta encontrar coincidencias o diferencias, lo que implica mayor uso de CPU, especialmente si el número de comandos crece. Además, manejar strings más largos aumenta el consumo de memoria RAM, que es un recurso crítico en microcontroladores como el Arduino. En contraste, el protocolo compacto utiliza un formato de longitud fija y comandos codificados en pocos caracteres (por ejemplo, ST, ON, BL). Esto permite identificar comandos con comparaciones directas de uno o dos caracteres, reduciendo significativamente el número de operaciones por comando. El parser no necesita recorrer cadenas completas ni gestionar longitudes variables, lo que lo hace más rápido y predecible. También reduce el uso de memoria, ya que los mensajes son más cortos y la lógica de procesamiento es más simple.]
 
 ---
 
@@ -239,7 +239,10 @@ Compara los parsers del protocolo humanizado y el protocolo compacto desde la pe
 ### `lab-04-parte1-baudrate.ino` — Corrección de baudrate (Actividad 1)
 
 ```cpp
-// Pega aquí la línea corregida de Serial.begin() con comentario explicativo.
+ // === BAUDRATE ===
+ //Velocidad de comunicación serial.
+ long BAUDRATE = 9600;
+ // Se debe ajustar a 9600 para que el baudrate del Arduino y el del Monitor Serial coincidina porque ambos determinan la velocidad a la que se transmiten y se interpretan los bits en la comunicación UART.Si ambos dispositivos tienen el mismo valor, los bits se leen en el momento correcto y los datos se reconstruyen adecuadamente. En cambio, si los baudrates son diferentes, el receptor interpreta mal la duración de los bits, se desincroniza y los datos se corrompen, produciendo caracteres ilegibles o erróneos en pantalla.
 ```
 
 ### `lab-04-parte2-humanizado.ino` — Comando COUNT (Actividad 4)
