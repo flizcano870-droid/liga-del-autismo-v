@@ -32,9 +32,8 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos 10 filas** 
 
 **Caption obligatorio:** Indicar el valor de duty cycle al 0 %, al ~50 % y al 100 %.
 
-```
-[Insertar Figura 1 aquí]
-```
+
+![Figura 1 — Serial Monitor (Actividad 1)](actividad1.png)
 
 > **Descripción:** _(Describir brevemente qué muestra la captura y confirmar la relación lineal entre ADC y duty cycle observada.)_
 
