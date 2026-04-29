@@ -44,12 +44,11 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos 10 filas** 
 **Tabla 1 — Protocolo UART Diseñado por el Grupo**
 
 
-| Código | Descripción | Parámetro | Respuesta del Arduino |
-|:------:|:------------|:---------:|:---------------------|
-| | | | |
-| | | | |
-| | | | |
-
+| Código | Descripción                         | Parámetro               | Respuesta del Arduino        |
+|--------|-------------------------------------|--------------------------|------------------------------|
+| VM N   | Cambia la velocidad del motor (PWM) | N: entero entre 0 y 255  | OK VEL N                     |
+| DI N   | Cambia la dirección del motor       | N: 0 = CW, 1 = CCW       | OK DIR CW / OK DIR CCW       |
+| ES     | Consulta el estado actual del motor | Sin parámetro            | EST V=<vel> D=CW / D=CCW     |
 _Completar con los comandos implementados por el grupo. Mínimo tres filas._
 
 ---
