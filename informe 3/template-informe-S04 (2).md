@@ -1113,12 +1113,12 @@ Compara los parsers del protocolo humanizado y el protocolo compacto desde la pe
 ## 5. Dificultades Encontradas y Soluciones Aplicadas
 
 
-### Dificultad 1: [Describe brevemente el problema]
+### Dificultad 1: Los resultados obtenidos en la actividad #2 generaron errores porcentuales alrededor del 70% al compararlos con los tiempos teóricos que se encontraron siguiendo la ecuación sugerida en la guía. Sin embargo, no se logró identificar la causa directa de este error luego de revisar el código y las variables involucradas. Se sospecha que podría ser por algna memoría interna que posea el arduino, pero fue imposible confirmar esta hipótesis. Sin embargo, la tendencia que seguían los datos era la esperada, es decir, a mayor baudrate, menor tiempo de transmisión.
 
-- **Síntoma observado:** [¿Qué veías? ¿Qué fallaba exactamente?]
-- **Causa identificada:** [¿Por qué ocurrió?]
-- **Solución aplicada:** [¿Qué hiciste para resolverlo?]
-- **Lección aprendida:** [¿Qué harías diferente la próxima vez?]
+- **Síntoma observado:** Las mediciones discrepaban casi que por el doble con los valores teóricos, lo que indicaba un error porcentual muy alto (alrededor del 70%).
+- **Causa identificada:** No se logró identificar la causa directa del error luego de revisar el código y las variables involucradas. Se sospecha que podría ser por alguna memoria interna que posea el Arduino, pero fue imposible confirmar esta hipótesis.
+- **Solución aplicada:** Cambiamos el baudrate, reescribimos el mensaje que se enviaba para cambiar los bytes. Se calculó con varias herramientas el valor teórico para intentar encontrar algún error de cálculo. 
+- **Lección aprendida:** Puede que usar un codigo no bloqueante (sin delay()) para medir el tiempo de transmisión sea más preciso, ya que el uso de delay() puede introducir variaciones en el tiempo medido. Además, es importante considerar factores externos como la calidad del cable USB, interferencias electromagnéticas o incluso la carga del sistema operativo que podrían afectar las mediciones.
 
 ### Dificultad 2 (si aplica): [Describe brevemente el problema]
 
@@ -1140,4 +1140,21 @@ Compara los parsers del protocolo humanizado y el protocolo compacto desde la pe
 
 (c) Cómo distinguirías en el protocolo las respuestas síncronas (a comandos) de los eventos asíncronos (cambios en sensores).
 
-> [Respuesta del estudiante aquí — propuesta de extensión con justificación técnica]
+> (a) Nuevos comandos:
+> - MC 00000: Motor Control (0 para apagar, 1 para encender; si se pueden controlar más parámetros de la velocidad se podría usar 100 para velocidad máxima, 050 para mitad, etc.)
+> - LC 00000: LED Control (0 para apagar, 1 para encender, 2 para parpadeo intermitente)
+> - LT 00000: Leer Temperatura (no necesita parámetro)
+> - LD 00000: Leer Distancia (no necesita parámetro)
+> - AR 00000: Auto Reporte (0 para desactivar todo, 1 para activar reporte de temperatura cada cierto tiempo, 2 para activar solo el sensor de distancia, 3 para activar ambos simultaneamente)
+
+>
+> (b) Nuevos tipos de respuesta:
+> - MC 00000 → OK 00000 (confirmación de comando)
+> - LC 00000 → OK 00000 (confirmación de comando)
+> - LT 00000 → TEMP 00000 (la idea es que el resultado de la temperatura medida se devuelva de forma que el último dígito sea el decimal, por ejemplo, 02345 para 23.45°C)
+> - LD 00000 → DIST 00000 (en este caso, los resultados se leen en cm, por ejemplo, 00150 para 150 cm)
+> - AR 00000 → AK 00000 (confirmación de comando, se usa la A para hacer la distinción de que es un proceso asincrono)
+
+>Cabe aclarar que la respuesta que se daría a una trama erronea es la misma: ER 00000, para mantener la consistencia del protocolo compacto. Si se quisiera expandir la respuesta de error se proponen las siguientes respuestas:ER 00000 (comando invalido), ER 00001 (parametro fuera de rango), ER 00002 (malfuncionamiento del sensor o sensor no disponible).
+
+> (c) Con el objetivo de distinguir las respuestas síncrónicas y asíncronas, se colocaría un prefijo parecido a la confirmación de comando de AR. Por ejemplo, si se envía AR 00003, las respuestas asíncroncas de la temperatura y distancia recibidas se pueden ver como ATEMP XXXXX y ADIST XXXXXX respectivamente, donde el prefijo A indica que es un reporte asíncrono. De esta manera se logra mantener la distención entre las respuestas sincrónicas OK, TEMP, DIST. 
