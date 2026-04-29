@@ -61,9 +61,9 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 
 **Caption obligatorio:** Indicar los códigos de comando usados por el grupo.
 
-```
-[Insertar Figura 2 aquí]
-```
+
+![Figura 2— Serial Monitor (Actividad 3)](actividad3.jpeg)
+
 
 > **Descripción:** _(Describir los comandos enviados y confirmar que el motor respondió sin necesidad de recompilar.)_
 
