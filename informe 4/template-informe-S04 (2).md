@@ -33,7 +33,7 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos 10 filas** 
 **Caption obligatorio:** Indicar el valor de duty cycle al 0 %, al ~50 % y al 100 %.
 
 
-![Figura 1 — Serial Monitor (Actividad 1)](actividad1.png)
+![Figura 1 — Serial Monitor (Actividad 1)](Actividad1.png)
 
 > **Descripción:** _(Describir brevemente qué muestra la captura y confirmar la relación lineal entre ADC y duty cycle observada.)_
 
@@ -211,7 +211,7 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 ## 5. Dificultades Encontradas y Soluciones Aplicadas
 
 
-### Dificultad 1: [Descripción breve del problema]
+### Dificultad 1: no sobre pasar los 500mA sugeridos para el motor DC
 
 - **Síntoma observado:** _(¿Qué ocurrió exactamente?)_
 - **Causa identificada:** _(¿Por qué ocurrió?)_
