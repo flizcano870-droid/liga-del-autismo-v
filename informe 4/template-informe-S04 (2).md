@@ -65,7 +65,7 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 ![Figura 2— Serial Monitor (Actividad 3)](actividad3.jpeg)
 
 
-> **Descripción:** _(Describir los comandos enviados y confirmar que el motor respondió sin necesidad de recompilar.)_
+> **Descripción:** _(se usó el comando VM N\n el cual controla la velocidad en un rando de 0-255. Las respuestas de este comando son las que dicen OK VEL N. También se usó el comando DI N\n el cual controla la dirección a la que gira el disco donde los parámetros permitidos son CW y CCW (clockwise y counter-clockwise respectivamente); de esta forma, la respuesta obtenida sigue la forma OK DIR N\n. Adicionalmente, se usó una trama incorrecta para mostrar la respuesta de error ER comando desconocido. Por último se mandó el comando el comando ES N\n que da como respuestas la velocidad y la dirección instantáneos. )_
 
 ---
 
