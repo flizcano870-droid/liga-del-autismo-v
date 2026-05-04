@@ -14,7 +14,6 @@
 | | 2. Sergio Andrés Poveda Pérez|
 | | 3. Simón Gabriel Snadoval Palma|
 | | 4. Sara Romero Chaves|
-| | 5. |
 | **Grupo** | 3 |
 | **Fecha de la práctica** |29/04/2026 |
 | **Fecha de entrega** | **Martes 22 de abril de 2026, 23:59** |
