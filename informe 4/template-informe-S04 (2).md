@@ -117,19 +117,19 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 
 **Pregunta A1.1:** ¿Cuántos niveles de brillo distintos puede producir `analogWrite()`?
 
-> [Respuesta del estudiante aquí]
+> [La función analogWrite() trabaja con una resolución de 8 bits, lo que implica que el valor del duty cycle puede tomar cualquier entero entre 0 y 255. Esto corresponde a 256 niveles discretos de señal, y por tanto a 256 niveles distintos de brillo en el LED. Es importante no confundir esto con 255 niveles: el conteo incluye el cero, por lo que el total correcto es 256.]
 
 **Pregunta A1.2:** ¿Qué ocurre con el brillo cuando el duty cycle es 0? ¿Y cuando es 255?
 
-> [Respuesta del estudiante aquí]
+> [Cuando el duty cycle es 0, la señal PWM permanece siempre en nivel bajo (0V), lo que implica que no circula corriente por el LED y este permanece completamente apagado. En cambio, cuando el duty cycle es 255, la señal se mantiene constantemente en nivel alto (aproximadamente 5V), eliminando el comportamiento pulsado y convirtiéndose en una señal continua. En este caso, el LED emite su brillo máximo, ya que está permanentemente alimentado.]
 
 **Pregunta A1.3:** ¿La frecuencia medida con el osciloscopio coincide con los ~490 Hz documentados para el Timer 1?
 
-> [Respuesta del estudiante aquí]
+>[La frecuencia medida con el osciloscopio fue cercana a los ~490 Hz documentados para el pin D9 asociado al temporizador correspondiente. Sin embargo, no es correcto afirmar que coincidió exactamente, ya que existen pequeñas desviaciones debidas a tolerancias del reloj del microcontrolador, condiciones del entorno o precisión del instrumento de medición.]
 
 **Pregunta A1.4:** La función `analogWrite()` genera una señal de frecuencia fija (~490 Hz en D9) con duty cycle variable. ¿Por qué el LED responde con brillo proporcional al duty cycle en lugar de parpadear a 490 Hz? ¿A partir de qué frecuencia mínima aproximada deja de percibirse el parpadeo en el ojo humano?
 
-> [Respuesta del estudiante aquí]
+> [Aunque analogWrite() genera una señal PWM que enciende y apaga el LED a una frecuencia fija de aproximadamente 490 Hz, el ojo humano no percibe este parpadeo debido a su capacidad limitada de resolución temporal. El sistema visual integra la luz recibida en intervalos de tiempo relativamente largos, por lo que, cuando la frecuencia de conmutación supera aproximadamente los 50–60 Hz (frecuencia crítica de fusión), el parpadeo deja de ser distinguible y se percibe una iluminación continua. En estas condiciones, el brillo aparente del LED depende del valor promedio de la señal, que está directamente determinado por el duty cycle: a mayor tiempo encendido dentro de cada período, mayor intensidad luminosa percibida. Dado que 490 Hz es muy superior a este umbral, el LED no parece parpadear, sino variar suavemente su brillo.]
 
 ---
 
@@ -137,7 +137,7 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 
 **Pregunta A2.1:** ¿Qué limitación tiene el método de control con velocidad hardcodeada? ¿Qué se debe hacer cada vez que se quiere cambiar la velocidad?
 
-> [Respuesta del estudiante aquí]
+> [El método de control con velocidad hardcodeada tiene como principal limitación su falta de flexibilidad, ya que el valor del duty cycle está fijado directamente en el código fuente. Esto implica que no es posible modificar la velocidad del motor en tiempo real durante la ejecución del sistema. Cada vez que se desea cambiar la velocidad, es necesario editar el código, recompilar el programa y volver a cargarlo en el microcontrolador, lo cual interrumpe la operación del sistema y hace el proceso lento e ineficiente, especialmente en contextos experimentales donde se requieren ajustes continuos.]
 
 ---
 
@@ -145,7 +145,7 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 
 **Pregunta A3.1:** En el protocolo UART, el parser identifica los comandos comparando `buf[0]` y `buf[1]` directamente en lugar de usar `strcmp()`. ¿Qué condición del formato `CC N\n` hace que esta estrategia sea suficiente? ¿Seguiría siendo válida si el protocolo usara comandos de longitud variable (como en la Parte 2 de S4)?
 
-> [Respuesta del estudiante aquí]
+> [La estrategia de identificar comandos comparando directamente buf[0] y buf[1] es suficiente debido a que el protocolo tiene un formato fijo del tipo CC N\n, donde los dos primeros caracteres (CC) representan siempre el comando y tienen longitud constante. Esta estructura garantiza que la información relevante para identificar la instrucción se encuentra en posiciones conocidas del buffer, eliminando la necesidad de comparar cadenas completas como lo haría strcmp(). Además, el uso de un separador fijo (espacio) y un terminador definido (\n) hace que el parsing sea simple y determinista.Sin embargo, esta estrategia deja de ser válida si el protocolo permite comandos de longitud variable. En ese caso, ya no se podría asumir que el comando ocupa siempre las posiciones buf[0] y buf[1], por lo que sería necesario utilizar métodos más generales como strcmp(), búsqueda de delimitadores o tokenización. Esto introduce mayor complejidad en el parser, pero es indispensable para manejar correctamente comandos de longitud no fija.]
 
 ---
 
@@ -165,7 +165,7 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 
 **Pregunta T.1:** **Compare el enfoque de control de la Actividad 2 (velocidad hardcodeada) con el de la Actividad 3 (control por comandos UART).** ¿Qué ventaja concreta ofrece el segundo enfoque en el contexto de un experimento físico donde se necesita ajustar parámetros sin interrumpir la adquisición de datos? ¿Qué componente del sistema fue el que eliminó la restricción de recompilar? ¿Qué cambió arquitectónicamente entre los dos enfoques?
 
-> [Respuesta del estudiante aquí]
+> [El enfoque de control de la Actividad 3 ofrece una ventaja clara y concreta: permite ajustar la velocidad y otros parámetros del sistema en tiempo real sin detener la ejecución ni interrumpir la adquisición de datos. En un experimento físico, esto es crítico porque evita perder condiciones transitorias, mantiene la continuidad de las mediciones y permite explorar rápidamente distintos valores de entrada, algo que con velocidad hardcodeada es impráctico debido al ciclo constante de edición–compilación–carga. El componente del sistema que elimina la restricción de recompilar es la interfaz de comunicación UART junto con el parser implementado en el microcontrolador. Gracias a esto, el Arduino deja de depender de valores fijos en el código y pasa a recibir instrucciones dinámicas desde el exterior (por ejemplo, el Serial Monitor), lo que desacopla el control del programa compilado. Arquitectónicamente, el cambio es significativo: se pasa de un sistema cerrado y estático, donde los parámetros están embebidos en el firmware, a un sistema abierto y reactivo, donde existe una capa de entrada (UART) que permite modificar el comportamiento en tiempo de ejecución. Esto introduce una separación entre la lógica de control y la configuración de parámetros, acercando el diseño a un modelo más modular y flexible, propio de sistemas embebidos más avanzados.]
 
 **Pregunta T.2:** **Con base en la gráfica de la Actividad 4:** ¿La relación RPM vs duty cycle en la zona lineal es aproximadamente proporcional? Estime la pendiente (RPM por unidad de duty cycle) usando dos puntos de la zona lineal y determine si el ajuste es adecuado para un control proporcional simple.
 
