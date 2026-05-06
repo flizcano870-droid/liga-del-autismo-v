@@ -74,9 +74,9 @@ Adjuntar captura de pantalla del Serial Monitor donde se vea el mensaje de detec
 
 | Elemento verificado | Resultado |
 |:-----------------------------------------|:----------|
-| Dirección I2C detectada por el Scanner | |
-| Texto mostrado en el OLED (transcribir) | |
-| ¿El valor cambia al girar el potenciómetro? | Sí / No |
+| Dirección I2C detectada por el Scanner |0x3C |
+| Texto mostrado en el OLED (transcribir) | Pot: 138|
+| ¿El valor cambia al girar el potenciómetro? | Sí |
 
 ---
 
