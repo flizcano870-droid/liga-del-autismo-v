@@ -144,9 +144,8 @@ Captura del Serial Monitor mostrando el CSV emitiéndose sin interrupción mient
 - Debe mostrar claramente los picos y valles correspondientes a los momentos en que el LDR fue cubierto y descubierto durante la captura.
 - Señalar con anotaciones al menos dos puntos: un valle (LDR cubierto) y un pico (LDR descubierto).
 
-```
-[Insertar Figura 6 aquí]
-```
+![Figura 6 — Gráfica de dispersión: raw_ldr vs t_ms](Figure_1.png)
+
 
 > **Interpretación:** _(Describir la forma de la curva. ¿Se distinguen claramente los eventos de estimulación del LDR? ¿Qué valor aproximado de raw_ldr corresponde al ambiente iluminado y cuál al LDR cubierto?)_
 
