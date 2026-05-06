@@ -104,9 +104,9 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 - Marcar **dos puntos representativos de la zona lineal** para calcular la pendiente (RPM por unidad de duty cycle). Etiquetar ambos puntos con sus coordenadas.
 - Indicar si la zona lineal es aproximadamente proporcional o presenta saturación.
 
-![Figura 3 — Curva Duty Cycle vs RPM](imagenes/Figure_3.png)
+![Figura 3 — Curva Duty Cycle vs RPM](Figure_act3.png)
 
-> **Interpretación:** _(Describir la forma de la curva: zona muerta, punto de arranque, comportamiento en zona lineal. Indicar si la relación es aproximadamente proporcional. Incluir el valor calculado de la pendiente en la zona lineal.)_
+> **Interpretación:** _(La curva cuenta con dos zonas muertas al inicio, en los puntos de duty call 0 y 25. Luego, el arranque del motor se da a partir de un duty cycle de 50, lo que representa aproximadamente el 20 % de la escala total. En la zona lineal, se observa un comportamiento aproximadamente proporcional entre el duty cycle y las RPM, aunque con una ligera tendencia a la saturación a medida que se acerca al máximo duty cycle. La pendiente calculada en la zona lineal es de aproximadamente 4.29 RPM por unidad de duty cycle, lo que indica que por cada incremento de 1 en el duty cycle, las RPM aumentan en promedio en 4.29 unidades.)_
 
 ---
 
@@ -153,11 +153,11 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 
 **Pregunta A4.1:** Con base en la Tabla 2: ¿a qué duty cycle arranca el motor por primera vez? ¿Qué porcentaje de la escala total (0–255) representa esa zona muerta?
 
-> [Respuesta del estudiante aquí]
+> [El motor arranca por primera vez a un duty cycle de 50 a 86.3 RPM. Esto representa aproximadamente el 19.6 % de la escala total. Por lo tanto, la zona muerta corresponde a los duty cycles entre 0 y 49, donde el motor no genera suficiente torque para superar la inercia inicial.]
 
 **Pregunta A4.2:** La curva duty cycle vs RPM muestra una zona muerta en valores bajos de duty cycle. ¿Qué fenómeno físico del motor DC explica esa zona? ¿Cómo afectaría la existencia de esa zona a un sistema de control PID que intentara regular la velocidad del motor?
 
-> [Respuesta del estudiante aquí]
+> [Para que el motor logre rotar, necesita superar la inercia estática que generan su propia masa y la del disco colocado; el campo magnético generado por la corriente inducida no es suficiente para superar dicha inercia hasta que el duty cycle alcanza un valor mínimo (en este caso, 50). Un control PID que intente regular la velocidad encontraría un problema en la zona muerta, forzando el motor a subir los duty cycles a valores por encima de ese umbral para lograr cualquier movimiento. Este aumento brusco podría resultar en oscilaciones o inestabilidad. ]
 
 ---
 
