@@ -27,12 +27,12 @@ y_p2=df.iloc[7, 1]
 x_lineal_sin_especiales = x_lineal[~((x_lineal == df.iloc[3, 0]) | (x_lineal == df.iloc[7, 0]))]
 y_lineal_sin_especiales = y_lineal[~((x_lineal == df.iloc[3, 0]) | (x_lineal == df.iloc[7, 0]))]
 
-plt.scatter(x_p1, y_p1, color='orange', marker='o', s=50, label='(75, 183)')
-plt.scatter(x_p2, y_p2, color='orange', marker='o', s=50, label='(175, 607)')
+plt.scatter(x_p1, y_p1, color='cornflowerblue', marker='o', s=50, label='P1.(75, 183)')
+plt.scatter(x_p2, y_p2, color='cornflowerblue', marker='o', s=50, label='P2.(175, 607)')
 
 plt.scatter(x_resto, y_resto, color='darkblue', marker='o', s=50)
-plt.scatter(x_muerto, y_muerto, color='red', marker='o', s=50, label='Punto muerto')
-plt.scatter(x_start, y_start, color='green', marker='o', s=50, label='Punto de arranque')
+plt.scatter(x_muerto, y_muerto, color='deeppink', marker='o', s=50, label='Punto muerto')
+plt.scatter(x_start, y_start, color='darkorchid', marker='o', s=50, label='Punto de arranque')
 plt.scatter(x_lineal_sin_especiales, y_lineal_sin_especiales, color='darkblue', marker='o', s=50)
 plt.plot(x_teorico, y_teorico1, label=f'Regresión experimental;  y = {pendiente1:.4f}x + ({intercepto:.4f})', 
          color='darkblue', linewidth=1.5)
