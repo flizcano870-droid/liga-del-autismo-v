@@ -75,17 +75,17 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 
 | Duty Cycle (0–255) | RPM medidas |
 |:-------------------:|:-----------:|
-| 0 | |
-| 25 | |
-| 50 | |
-| 75 | |
-| 100 | |
-| 125 | |
-| 150 | |
-| 175 | |
-| 200 | |
-| 225 | |
-| 255 | |
+| 0 |0|
+| 25 |0|
+| 50 |86.3 |
+| 75 |183|
+| 100 |270|
+| 125 |352|
+| 150 |495|
+| 175 |607|
+| 200 |821|
+| 225 |1076|
+| 255 |1417|
 | **Duty cycle mínimo de arranque:** | |
 
 ---
