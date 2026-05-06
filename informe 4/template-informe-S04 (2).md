@@ -211,17 +211,17 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 
 ### Dificultad 1: no sobre pasar los 500mA sugeridos para el motor DC
 
-- **Síntoma observado:** _(¿Qué ocurrió exactamente?)_
-- **Causa identificada:** _(¿Por qué ocurrió?)_
-- **Solución aplicada:** _(¿Cómo lo resolvieron?)_
-- **Lección aprendida:** _(¿Qué cambiarían la próxima vez?)_
+- **Síntoma observado:** Dado que en la guía se sugería no sobrepasar los 500mA para el motor DC, se tuvo dificultad para colocar este tope en la fuente de voltaje pues automáticamente se superaban los límites lo cual retrasó el desarrollo de la práctica.
+- **Causa identificada:** Se identificó que el motor DC utilizado tenía una corriente de arranque (stall current) que superaba los 500mA, superando el límite sugerido.
+- **Solución aplicada:** El profesor especificó luego que no había problema con superar ese límite durante la práctica, lo que permitió continuar sin restricciones. Sin embargo, se aprendió la importancia de revisar las especificaciones del motor antes de la práctica para anticipar este tipo de problemas.
+- **Lección aprendida:** Antes de iniciar una práctica, es fundamental revisar las especificaciones técnicas de los componentes para evitar sorpresas y retrasos. En este caso, conocer la corriente de arranque del motor DC habría permitido planificar mejor el experimento y evitar la preocupación por superar el límite de corriente.
 
-### Dificultad 2 (si aplica): [Descripción breve del problema]
+### Dificultad 2 (si aplica): Precesión en el disco.
 
-- **Síntoma observado:**
-- **Causa identificada:**
-- **Solución aplicada:**
-- **Lección aprendida:**
+- **Síntoma observado:** Durante la realización de la Actividad 4, se observó que el disco presentaba un movimiento de precesión, lo que afectaba la precisión de las mediciones de RPM.
+- **Causa identificada:** La parte del motor en la que se montaba el disco no estaba completamente asegurada, lo que permitía un ligero movimiento de precesión al girar. Esto luego se tradujo en fluctuaciones en el conteo de pulsos del encoder, dificultando la obtención de una curva de caracterización precisa.
+- **Solución aplicada:** Se amplió el grosor de disco para reducir la precesión, lo que mejoró la estabilidad del sistema y permitió obtener mediciones más consistentes. Sin embargo, esta solución no eliminó completamente el problema.
+- **Lección aprendida:** La estabilidad del motor, y su calidad, son factores cruciales para lograr precisión en las medidas. En futuras prácticas, se podría considerar el uso de motores con mejor calidad de construcción o implementar mecanismos adicionales para asegurar el disco y minimizar la precesión, como el uso de acoples rígidos o soportes adicionales.
 
 ---
 
