@@ -104,7 +104,7 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 - Marcar **dos puntos representativos de la zona lineal** para calcular la pendiente (RPM por unidad de duty cycle). Etiquetar ambos puntos con sus coordenadas.
 - Indicar si la zona lineal es aproximadamente proporcional o presenta saturación.
 
-![Figura 3 — Curva Duty Cycle vs RPM](imagenes/figura-3-curva-pwm-rpm.png)
+![Figura 3 — Curva Duty Cycle vs RPM](imagenes/Figure_3.png)
 
 > **Interpretación:** _(Describir la forma de la curva: zona muerta, punto de arranque, comportamiento en zona lineal. Indicar si la relación es aproximadamente proporcional. Incluir el valor calculado de la pendiente en la zona lineal.)_
 
