@@ -40,9 +40,9 @@ Adjuntar captura de pantalla del archivo `.csv` abierto en Excel/Sheets mostrand
 
 | Canal | Promedio | Mínimo | Máximo |
 |:------|:--------:|:------:|:------:|
-| LDR (`raw_ldr`) | | | |
-| LM35 (`raw_lm35`) | | | |
-| Potenciómetro (`raw_pot`) | | | |
+| LDR (`raw_ldr`) | 645.1 |45| 1023 |
+| LM35 (`raw_lm35`) | 55.46 | 34 | 94 |
+| Potenciómetro (`raw_pot`) | 192.41 | 0 |1023 |
 
 _Los valores deben calcularse con fórmulas de la hoja electrónica (`=PROMEDIO()`, `=MIN()`, `=MAX()`), no copiarse manualmente._
 
