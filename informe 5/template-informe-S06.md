@@ -50,11 +50,11 @@ _Los valores deben calcularse con fórmulas de la hoja electrónica (`=PROMEDIO(
 
 **Pregunta de análisis A1.1:** A partir de los valores de la Tabla 1, calcule la temperatura ambiente aproximada usando la fórmula `tempC = rawLM35 × 5.0 / 1023.0 / 0.01`. ¿El resultado es coherente con la temperatura esperada (~20–25 °C)?
 
-> [Respuesta del estudiante aquí]
+> [ si, la temperatura calculada es coherente con la temperatura ambiente esperada, lo que indica que el sensor LM35 está funcionando correctamente y proporcionando lecturas válidas. ]
 
 **Pregunta de análisis A1.2:** Calcule la cadencia real de muestreo como el promedio de las diferencias entre timestamps consecutivos (`t_ms`) en el archivo CSV. Compare con el valor nominal de 500 ms y explique cualquier diferencia observada.
 
-> [Respuesta del estudiante aquí]
+> [Tras calcular la cadencia real de muestreo, se encontro que el promedio es de 500 ms, lo que coincide con el valor nominal esperado. Esto indica que el sistema de adquisición de datos está funcionando correctamente y manteniendo la frecuencia de muestreo estable. Cualquier pequeña variación podría deberse a la latencia del sistema o a pequeñas fluctuaciones en el tiempo de ejecución del código, pero en general, el resultado es satisfactorio y no muestra desviaciones significativas.]
 
 ---
 
@@ -82,7 +82,7 @@ Adjuntar captura de pantalla del Serial Monitor donde se vea el mensaje de detec
 
 **Pregunta de análisis A2.1:** ¿Por qué no es posible conectar un sensor analógico a A4 o A5 mientras el bus I2C está activo?
 
-> [Respuesta del estudiante aquí]
+> [No es posible conencar un sensor analogico a A4 o A5 mientras que el bus I2C esta activo porque el arduino utiliza esos pines para la comunicación I2C, lo que significa que están configurados como líneas de datos (SDA) y reloj (SCL). Si se conecta un sensor analógico a esos pines, se interferirá con la comunicación I2C, lo que puede causar fallos en la lectura de datos del sensor y en la comunicación con el display OLED. Además, el bus I2C requiere resistencias pull-up en esas líneas, lo que puede afectar las lecturas analógicas si se conectan sensores a esos pines.]
 
 ---
 
@@ -120,15 +120,23 @@ Captura del Serial Monitor mostrando el CSV emitiéndose sin interrupción mient
 
 **Pregunta de análisis A3.1:** El ATmega328P tiene 2048 bytes de SRAM. El buffer del display OLED ocupa 512 bytes. Estime el consumo de SRAM de las variables globales del sketch (arrays de estadísticas, contadores, flags). ¿Cuánta SRAM queda disponible para stack y variables locales?
 
-> [Respuesta del estudiante aquí]
+> [la cantidad de sram que quedaria disponible seria de aproximadamente 650 bytes, esto se debe a que el buffer del display OLED ocupa 512 bytes y el consumo de SRAM de las variables globales del sketch (arrays de estadísticas, contadores, flags) se estima en alrededor de 886 bytes. Por lo tanto, al restar el consumo total de SRAM (512 bytes para el buffer del display OLED + 886 bytes para las variables globales) del total disponible (2048 bytes), se obtiene la cantidad de SRAM restante para stack y variables locales.]
 
 **Pregunta de análisis A3.2:** Durante la conmutación de pantallas, el CSV continúa emitiéndose sin interrupción. Identifique qué mecanismos del código garantizan que la emisión CSV, la actualización del OLED y la lectura del botón son tareas independientes que no se bloquean mutuamente.
 
-> [Respuesta del estudiante aquí]
+> [los mecanismos que garantizan que la emisión de datos en formato CSV, la actualización de la pantalla OLED y la lectura del estado del botón sean tareas independientes que no se bloqueen entre sí son básicamente dos:
+
+El uso de la función `millis()` permite controlar el tiempo que transcurre entre muestras y actualizaciones de pantalla. De esta forma, el programa puede realizar otras tareas sin detenerse mientras espera el momento adecuado para la siguiente actualización.
+
+Además, el uso de indicadores o *flags* permite al código detectar el estado del botón. Así, puede cambiar de pantalla sin tener que detener la ejecución del programa. Gracias a esto, el sistema puede seguir emitiendo datos en formato CSV y actualizando la pantalla OLED sin interrupciones. Esto incluso cuando se presiona el botón para cambiar de pantalla.]
 
 **Pregunta de análisis A3.3:** El debouncing del botón usa una ventana de 50 ms con `millis()`. ¿Por qué no es viable usar `delay(50)` para este propósito en un sistema que debe muestrear sensores cada 500 ms y actualizar el OLED? Proponga un valor de ventana de debouncing inadecuado para este sistema y justifique su respuesta.
 
-> [Respuesta del estudiante aquí]
+> [No es viable porque usar `delay(50)` detiene el programa durante 50 milisegundos. Esto afecta la capacidad del sistema para leer los sensores cada 500 milisegundos y actualizar la pantalla OLED a tiempo. Mientras el programa está en `delay(50)`, no se pueden hacer otras tareas. Esto puede hacer que se pierdan datos de los sensores o que la pantalla OLED se actualice tarde.
+
+Un valor de ventana de debouncing que no es adecuado para este sistema sería 200 milisegundos. La ventana de debouncing es demasiado larga y el sistema no responde rápido a los cambios en el estado del botón. Esto puede hacer que la experiencia del usuario sea frustrante y que no se pueda cambiar de pantalla de manera eficiente.
+
+Además, una ventana de debouncing tan larga puede interferir con la capacidad del sistema para leer los sensores y actualizar la pantalla OLED a tiempo. Esto afecta negativamente el rendimiento general del sistema. El sistema necesita poder leer los sensores y actualizar la pantalla OLED de manera oportuna para funcionar correctamente..]
 
 ---
 
@@ -155,7 +163,7 @@ Captura del Serial Monitor mostrando el CSV emitiéndose sin interrupción mient
 
 **Pregunta T.1:** En el formato CSV de este laboratorio, el timestamp `t_ms` es el valor de `millis()` en el momento del muestreo, no el tiempo real de reloj (hora del día). ¿Qué información se pierde con este enfoque? ¿Cómo podría modificarse el script Python de la Actividad 1 para que cada línea del archivo incluya un timestamp de tiempo real además del `t_ms` del Arduino?
 
-> [Respuesta del estudiante aquí]
+> [Se puede cambiar el script de Python para que capture la hora exacta cuando se escribe cada línea en el archivo CSV. Esto se hace con la función `datetime.now()` de la biblioteca `datetime` de Python. De esta manera, se puede agregar una columna más al CSV con la hora real junto con el tiempo en milisegundos que viene del Arduino. Esto nos da un registro más detallado de cuándo sucedieron las cosas en términos de hora del día. Esto puede ser útil para comparar los datos con otros eventos o para analizarlos más adelante.]
 
 **Pregunta T.2:** Compare la cadencia de muestreo medida en la Actividad 1 con la observada durante la Actividad 3. ¿Agregar el manejo del OLED y el botón afecta la regularidad del intervalo de muestreo? Justifique su respuesta con datos de las capturas de Serial Monitor.
 
