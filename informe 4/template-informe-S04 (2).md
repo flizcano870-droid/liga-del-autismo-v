@@ -179,9 +179,89 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 ### Actividad 2 — Motor DC: control de velocidad y dirección
 
 ```cpp
-// Pegar aquí el código de la Actividad 2 (control de motor DC).
-// Comentar: configuración de pines, lógica de dirección (IN1/IN2),
-// control de velocidad con analogWrite(ENA, ...) y lectura del botón.
+    /*
+    * lab-05-parte1-pwm-led.ino
+    * Laboratorio 5 — Parte 1: PWM con LED y potenciómetro
+    *
+    * === DESCRIPCIÓN ===
+    *
+    * Este sketch implementa control de brillo de un LED mediante PWM
+    * (Pulse Width Modulation). La posición del potenciómetro en A0 se
+    * mapea linealmente al duty cycle de la señal PWM en D9~.
+    *
+    * El objetivo es internalizar el concepto de duty cycle antes de
+    * aplicar PWM al control de velocidad de un motor DC (Parte 2).
+    *
+    * === FUNCIONES NUEVAS EN ESTA SESIÓN ===
+    *
+    * analogWrite(pin, valor):
+    *   Genera una señal PWM en el pin especificado (debe ser un pin ~).
+    *   'valor' es el duty cycle en escala 0–255:
+    *     0   → duty cycle 0 %  (señal siempre LOW  → LED apagado)
+    *     127 → duty cycle 50 % (señal al 50 % HIGH → brillo medio)
+    *     255 → duty cycle 100% (señal siempre HIGH → brillo máximo)
+    *   Frecuencia PWM en D9 (Timer 1): ~490 Hz según datasheet ATmega328P.
+    *
+    * map(valor, desdeMin, desdeMax, hastaMin, hastaMax):
+    *   Remapea linealmente un valor de un rango a otro.
+    *   Ejemplo: map(512, 0, 1023, 0, 255) → 127
+    *   Internamente: resultado = (valor - desdeMin) * (hastaMax - hastaMin)
+    *                             / (desdeMax - desdeMin) + hastaMin
+    *   Nota: map() trabaja con enteros — el resultado se trunca, no se redondea.
+    *
+    * === CIRCUITO ===
+    *   A0  — Cursor del potenciómetro (extremos a 5V y GND)
+    *   D9~ — LED + resistencia 220 Ω en serie (cátodo a GND)
+    *
+    * Autor: Ricardo Amézquita Orozco
+    * Curso: Electrónica Digital 2016684 — UNAL 2026-1
+    */
+
+    // === DEFINICIÓN DE PINES ===
+    const int PIN_POT = A0;   // Entrada analógica del potenciómetro
+    const int PIN_LED = 9;    // Salida PWM~ el LED con resistencia 220 Ω
+
+    // === CONFIGURACIÓN ===
+    void setup() {
+    // PIN_POT es entrada analógica — no requiere pinMode() 
+    pinMode(PIN_LED, OUTPUT);
+
+    Serial.begin(9600);
+    // Imprimimos un encabezado en formato de tabla
+    Serial.println("Lab 5 — Parte 1: PWM con LED");
+    Serial.println("ADC(0-1023) | DutyCycle(0-255) | Porcentaje(%)");
+    Serial.println("---------------------------------------------");
+    }
+
+    // === BUCLE PRINCIPAL ===
+    void loop() {
+    // Leer valor del ADC: 0 (0 V) a 1023 (5 V)
+    int valorADC = analogRead(PIN_POT);
+
+    // Barrer el rango ADC (0–1023) a rango duty cycle (0–255)
+    // analogWrite() acepta valores en escala 0–255 (resolución de 8 bits)
+    int dutyCycle = map(valorADC, 0, 1023, 0, 255); // Mapeo lineal del ADC al duty cycle PWM
+
+    // Aplicar duty cycle al LED — PWM convierte el valor digital en una
+    // proporción de tiempo HIGH vs. LOW que el LED percibe como brillo
+    analogWrite(PIN_LED, dutyCycle); // Control de brillo del LED
+
+    // Calcular porcentaje para visualización en Serial Monitor
+    // Escala: (dutyCycle / 255) * 100, expresado como entero
+    int porcentaje = map(dutyCycle, 0, 255, 0, 100); // Alternativamente: int porcentaje = (dutyCycle * 100) / 255;
+
+    // Imprimir las tres columnas para correlacionar entrada analógica,
+    // duty cycle resultante y porcentaje legible por el operador
+    Serial.print(valorADC);
+    Serial.print("\t\t"); // Tabulación para formato de tabla
+    Serial.print(dutyCycle); // Valor de duty cycle en escala 0–255
+    Serial.print("\t\t");
+    Serial.println(porcentaje);
+
+    // Esperar 200 ms entre lecturas para que el Serial Monitor sea legible
+    // El delay() es aceptable aquí: la Parte 1 no requiere respuesta en tiempo real
+    delay(200);
+    }
 ```
 
 ### Actividad 3 — Control UART: parser y protocolo
