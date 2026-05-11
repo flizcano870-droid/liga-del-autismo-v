@@ -168,14 +168,416 @@ Captura del Serial Monitor mostrando el CSV emitiéndose sin interrupción mient
 ### Actividad 3 — Integración con cuatro pantallas conmutables
 
 ```cpp
-// Pegar aquí el código COMPLETO de la Actividad 3.
-// Comentar:
-//   - Estructura de variables globales (pantalla, arrays de estadísticas, flags)
-//   - Lógica de muestreo periódico con millis() y emisión CSV
-//   - Conversión a unidades físicas para cada canal
-//   - Detección de flanco del botón con debouncing (50 ms)
-//   - Selección de pantalla y formato de display para cada vista
-//   - Llamada única a display.display() por ciclo de muestreo
+    #include <Wire.h>
+    #include <Adafruit_GFX.h>
+    #include <Adafruit_SSD1306.h>
+
+    // =====================================================
+    // DEFINICIÓN DE PINES
+    // =====================================================
+
+    // Sensores analógicos
+    #define PIN_LDR A0
+    #define PIN_LM35 A1
+    #define PIN_POT A2
+
+    // Pulsador para cambio de pantalla
+    #define PIN_BOTON 7
+
+    // =====================================================
+    // CONFIGURACIÓN OLED SSD1306
+    // =====================================================
+
+    // Resolución de pantalla
+    #define ANCHO 128
+    #define ALTO 32
+
+    // Reset no utilizado
+    #define RESET -1
+
+    // Dirección I2C de la OLED
+    #define ADDR 0x3C
+
+    // Objeto display OLED
+    Adafruit_SSD1306 display(ANCHO, ALTO, &Wire, RESET);
+
+    // =====================================================
+    // VARIABLES GLOBALES
+    // =====================================================
+
+    // ==========================
+    // TIMING DE MUESTREO
+    // ==========================
+
+    // Intervalo de muestreo:
+    // 500 ms entre adquisiciones
+    const unsigned long INTERVALO = 500;
+
+    // Guarda instante del último muestreo
+    unsigned long tAnterior = 0;
+
+    // ==========================
+    // VARIABLES DEL BOTÓN
+    // ==========================
+
+    // Pantalla actualmente seleccionada:
+    //
+    // 0 -> Vista general
+    // 1 -> Estadísticas LDR
+    // 2 -> Estadísticas LM35
+    // 3 -> Estadísticas POT
+    byte pantalla = 0;
+
+    // Estado previo del botón
+    int estadoAnteriorBoton = LOW;
+
+    // Instante del último flanco válido
+    unsigned long tUltimoFlanco = 0;
+
+    // Tiempo de debounce:
+    // evita múltiples detecciones falsas
+    const unsigned long debounce = 50;
+
+    // ==========================
+    // ARRAYS DE ESTADÍSTICAS
+    // ==========================
+
+    // suma[i]:
+    // acumula muestras para promedio
+    float suma[3] = {0,0,0};
+
+    // minV[i]:
+    // almacena valor mínimo ADC
+    int minV[3] = {1023,1023,1023};
+
+    // maxV[i]:
+    // almacena valor máximo ADC
+    int maxV[3] = {0,0,0};
+
+    // Número total de muestras
+    unsigned long n = 0;
+
+    // =====================================================
+    // SETUP
+    // =====================================================
+
+    void setup() {
+
+    // Inicializar UART
+    Serial.begin(9600);
+
+    // Inicializar bus I2C
+    Wire.begin();
+
+    // Configurar botón como entrada
+    pinMode(PIN_BOTON, INPUT);
+
+    // Inicializar pantalla OLED
+    if (!display.begin(SSD1306_SWITCHCAPVCC, ADDR)) {
+
+        Serial.println(F("Error OLED"));
+
+        while(true);
+    }
+
+    // Configuración gráfica inicial
+    display.clearDisplay();
+
+    display.setTextSize(1);
+
+    display.setTextColor(SSD1306_WHITE);
+    }
+
+    // =====================================================
+    // LOOP PRINCIPAL
+    // =====================================================
+
+    void loop() {
+
+    // millis():
+    // tiempo desde inicio del programa
+    unsigned long ahora = millis();
+
+    // =================================================
+    // DETECCIÓN DE FLANCO DEL BOTÓN + DEBOUNCING
+    // =================================================
+
+    // Leer estado actual del pulsador
+    int estado = digitalRead(PIN_BOTON);
+
+    // Detección de flanco:
+    //
+    // LOW -> HIGH
+    //
+    // además:
+    // verificar tiempo mínimo debounce = 50 ms
+    if (
+        estado == HIGH &&
+        estadoAnteriorBoton == LOW &&
+        (ahora - tUltimoFlanco > debounce)
+        ) {
+
+        // Cambiar pantalla cíclicamente:
+        // 0 -> 1 -> 2 -> 3 -> 0
+        pantalla = (pantalla + 1) % 4;
+
+        // Guardar instante del flanco válido
+        tUltimoFlanco = ahora;
+    }
+
+    // Actualizar estado previo
+    estadoAnteriorBoton = estado;
+
+    // =================================================
+    // MUESTREO PERIÓDICO CON millis()
+    // =================================================
+
+    // Ejecutar adquisición cada 500 ms
+    if (ahora - tAnterior >= INTERVALO) {
+
+        // Actualizar referencia temporal
+        tAnterior = ahora;
+
+        // ==============================================
+        // LECTURA DE SENSORES
+        // ==============================================
+
+        int rawLDR = analogRead(PIN_LDR);
+
+        int rawLM35 = analogRead(PIN_LM35);
+
+        int rawPOT = analogRead(PIN_POT);
+
+        // ==============================================
+        // EMISIÓN CSV POR UART
+        // ==============================================
+
+        // Formato:
+        // tiempo,LDR,LM35,POT
+        //
+        // Ejemplo:
+        // 1500,512,130,800
+        //
+        // Compatible con captura de datos
+        // en Serial Monitor o Python.
+        Serial.print(ahora);
+        Serial.print(",");
+
+        Serial.print(rawLDR);
+        Serial.print(",");
+
+        Serial.print(rawLM35);
+        Serial.print(",");
+
+        Serial.println(rawPOT);
+
+        // ==============================================
+        // ACTUALIZACIÓN DE ESTADÍSTICAS
+        // ==============================================
+
+        int raw[3] = {rawLDR, rawLM35, rawPOT};
+
+        for (int i=0; i<3; i++) {
+
+        // Actualizar mínimo
+        if (raw[i] < minV[i]) {
+            minV[i] = raw[i];
+        }
+
+        // Actualizar máximo
+        if (raw[i] > maxV[i]) {
+            maxV[i] = raw[i];
+        }
+
+        // Acumular para promedio
+        suma[i] += raw[i];
+        }
+
+        // Incrementar número de muestras
+        n++;
+
+        // ==============================================
+        // CONVERSIÓN A UNIDADES FÍSICAS
+        // ==============================================
+
+        // -------- LDR --------
+        //
+        // Conversión aproximada a porcentaje
+        //
+        // ADC 0-1023 -> 0-100 %
+        float ldr = rawLDR * 100.0 / 1023.0;
+
+        // -------- LM35 --------
+        //
+        // ADC -> Voltaje:
+        // V = ADC * 5 / 1023
+        //
+        // LM35:
+        // 10 mV / °C
+        //
+        // T = V / 0.01
+        float temp =
+        rawLM35 * 5.0 / 1023.0 / 0.01;
+
+        // -------- POT --------
+        //
+        // Conversión a porcentaje
+        float pot =
+        rawPOT * 100.0 / 1023.0;
+
+        // ==============================================
+        // PROMEDIOS
+        // ==============================================
+
+        float promLDR =
+        (suma[0]/n) * 100.0 / 1023.0;
+
+        float promTEMP =
+        (suma[1]/n) * 5.0 / 1023.0 / 0.01;
+
+        float promPOT =
+        (suma[2]/n) * 100.0 / 1023.0;
+
+        // ==============================================
+        // MÍNIMOS Y MÁXIMOS CONVERTIDOS
+        // ==============================================
+
+        float minLDR =
+        minV[0] * 100.0 / 1023.0;
+
+        float maxLDR =
+        maxV[0] * 100.0 / 1023.0;
+
+        float minTEMP =
+        minV[1] * 5.0 / 1023.0 / 0.01;
+
+        float maxTEMP =
+        maxV[1] * 5.0 / 1023.0 / 0.01;
+
+        float minPOT =
+        minV[2] * 100.0 / 1023.0;
+
+        float maxPOT =
+        maxV[2] * 100.0 / 1023.0;
+
+        // ==============================================
+        // CONFIGURACIÓN DE DISPLAY OLED
+        // ==============================================
+
+        // Limpiar framebuffer
+        display.clearDisplay();
+
+        // Cursor inicial
+        display.setCursor(0,0);
+
+        // ==============================================
+        // SELECCIÓN DE PANTALLA
+        // ==============================================
+
+        // ----------------------------------------------
+        // PANTALLA 0 -> Vista general
+        // ----------------------------------------------
+        if (pantalla == 0) {
+
+        // Mostrar valores instantáneos
+        // de todos los sensores
+
+        display.print(F("LDR: "));
+        display.print((int)ldr);
+        display.println(F("%"));
+
+        display.print(F("LM35: "));
+        display.print((int)temp);
+        display.println(F("C"));
+
+        display.print(F("Pot: "));
+        display.print((int)pot);
+        display.println(F("%"));
+        }
+
+        // ----------------------------------------------
+        // PANTALLA 1 -> Estadísticas LDR
+        // ----------------------------------------------
+        if (pantalla == 1) {
+
+        display.print(F("LDR: "));
+        display.print((int)ldr);
+        display.println(F("%"));
+
+        display.print(F("Mn: "));
+        display.print((int)minLDR);
+        display.println(F("%"));
+
+        display.print(F("Mx: "));
+        display.print((int)maxLDR);
+        display.println(F("%"));
+
+        display.print(F("Av: "));
+        display.print((int)promLDR);
+        display.println(F("%"));
+        }
+
+        // ----------------------------------------------
+        // PANTALLA 2 -> Estadísticas LM35
+        // ----------------------------------------------
+        if (pantalla == 2) {
+
+        // Se usa un decimal por tratarse
+        // de una magnitud física continua
+
+        display.print(F("LM35: "));
+        display.print(temp,1);
+        display.println(F("C"));
+
+        display.print(F("Mn: "));
+        display.print(minTEMP,1);
+        display.println(F("C"));
+
+        display.print(F("Mx: "));
+        display.print(maxTEMP,1);
+        display.println(F("C"));
+
+        display.print(F("Av: "));
+        display.print(promTEMP,1);
+        display.println(F("C"));
+        }
+
+        // ----------------------------------------------
+        // PANTALLA 3 -> Estadísticas POT
+        // ----------------------------------------------
+        if (pantalla == 3) {
+
+        display.print(F("Pot: "));
+        display.print((int)pot);
+        display.println(F("%"));
+
+        display.print(F("Mn: "));
+        display.print((int)minPOT);
+        display.println(F("%"));
+
+        display.print(F("Mx: "));
+        display.print((int)maxPOT);
+        display.println(F("%"));
+
+        display.print(F("Av: "));
+        display.print((int)promPOT);
+        display.println(F("%"));
+        }
+
+        // ==============================================
+        // ACTUALIZACIÓN FINAL DE OLED
+        // ==============================================
+
+        // display.display():
+        // Transfiere el framebuffer completo
+        // a la pantalla física OLED.
+        //
+        // Se realiza UNA SOLA VEZ por ciclo
+        // de muestreo para evitar parpadeos
+        // y reducir tráfico I2C innecesario.
+        display.display();
+    }
+    }
 ```
 
 ---
