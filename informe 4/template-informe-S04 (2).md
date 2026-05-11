@@ -33,7 +33,7 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos 10 filas** 
 
 
 ![Figura 1 — Serial Monitor (Actividad 1)](Actividad1.png)
-a
+
 > **Descripción:** _(En la imagen se observa que el valor del ADC y el ciclo de trabajo (duty cycle) presentan una relación aproximadamente lineal, de modo que al aumentar uno, el otro también se incrementa de manera proporcional.)_
 
 ---
