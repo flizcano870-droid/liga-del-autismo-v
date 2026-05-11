@@ -267,11 +267,184 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 ### Actividad 3 — Control UART: parser y protocolo
 
 ```cpp
-// Pegar aquí el código de la Actividad 3 (parser UART).
-// Comentar: lectura serial no bloqueante con Serial.available(),
-// acumulación en buffer char buf[16], identificación de comandos
-// con buf[0] y buf[1], extracción de parámetro con atoi(buf + 3),
-// y respuesta de confirmación por Serial para cada comando.
+    /*
+    * Protocolo compacto para control de motor DC
+    * Formato: CC N\n
+    * - CC: comando de 2 letras mayúsculas
+    * - espacio separador
+    * - N: entero de longitud variable
+    * - \n: delimitador
+    *
+    * Comandos:
+    *   VM <vel>  -> velocidad PWM (0-255)
+    *   DI <dir>  -> direccion (0=CW, 1=CCW)
+    *   ES        -> estado actual
+    *
+    * Pines:
+    *   ENA: velocidad (PWM)
+    *   IN1, IN2: direccion
+    */
+
+    // Pines del motor (ajustar según conexion)
+    const int PIN_ENA = 9;   // PWM
+    const int PIN_IN1 = 8;
+    const int PIN_IN2 = 7;
+
+    // Estado del sistema
+    int velocidadActual = 0;
+    int direccionActual = 0;   // 0=CW, 1=CCW
+
+    // Buffer serial no bloqueante.
+    // Se usa un arreglo de chars para almacenar temporalmente
+    // el comando recibido por UART.
+    char bufferSerial[16];
+    int indiceBuffer = 0;
+
+    void setup() {
+        pinMode(PIN_ENA, OUTPUT);
+        pinMode(PIN_IN1, OUTPUT);
+        pinMode(PIN_IN2, OUTPUT);
+        
+        // Estado inicial: motor apagado, CW
+        analogWrite(PIN_ENA, 0);
+        digitalWrite(PIN_IN1, HIGH);
+        digitalWrite(PIN_IN2, LOW);
+        
+        Serial.begin(9600);
+        Serial.println("Sistema listo");
+    }
+
+    void loop() {
+        // Lectura serial no bloqueante:
+        // se verifica constantemente si hay datos disponibles
+        // usando Serial.available() sin detener el programa.
+        leerSerial();
+    }
+
+    void leerSerial() {
+
+        // Mientras existan caracteres disponibles en el buffer UART
+        while (Serial.available() > 0) {
+
+            // Leer un caracter recibido
+            char c = Serial.read();
+            
+            // Si llega el delimitador '\n'
+            // significa que el comando terminó
+            if (c == '\n') {
+
+                // Agregar terminador de cadena
+                bufferSerial[indiceBuffer] = '\0';
+
+                // Procesar el comando completo
+                procesarComando(bufferSerial);
+
+                // Reiniciar buffer para el siguiente comando
+                indiceBuffer = 0;
+            }
+
+            // Ignorar '\r' y evitar overflow del buffer
+            else if (c != '\r' && indiceBuffer < 15) {
+
+                // Acumulación de caracteres en el buffer char[16]
+                bufferSerial[indiceBuffer] = c;
+                indiceBuffer++;
+            }
+        }
+    }
+
+    void procesarComando(char* buf) {
+
+        // Validar longitud mínima del comando
+        if (indiceBuffer < 2) {
+            Serial.println("ER comando muy corto");
+            return;
+        }
+        
+        // Extracción del parámetro numérico:
+        // buf[0] y buf[1] contienen el identificador del comando.
+        // Ejemplo:
+        // "VM 120"
+        // 012345
+        //
+        // buf + 3 apunta al inicio del número.
+        // atoi() convierte la cadena a entero.
+        int valor = 0;
+
+        if (indiceBuffer > 3) {
+            valor = atoi(buf + 3);
+        }
+        
+        // Identificación del comando mediante buf[0] y buf[1]
+
+        // -------------------------
+        // COMANDO VM -> Velocidad
+        // -------------------------
+        if (buf[0] == 'V' && buf[1] == 'M') {
+
+            // Validar rango PWM
+            if (valor < 0 || valor > 255) {
+                Serial.println("ER velocidad fuera de rango (0-255)");
+                return;
+            }
+
+            // Actualizar velocidad
+            velocidadActual = valor;
+            analogWrite(PIN_ENA, velocidadActual);
+
+            // Respuesta de confirmación por Serial
+            Serial.print("OK VEL ");
+            Serial.println(velocidadActual);
+        }
+        
+        // -------------------------
+        // COMANDO DI -> Dirección
+        // -------------------------
+        else if (buf[0] == 'D' && buf[1] == 'I') {
+
+            // Validar dirección
+            if (valor != 0 && valor != 1) {
+                Serial.println("ER direccion invalida (0=CW, 1=CCW)");
+                return;
+            }
+
+            // Actualizar dirección
+            direccionActual = valor;
+
+            if (direccionActual == 0) {
+                digitalWrite(PIN_IN1, HIGH);
+                digitalWrite(PIN_IN2, LOW);
+            } 
+            else {
+                digitalWrite(PIN_IN1, LOW);
+                digitalWrite(PIN_IN2, HIGH);
+            }
+
+            // Confirmación enviada por UART
+            Serial.print("OK DIR ");
+            Serial.println(direccionActual == 0 ? "CW" : "CCW");
+        }
+        
+        // -------------------------
+        // COMANDO ES -> Estado
+        // -------------------------
+        else if (buf[0] == 'E' && buf[1] == 'S') {
+
+            // Respuesta con el estado actual del sistema
+            Serial.print("EST V=");
+            Serial.print(velocidadActual);
+            Serial.print(" D=");
+            Serial.println(direccionActual == 0 ? "CW" : "CCW");
+        }
+        
+        // -------------------------
+        // COMANDO DESCONOCIDO
+        // -------------------------
+        else {
+            Serial.println("ER comando desconocido");
+        }
+    }
+
 ```
 
 ### Actividad 4 — Encoder óptico: contador de pulsos y cálculo de RPM
