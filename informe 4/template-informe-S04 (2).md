@@ -450,11 +450,396 @@ Adjuntar captura de pantalla del Serial Monitor mostrando **al menos tres interc
 ### Actividad 4 — Encoder óptico: contador de pulsos y cálculo de RPM
 
 ```cpp
-// Pegar aquí el código de la Actividad 4 (encoder + RPM).
-// Comentar: ISR attachInterrupt() con variable volatile,
-// cálculo de RPM con millis() cada 2 segundos,
-// fórmula RPM = (contadorPulsos / N_franjas) × (60 / 2),
-// e integración con el protocolo UART de Act. 3.
+    /*
+    * Protocolo compacto para control de motor DC con encoder IR y RPM
+    * Formato: CC N\n
+    *
+    * Comandos:
+    *   VM <vel>  -> velocidad PWM (0-255)
+    *   DI <dir>  -> direccion (0=CW, 1=CCW)
+    *   ES        -> estado (velocidad, direccion, RPM)
+    *   PC        -> leer contador de pulsos
+    *
+    * Pines:
+    *   ENA: velocidad (PWM) - D9
+    *   IN1, IN2: direccion - D8, D7
+    *   SENSOR_IR: encoder - D3
+    */
+
+    // =========================
+    // DEFINICIÓN DE PINES
+    // =========================
+
+    // Pines del motor DC
+    const int PIN_ENA = 9;
+    const int PIN_IN1 = 8;
+    const int PIN_IN2 = 7;
+
+    // Pin del sensor IR del encoder
+    const int PIN_SENSOR = 3;
+
+    // =========================
+    // CONSTANTES DEL ENCODER
+    // =========================
+
+    // Número de franjas negras del disco encoder.
+    // Cada vuelta completa genera N_FRANJAS pulsos.
+    const int N_FRANJAS = 8;
+
+    // Factor de conversión RPM:
+    // RPM = (pulsos / N_franjas) × (60 / 2)
+    //
+    // Como el cálculo se hace cada 2 segundos:
+    // (60 / 2) = 30
+    const float FACTOR_RPM = 30.0;
+
+    // =========================
+    // ESTADO DEL MOTOR
+    // =========================
+
+    // Duty cycle actual
+    int velocidadActual = 0;
+
+    // Dirección actual:
+    // 0 = CW
+    // 1 = CCW
+    int direccionActual = 0;
+
+    // =========================
+    // CONTADOR DE PULSOS
+    // =========================
+
+    // Variable volatile:
+    //
+    // La ISR modifica esta variable de forma asíncrona.
+    // volatile evita que el compilador optimice incorrectamente
+    // su lectura/escritura.
+    volatile unsigned long contadorPulsos = 0;
+
+    // =========================
+    // VARIABLES PARA RPM
+    // =========================
+
+    // Guarda el instante de la última medición
+    unsigned long tiempoAnteriorRPM = 0;
+
+    // Intervalo de cálculo de RPM:
+    // 2000 ms = 2 segundos
+    const unsigned long INTERVALO_RPM_MS = 2000;
+
+    // RPM calculadas actualmente
+    float rpmActual = 0.0;
+
+    // =========================
+    // BUFFER SERIAL UART
+    // =========================
+
+    // Buffer de recepción serial no bloqueante
+    char bufferSerial[16];
+    int indiceBuffer = 0;
+
+    // =========================
+    // SETUP
+    // =========================
+
+    void setup() {
+
+        // Configurar pines del motor
+        pinMode(PIN_ENA, OUTPUT);
+        pinMode(PIN_IN1, OUTPUT);
+        pinMode(PIN_IN2, OUTPUT);
+        
+        // Configurar sensor IR como entrada con pull-up interno
+        pinMode(PIN_SENSOR, INPUT_PULLUP);
+        
+        // Configuración de interrupción externa:
+        //
+        // attachInterrupt():
+        // Ejecuta automáticamente la ISR contarPulso()
+        // cada vez que ocurre un flanco FALLING
+        // en el pin del sensor.
+        //
+        // digitalPinToInterrupt():
+        // Convierte el pin físico en el número de interrupción.
+        attachInterrupt(
+            digitalPinToInterrupt(PIN_SENSOR),
+            contarPulso,
+            FALLING
+        );
+        
+        // Estado inicial del motor:
+        // apagado y dirección CW
+        analogWrite(PIN_ENA, 0);
+
+        digitalWrite(PIN_IN1, HIGH);
+        digitalWrite(PIN_IN2, LOW);
+        
+        // Inicializar UART
+        Serial.begin(9600);
+
+        Serial.println("Sistema listo");
+    }
+
+    // =========================
+    // ISR DEL ENCODER
+    // =========================
+
+    // ISR = Interrupt Service Routine
+    //
+    // Esta función se ejecuta automáticamente
+    // cada vez que el encoder detecta un pulso.
+    //
+    // La ISR debe ser extremadamente corta:
+    // únicamente incrementar el contador.
+    void contarPulso() {
+        contadorPulsos++;
+    }
+
+    // =========================
+    // LOOP PRINCIPAL
+    // =========================
+
+    void loop() {
+
+        // Lectura UART no bloqueante
+        leerSerial();
+
+        // Cálculo periódico de RPM
+        calcularRPM();
+    }
+
+    // =========================
+    // LECTURA SERIAL UART
+    // =========================
+
+    void leerSerial() {
+
+        // Mientras existan caracteres disponibles
+        while (Serial.available() > 0) {
+
+            // Leer carácter recibido
+            char c = Serial.read();
+            
+            // '\n' indica fin de comando
+            if (c == '\n') {
+
+                // Agregar terminador de cadena
+                bufferSerial[indiceBuffer] = '\0';
+
+                // Procesar comando completo
+                procesarComando(bufferSerial);
+
+                // Reiniciar buffer
+                indiceBuffer = 0;
+            }
+
+            // Ignorar '\r' y evitar overflow
+            else if (c != '\r' && indiceBuffer < 15) {
+
+                // Acumulación de caracteres
+                // en char bufferSerial[16]
+                bufferSerial[indiceBuffer] = c;
+
+                indiceBuffer++;
+            }
+        }
+    }
+
+    // =========================
+    // CÁLCULO DE RPM
+    // =========================
+
+    void calcularRPM() {
+
+        // millis():
+        // devuelve el tiempo transcurrido desde
+        // el inicio del programa en milisegundos.
+        unsigned long tiempoActual = millis();
+        
+        // Ejecutar cálculo cada 2 segundos
+        if (tiempoActual - tiempoAnteriorRPM >= INTERVALO_RPM_MS) {
+
+            // Deshabilitar interrupciones temporalmente
+            // para leer el contador de forma segura.
+            noInterrupts();
+
+            // Guardar pulsos medidos
+            unsigned long pulsosEnIntervalo = contadorPulsos;
+
+            // Reiniciar contador
+            contadorPulsos = 0;
+
+            // Reactivar interrupciones
+            interrupts();
+            
+            // ==========================================
+            // FÓRMULA DE RPM
+            // ==========================================
+            //
+            // RPM = (contadorPulsos / N_franjas)
+            //       × (60 / tiempoMedición)
+            //
+            // Como tiempoMedición = 2 s:
+            //
+            // RPM = (contadorPulsos / N_franjas) × 30
+            //
+            rpmActual =
+                ((float)pulsosEnIntervalo / N_FRANJAS)
+                * FACTOR_RPM;
+            
+            // Mostrar RPM calculadas
+            Serial.print("RPM ");
+
+            // Mostrar con 1 decimal
+            Serial.println(rpmActual, 1);
+            
+            // Actualizar referencia temporal
+            tiempoAnteriorRPM = tiempoActual;
+        }
+    }
+
+    // =========================
+    // PARSER DE COMANDOS UART
+    // =========================
+
+    void procesarComando(char* buf) {
+
+        // Validar longitud mínima
+        if (indiceBuffer < 2) {
+
+            Serial.println("ER comando muy corto");
+
+            return;
+        }
+        
+        // Extraer parámetro numérico:
+        //
+        // "VM 120"
+        // 012345
+        //
+        // buf + 3 apunta al inicio del número.
+        int valor = 0;
+
+        if (indiceBuffer > 3) {
+            valor = atoi(buf + 3);
+        }
+        
+        // ==========================================
+        // COMANDO VM -> VELOCIDAD PWM
+        // ==========================================
+
+        if (buf[0] == 'V' && buf[1] == 'M') {
+
+            // Validar rango permitido
+            if (valor < 0 || valor > 255) {
+
+                Serial.println("ER velocidad fuera de rango (0-255)");
+
+                return;
+            }
+
+            // Actualizar duty cycle
+            velocidadActual = valor;
+
+            analogWrite(PIN_ENA, velocidadActual);
+
+            // Confirmación UART
+            Serial.print("OK VEL ");
+
+            Serial.println(velocidadActual);
+        }
+        
+        // ==========================================
+        // COMANDO DI -> DIRECCIÓN
+        // ==========================================
+
+        else if (buf[0] == 'D' && buf[1] == 'I') {
+
+            // Validar dirección
+            if (valor != 0 && valor != 1) {
+
+                Serial.println("ER direccion invalida (0=CW, 1=CCW)");
+
+                return;
+            }
+
+            direccionActual = valor;
+
+            // CW
+            if (direccionActual == 0) {
+
+                digitalWrite(PIN_IN1, HIGH);
+                digitalWrite(PIN_IN2, LOW);
+            }
+
+            // CCW
+            else {
+
+                digitalWrite(PIN_IN1, LOW);
+                digitalWrite(PIN_IN2, HIGH);
+            }
+
+            // Confirmación UART
+            Serial.print("OK DIR ");
+
+            Serial.println(
+                direccionActual == 0 ? "CW" : "CCW"
+            );
+        }
+        
+        // ==========================================
+        // COMANDO ES -> ESTADO COMPLETO
+        // ==========================================
+
+        else if (buf[0] == 'E' && buf[1] == 'S') {
+
+            // Integración con el protocolo UART
+            // de la Actividad 3:
+            //
+            // además de velocidad y dirección,
+            // ahora se reporta también la RPM.
+            Serial.print("EST V=");
+
+            Serial.print(velocidadActual);
+
+            Serial.print(" D=");
+
+            Serial.print(
+                direccionActual == 0 ? "CW" : "CCW"
+            );
+
+            Serial.print(" RPM=");
+
+            Serial.println(rpmActual, 1);
+        }
+        
+        // ==========================================
+        // COMANDO PC -> CONTADOR DE PULSOS
+        // ==========================================
+
+        else if (buf[0] == 'P' && buf[1] == 'C') {
+
+            // Leer contador de forma segura
+            noInterrupts();
+
+            unsigned long pulsos = contadorPulsos;
+
+            interrupts();
+
+            Serial.print("PULSOS ");
+
+            Serial.println(pulsos);
+        }
+        
+        // ==========================================
+        // COMANDO DESCONOCIDO
+        // ==========================================
+
+        else {
+
+            Serial.println("ER comando desconocido");
+        }
+    }
 ```
 
 ---
