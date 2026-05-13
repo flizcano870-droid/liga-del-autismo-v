@@ -30,7 +30,7 @@ Adjuntar captura de pantalla del archivo `.csv` abierto en Excel/Sheets mostrand
 
 ![captura de pantalla del csv](figure1si.jpeg)
 
-> **Descripción:** _(Indicar cuántas filas se capturaron, confirmar la presencia del encabezado `t_ms,raw_ldr,raw_lm35,raw_pot`, y describir si los timestamps son crecientes y aproximadamente a 500 ms de separación.)_
+> **Descripción:** _Se capturaron 5 filas que siguen el orden de t_ms,raw_ldr,raw_lm35,raw_pot, efectivamente se incrementó el tiempo cada 500 ms _
 
 ---
 
