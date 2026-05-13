@@ -135,13 +135,13 @@ La comparación visual de las tres estrategias se realiza a partir de los screen
 
 **Pregunta Act. 3a:** ¿Por qué el controlador P no puede alcanzar exactamente el setpoint?
 
-> [Respuesta del estudiante aquí]
+> [El controlador proporcional (P) no puede alcanzar exactamente el setpoint porque la salida del controlador depende directamente del error. A medida que la temperatura se acerca al setpoint, el error disminuye y, por lo tanto, también disminuye la potencia entregada al calefactor. Cuando el error llega a cero, la salida PWM también se vuelve cero, por lo que el sistema deja de suministrar energía térmica. Sin embargo, el bloque de aluminio sigue perdiendo calor hacia el ambiente, así que se necesita una cierta potencia constante para mantener estable la temperatura. Por esta razón, el sistema necesita conservar un pequeño error estacionario para que el controlador siga entregando potencia al calefactor.]
 
 ---
 
 **Pregunta Act. 3b:** A partir de la Tabla 2, ¿qué tendencia observa entre el valor de Kp y el error estacionario medido? Justificar.
 
-> [Respuesta del estudiante aquí]
+> [A partir de los datos de la Tabla 2 se observa que al aumentar el valor de Kp el error estacionario disminuye. Con Kp = 10 el error fue de 0.835 °C, con Kp = 30 disminuyó a 0.373 °C y con Kp = 100 volvio a incrementarse hasta 0.6564°C. Esto sucede porque un valor mayor de Kp hace que el controlador responda más fuertemente ante un mismo error, aumentando la potencia aplicada al calefactor y acercando más la temperatura al setpoint. Sin embargo, el error en el caso del Kp =100 se debe a que durante la practica no fue posible usar la resistencia calefactora por lo que se uso el disipador del L298N lo cual podria explicar este resultado.]
 
 ---
 
