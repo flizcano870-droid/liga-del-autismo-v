@@ -28,15 +28,15 @@
 
 | Ciclo | T máxima (°C) | T mínima (°C) | Amplitud p-a-p (°C) | Período (s) |
 |:-----:|:-------------:|:-------------:|:--------------------:|:-----------:|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
+| 1 |38.82 | 35.05| 3.77| 4|
+| 2 |37.73 | 35.27| 2.46| 3|
+| 3 |36.77| 35.05| 1.72| 4|
 
-*Setpoint utilizado:* ______ °C
+*Setpoint utilizado:* 35 °C
 
 **Captura Act. 2:** Screenshot del Serial Plotter mostrando oscilación ON/OFF con al menos 3 ciclos completos visibles.
 
-![Screenshot ON/OFF — oscilación](imagenes/act2-onoff-oscilacion.png)
+![Screenshot ON/OFF — oscilación](ssact2.jpeg)
 
 ---
 
@@ -44,19 +44,19 @@
 
 **Tabla 2 — Barrido de Kp (control P)**
 
-*Setpoint utilizado:* ______ °C
+*Setpoint utilizado:* 35 °C
 
 | Kp | Error estacionario (°C) |
 |:-----:|:-----------------------:|
-| | |
-| | |
-| | |
+|10 | 0.835|
+|30| |
+|100| |
 
 *Error estacionario = promedio de |setpoint − temperatura| durante los últimos 60 s de la corrida.*
 
 **Capturas Act. 3:** Al menos 3 screenshots del Serial Plotter, uno por cada valor de Kp, etiquetados con el valor correspondiente.
 
-![Screenshot P — Kp 1](imagenes/act3-control-p-kp1.png)
+![Screenshot P — Kp 1](ss1act3.jpeg)
 
 ![Screenshot P — Kp 2](imagenes/act3-control-p-kp2.png)
 
