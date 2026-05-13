@@ -128,7 +128,8 @@ La comparación visual de las tres estrategias se realiza a partir de los screen
 
 **Pregunta Act. 2:** ¿Por qué el sistema no puede estabilizarse exactamente en el setpoint con control ON/OFF, incluso si se elimina cualquier histéresis? Apoyar la respuesta con los datos de la Tabla 1.
 
-> [Respuesta del estudiante aquí]
+> [El sistema no puede estabilizarse exactamente en el setpoint con control ON/OFF porque este tipo de control solo tiene dos estados posibles: encendido al máximo o apagado completo. Cuando la temperatura está por debajo del setpoint, el calefactor entrega toda la potencia; cuando la temperatura lo supera, el calefactor se apaga. Sin embargo, el bloque de aluminio y la resistencia tienen inercia térmica, por lo que el sistema sigue calentándose incluso después de apagar el calefactor. Esto provoca que la temperatura sobrepase el setpoint y luego empiece a descender hasta quedar nuevamente por debajo del valor deseado, repitiendo continuamente el ciclo de encendido y apagado. Los datos de la Tabla 1 muestran claramente este comportamiento oscilatorio. En el ciclo 1 la temperatura varió entre 35.05 °C y 38.82 °C, con una amplitud pico a pico de 3.77 °C. En el ciclo 2 la amplitud fue de 2.46 °C y en el ciclo 3 de 1.72 °C. Además, el período de oscilación se mantuvo entre 3 y 4 segundos, lo que indica que el sistema entra en un régimen periódico alrededor del setpoint en lugar de estabilizarse exactamente en él. Incluso si se elimina completamente la histéresis, el problema seguiría existiendo porque el controlador ON/OFF no puede aplicar una potencia intermedia. El actuador siempre entrega toda la potencia o ninguna, de modo que la temperatura inevitablemente sobrepasa el valor objetivo debido al retraso térmico del sistema. Por esta razón, el control ON/OFF siempre produce oscilaciones alrededor del setpoint y no una estabilización exacta.
+]
 
 ---
 
