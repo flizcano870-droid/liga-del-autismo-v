@@ -64,9 +64,7 @@ _Los valores deben calcularse con fórmulas de la hoja electrónica (`=PROMEDIO(
 
 Adjuntar captura de pantalla del Serial Monitor donde se vea el mensaje de detección del dispositivo I2C con su dirección.
 
-```
-[Insertar Figura 2 aquí]
-```
+![captura de pantalla del Serial Monitor](figure1.jpeg)
 
 ---
 
@@ -92,9 +90,8 @@ Adjuntar captura de pantalla del Serial Monitor donde se vea el mensaje de detec
 
 Foto del montaje con el OLED mostrando la vista general. Etiquetar cada valor indicando canal y unidad.
 
-```
-[Insertar Figura 3 aquí]
-```
+![Figura 3 foto general](figure3.jpeg)
+
 
 ---
 
@@ -102,9 +99,7 @@ Foto del montaje con el OLED mostrando la vista general. Etiquetar cada valor in
 
 Foto del montaje con el OLED mostrando una de las pantallas de detalle. Etiquetar las cuatro líneas (valor actual, mínimo, máximo, promedio) e indicar a qué canal corresponde.
 
-```
-[Insertar Figura 4 aquí]
-```
+![Figura 4 pantalla de detalle](figure4.jpeg)
 
 ---
 
@@ -112,9 +107,7 @@ Foto del montaje con el OLED mostrando una de las pantallas de detalle. Etiqueta
 
 Captura del Serial Monitor mostrando el CSV emitiéndose sin interrupción mientras se presiona el botón para cambiar de pantalla. Verificar que no hay gaps ni líneas incompletas.
 
-```
-[Insertar Figura 5 aquí]
-```
+![Figura 5 Serial Monitor](figure5.jpeg)
 
 ---
 
