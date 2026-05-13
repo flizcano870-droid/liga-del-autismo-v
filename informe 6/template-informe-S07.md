@@ -76,9 +76,10 @@ Kp=100
 
 | Ki | Error residual (°C) |
 |:-----:|:-------------------:|
-| | |
-| | |
-| | |
+| 2| 1.38|
+| 10| 1.8|
+| 0.1| 1|
+
 
 *Error residual = promedio de |setpoint − temperatura| durante los últimos 60 s de la corrida.*
 
@@ -86,7 +87,7 @@ Kp=100
 - Screenshot mostrando wind-up (sin `constrain` sobre `errorSum`): se observa como un sobreimpulso severo seguido de una recuperación muy lenta o nula hacia el setpoint. El wind-up **no** es directamente visible en la curva de `errorSum` (que no se grafica); lo que se observa es el efecto en temperatura: la inercia acumulada en el integrador hace que el calentador siga a máxima potencia mucho después de haber cruzado el setpoint.
 - Al menos 3 screenshots con diferentes valores de Ki (con `constrain` activo), etiquetados con Kp y Ki.
 
-![Screenshot PI — wind-up](imagenes/act4-control-pi-windup.png)
+![Screenshot PI — wind-up](ss1act4.jpeg)
 
 ![Screenshot PI — Ki 1](imagenes/act4-control-pi-ki1.png)
 
