@@ -49,18 +49,21 @@
 | Kp | Error estacionario (°C) |
 |:-----:|:-----------------------:|
 |10 | 0.835|
-|30| |
-|100| |
+|30| 0.373|
+|100| 0.125|
 
 *Error estacionario = promedio de |setpoint − temperatura| durante los últimos 60 s de la corrida.*
 
 **Capturas Act. 3:** Al menos 3 screenshots del Serial Plotter, uno por cada valor de Kp, etiquetados con el valor correspondiente.
 
 ![Screenshot P — Kp 1](ss1act3.jpeg)
+Kp=10
 
-![Screenshot P — Kp 2](imagenes/act3-control-p-kp2.png)
+![Screenshot P — Kp 2](ss2act3.jpeg)
+Kp=30
 
-![Screenshot P — Kp 3](imagenes/act3-control-p-kp3.png)
+![Screenshot P — Kp 3](ss3act3.jpeg)
+Kp=100
 
 ---
 
