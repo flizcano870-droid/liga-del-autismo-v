@@ -50,7 +50,7 @@
 |:-----:|:-----------------------:|
 |10 | 0.835|
 |30| 0.373|
-|100| 0.125|
+|100| 0.656|
 
 *Error estacionario = promedio de |setpoint − temperatura| durante los últimos 60 s de la corrida.*
 
@@ -71,8 +71,8 @@ Kp=100
 
 **Tabla 3 — Barrido de Ki (Kp fijo del mejor valor de Actividad 3)**
 
-*Kp utilizado:* ______
-*Setpoint utilizado:* ______ °C
+*Kp utilizado:* 30
+*Setpoint utilizado:* 35 °C
 
 | Ki | Error residual (°C) |
 |:-----:|:-------------------:|
