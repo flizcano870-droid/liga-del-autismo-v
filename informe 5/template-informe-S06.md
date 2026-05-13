@@ -80,7 +80,7 @@ Adjuntar captura de pantalla del Serial Monitor donde se vea el mensaje de detec
 
 **Pregunta de análisis A2.1:** ¿Por qué no es posible conectar un sensor analógico a A4 o A5 mientras el bus I2C está activo?
 
-> [No es posible conencar un sensor analogico a A4 o A5 mientras que el bus I2C esta activo porque el arduino utiliza esos pines para la comunicación I2C, lo que significa que están configurados como líneas de datos (SDA) y reloj (SCL). Si se conecta un sensor analógico a esos pines, se interferirá con la comunicación I2C, lo que puede causar fallos en la lectura de datos del sensor y en la comunicación con el display OLED. Además, el bus I2C requiere resistencias pull-up en esas líneas, lo que puede afectar las lecturas analógicas si se conectan sensores a esos pines.]
+> [No es posible conectar un sensor analogico a A4 o A5 mientras que el bus I2C esta activo porque el arduino utiliza esos pines para la comunicación I2C, lo que significa que están configurados como líneas de datos (SDA) y reloj (SCL). Si se conecta un sensor analógico a esos pines, se interferirá con la comunicación I2C, lo que puede causar fallos en la lectura de datos del sensor y en la comunicación con el display OLED. Además, el bus I2C requiere resistencias pull-up en esas líneas, lo que puede afectar las lecturas analógicas si se conectan sensores a esos pines.]
 
 ---
 
