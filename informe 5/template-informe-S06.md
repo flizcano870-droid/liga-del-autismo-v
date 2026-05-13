@@ -147,7 +147,7 @@ Captura del Serial Monitor mostrando el CSV emitiéndose sin interrupción mient
 ![Figura 6 — Gráfica de dispersión: raw_ldr vs t_ms](Figure_1.png)
 
 
-> **Interpretación:** _(Describir la forma de la curva. ¿Se distinguen claramente los eventos de estimulación del LDR? ¿Qué valor aproximado de raw_ldr corresponde al ambiente iluminado y cuál al LDR cubierto?)_
+> **Interpretación:** _Se observa como hay un pico que muestra un aumento súbito en el valor ADC, este corresponde al momento en el que el LDR se expuso a la luz, antes de volver a ser cubierto; de esta forma se ve, aunque con ruido, las estimulaciones recibidas por el sensor. _
 
 ---
 
