@@ -577,12 +577,12 @@ Captura del Serial Monitor mostrando el CSV emitiéndose sin interrupción mient
 
 ## 5. Dificultades Encontradas y Soluciones Aplicadas
 
-### Dificultad 1: [Descripción breve del problema]
+### Dificultad 1: Fue trabajoso lograr codificar el cambio de pantalla con el botón sin afectar la emisión continua del CSV. Al principio, el programa se bloqueaba o se perdían datos al intentar leer el botón o actualizar el OLED.
 
-- **Síntoma observado:** _(¿Qué ocurrió exactamente?)_
-- **Causa identificada:** _(¿Por qué ocurrió?)_
-- **Solución aplicada:** _(¿Cómo lo resolvieron?)_
-- **Lección aprendida:** _(¿Qué cambiarían la próxima vez?)_
+- **Síntoma observado:** _Al intentar modificar el codigo para incluir el cambio de pantalla, el programa se bloqueaba o se perdían datos (inclusive en un momento se borró todo lo del archivo .csv)._
+- **Causa identificada:** _El manejo concurrente de la actualización de la pantalla y la emisión del CSV causaba conflictos en el uso de los recursos del microcontrolador._
+- **Solución aplicada:** _Se implementó un sistema de manejo de estados que permitía cambiar de pantalla sin interrumpir la emisión del CSV, utilizando un protocolo de control que gestionaba las actualizaciones de forma secuencial._
+- **Lección aprendida:** _La gestión adecuada de los recursos del microcontrolador es crucial para evitar conflictos en sistemas concurrentes._
 
 ### Dificultad 2 (si aplica): [Descripción breve del problema]
 
