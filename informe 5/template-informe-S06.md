@@ -28,9 +28,7 @@
 
 Adjuntar captura de pantalla del archivo `.csv` abierto en Excel/Sheets mostrando el encabezado, las primeras 5 filas y las últimas 5 filas. Indicar el conteo total de filas y el tiempo de captura.
 
-```
-[Insertar Figura 1 aquí]
-```
+![captura de pantalla del csv](figure1si.jpeg)
 
 > **Descripción:** _(Indicar cuántas filas se capturaron, confirmar la presencia del encabezado `t_ms,raw_ldr,raw_lm35,raw_pot`, y describir si los timestamps son crecientes y aproximadamente a 500 ms de separación.)_
 
