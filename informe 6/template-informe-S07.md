@@ -76,9 +76,9 @@ Kp=100
 
 | Ki | Error residual (°C) |
 |:-----:|:-------------------:|
-| 2| 1.38|
-| 10| 1.8|
-| 0.1| 1|
+| 0.1| 1.06|
+| 0.01| 0.82|
+| 0.005| 0.80|
 
 
 *Error residual = promedio de |setpoint − temperatura| durante los últimos 60 s de la corrida.*
@@ -88,13 +88,16 @@ Kp=100
 - Al menos 3 screenshots con diferentes valores de Ki (con `constrain` activo), etiquetados con Kp y Ki.
 
 ![Screenshot PI — wind-up](ss1act4.jpeg)
+wind-up
 
-![Screenshot PI — Ki 1](imagenes/act4-control-pi-ki1.png)
+![Screenshot PI — Ki 1](ss2act4.jpeg)
+Ki=0.1
 
-![Screenshot PI — Ki 2](imagenes/act4-control-pi-ki2.png)
+![Screenshot PI — Ki 2](ss3act4.jpeg)
+Ki=0.01
 
-![Screenshot PI — Ki 3](imagenes/act4-control-pi-ki3.png)
-
+![Screenshot PI — Ki 3](ss4act4.jpeg)
+Ki=0.001
 ---
 
 ### Actividad 5 — Consolidación
@@ -103,8 +106,8 @@ Kp=100
 
 | Estrategia | Kp | Ki | Error estacionario (°C) | Oscilación (°C p-a-p) |
 |:------------------|:-----:|:-----:|:------------------------:|:---------------------:|
-| ON/OFF | N/A | N/A | | (ver Tabla 1) |
-| P (mejor Kp) | | 0 | | — |
+| ON/OFF | N/A | N/A |1,448 | (ver Tabla 1) |
+| P (mejor Kp) |30| 0 | 0.373| — |
 | PI (mejor Kp/Ki) | | | | — |
 
 *Datos tomados de Tabla 1 (ON/OFF), Tabla 2 (P) y Tabla 3 (PI).*
@@ -119,7 +122,7 @@ La comparación visual de las tres estrategias se realiza a partir de los screen
 
 **Interpretación comparativa:**
 
-> [Describir cómo evoluciona el comportamiento de ON/OFF → P → PI a partir de los screenshots: qué limitación resuelve cada estrategia, cuándo se estabiliza cada una, y qué error estacionario queda en cada caso.]
+> El protocolo ON/OFF reguló la cantidad de temperatura que emana el calefactor para lograr llegar al setpoint y luego no sobrepasarse; sin embargo, debido a la inercia térmica del sistema, alrededor del setpoint se produjó osilaciones con amplitud p-a-p de  varios grados generando un error estacionario de 1.448 °C. Luego, el controlador P permitió reducir como mínimo el error estacionario a 0,373 °C, pero al no tener un término integral que reduzca el factor de error que se encuentra entre el punto de estabilización y el setpoint, es imposible que logre reducir el error a cero. Finalmente, arrojó un error estacionario mínimo de 0.80 °C, a pesar de que se esperaba este fuera menor que el error obtenido con l protocolo P; sin embargo este comportamiento puede explicarse al ruido en los datos que se atribuye a las fallas con el montaje de calefacción lo que puede además haber creado sobrecorreciones aunque se estuviera aplicando el constrain (). 
 
 ---
 
@@ -205,12 +208,12 @@ Incluir únicamente las secciones del código que el grupo implementó o modific
 
 ## 5. Dificultades Encontradas y Soluciones Aplicadas
 
-### Dificultad 1: [Descripción breve del problema]
+### Dificultad 1: La resistencia calefactora no funcionó correctamente, lo que impidió una realización normal de las actividades. 
 
-- **Síntoma observado:**
-- **Causa identificada:**
-- **Solución aplicada:**
-- **Lección aprendida:**
+- **Síntoma observado:** Durante la realización de la actividad 1, no se evidenció el calentamiento esperado de la resistencia auqnue estuviera entrando voltaje en el L298N. 
+- **Causa identificada:**Al medir el valor de la resistencia con el multímetro, se encontró que el valor era de aproximadamente 1Ω.
+- **Solución aplicada:**Se decidió usar el disipador del L298N, que sí se calentaba al aplicar el voltaje, como la calefacción del sistema. Esto permitió continuar con las actividades aunque con un comportamiento térmico diferente al esperado.
+- **Lección aprendida:** Es importante verificar el estado de los componentes antes de iniciar la práctica para evitar contratiempos. Además, es fundamental ser creativos y adaptarse a las circunstancias imprevistas.
 
 ### Dificultad 2 *(si aplica)*: [Descripción breve]
 
