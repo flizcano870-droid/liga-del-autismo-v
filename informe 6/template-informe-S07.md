@@ -97,7 +97,8 @@ Ki=0.1
 Ki=0.01
 
 ![Screenshot PI — Ki 3](ss4act4.jpeg)
-Ki=0.001
+Ki=0.005
+
 ---
 
 ### Actividad 5 — Consolidación
@@ -108,7 +109,7 @@ Ki=0.001
 |:------------------|:-----:|:-----:|:------------------------:|:---------------------:|
 | ON/OFF | N/A | N/A |1,448 | (ver Tabla 1) |
 | P (mejor Kp) |30| 0 | 0.373| — |
-| PI (mejor Kp/Ki) | | | | — |
+| PI (mejor Kp/Ki) |30| 0.005| 0.80| — |
 
 *Datos tomados de Tabla 1 (ON/OFF), Tabla 2 (P) y Tabla 3 (PI).*
 *N/A: el control ON/OFF es un controlador no lineal (bang-bang); no tiene parámetros Kp ni Ki equivalentes a un PID.*
@@ -159,13 +160,12 @@ La comparación visual de las tres estrategias se realiza a partir de los screen
 
 **Pregunta T1:** A partir de la Tabla 4, comparar el error estacionario del mejor controlador P con el del mejor controlador PI. ¿Por qué el controlador PI puede reducir este error a valores cercanos a cero mientras que el P no puede? Justificar con referencia a las ecuaciones de ambos controladores.
 
-> [Respuesta del estudiante aquí]
-
+> A pesar que al realizar la práctica del controlador PI no se obtuvo errores menores pues no se pudo usar un valor de Ki menor a 0.005, este controlador debería arrojar un error menor pues su ecuación incluye un término de sumatoria que funciona como una integral. De manera que puede superar la pequeña franja de error que se encuentra al usarel controlador P, pues sumará el error a lo largo del tiempo mandando así una potencia adicional cada vez que no se cumpla con el valor esperado. 
 ---
 
 **Pregunta T2:** ¿Qué diferencia observó entre el comportamiento del sistema al aumentar Kp en el control P (Actividad 3) y al aumentar Ki en el control PI (Actividad 4)? ¿En qué condiciones podría ser preferible usar solo control P en lugar de PI?
 
-> [Respuesta del estudiante aquí]
+> En general, al aumentar Kp se observaron menores valores en el error estacionario, pues la franja anteriormente mencionada se reduce. Por otro lado, el Ki es más delicado de ajustar, dependiendo de el valor inicial puede aumentar o disminuir el error estacionario. Es necesarios tener en cuenta que cambia dependiendo del Kp usado, pues el término integral empieza a acumulcar error en el momento que se estanca alrededor del valor mínimo de error que puede alcanzar el controlador P. En el caso de esta práctica, el barrido Ki se empezó en 0.1, sin embargo, a partir de ahí, se disminuyó el valor de Ki tanto como se pudo; esto pues al intentar aumentar, como se sugería en la guía, se evidenció un comportamiento errático en el sketch y errores cada vez mayores (señalando un posible wind-up, a pesar de usar la funcion constrain()).
 
 ---
 
@@ -215,12 +215,12 @@ Incluir únicamente las secciones del código que el grupo implementó o modific
 - **Solución aplicada:**Se decidió usar el disipador del L298N, que sí se calentaba al aplicar el voltaje, como la calefacción del sistema. Esto permitió continuar con las actividades aunque con un comportamiento térmico diferente al esperado.
 - **Lección aprendida:** Es importante verificar el estado de los componentes antes de iniciar la práctica para evitar contratiempos. Además, es fundamental ser creativos y adaptarse a las circunstancias imprevistas.
 
-### Dificultad 2 *(si aplica)*: [Descripción breve]
+### Dificultad 2 *(si aplica)*: No se logró un error estacionario menor con el controlador PI, a pesar de ajustar el Ki.
 
-- **Síntoma observado:**
-- **Causa identificada:**
-- **Solución aplicada:**
-- **Lección aprendida:**
+- **Síntoma observado:** A pesar de probar varios valores de Ki, inclusive el dígito más bajo permitido por el serial plotter, el error estacionario no logró ser menor que el mejor error obtenido con el controlador P
+- **Causa identificada:** Se cree que es causado por el ruido de los datos, que se atribuye a la falta de un buen montaje de calefacción. A su vez, es posible que se presentara inercia térmica acumulada en el integrador (wind-up) a pesar de usar la función `constrain()`, lo que podría haber generado sobrecorrecciones y dificultado la reducción del error estacionario.
+- **Solución aplicada:** Se intentó ajustar al valor de Ki lo más bajo posible y a pesar de haber obtenido mejores valores que con el Ki más alto, no se logró acercarse al 0.
+- **Lección aprendida:** El ajuste de un controlador PI puede ser más delicado que el de un controlador P, especialmente en sistemas con ruido o inestabilidad. Es importante considerar la interacción entre Kp y Ki, y estar atentos a posibles efectos de wind-up incluso cuando se implementan medidas para mitigarlo.
 
 ---
 
