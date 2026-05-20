@@ -89,11 +89,14 @@
 **Condiciones requeridas en la captura:** señal senoidal a 5 Hz (200 mVpp, DC 2.5 V) y el momento del barrido de frecuencia (1 → 10 Hz).
 **Lo que debe demostrarse:** a mayor frecuencia, mayor atenuación de ambos filtros; a igual f_c (~2.75 Hz), el IIR logra el mismo suavizado que la media móvil usando solo 1 variable.
 
-![Captura 1 — Serial Plotter filtrado](imagenes/captura-1-serial-plotter-filtrado.png)
+![Captura 1 — Serial Plotter filtrado](5hz.jpeg)
+5Hz
+![Captura 2 — Serial Plotter filtrado](barrido.jpeg)
+Barrido (1 → 10 Hz)
 
 **Interpretación:** *(Describir qué muestra la captura. ¿Cómo cambia la amplitud de MediaMovil e IIR al aumentar la frecuencia? ¿Son similares las atenuaciones de ambos filtros a 5 Hz? ¿Se observa el retardo de la media móvil respecto a la señal cruda?)*
 
-> [Respuesta del estudiante aquí]
+> la amplitud empezóa disminuir a medida que se aumenta la frecuencia, sinembargo no es necesariamente lineal.  El IIR se desfasó meno que el MM, sin embargo el MM presentó a lo largp del barrido una aplitud mayor qur el IIR.Por otro lado, a 5Hz las atenuaciones son similares, aunque, como se ve el la primera captura, el IIR tiene menos atenuación pues abarca una amplitud mayor. De la misma forma, el MM presenta mayor retardo con respecto a la señal cruda que el IIR, lo cual se evidencia en la primera captura.
 
 ---
 
