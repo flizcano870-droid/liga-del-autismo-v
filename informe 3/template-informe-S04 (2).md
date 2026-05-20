@@ -57,7 +57,7 @@ $$\text{Error} = \frac{|t_{\text{medido}} - t_{\text{teórico}}|}{t_{\text{teór
 | `LED OFF` | Newline |ok led apagado |se apago y se mantuvo asi  | |
 | `BLINK 5` | Newline |ok parpadeando 5 veces...ok parpadeo terminado |El led se encendio y se apago 5 veces  | |
 | `STATUS` (durante BLINK) | Newline |status led=off, , boton=libre |El led se encendio y se apago 5 veces | El resultado de status apareció al finalizar el proceso de blink 5|
-| `FOO` | Newline | | | |
+| `FOO` | Newline | Error, no reconoce el comando |nada | |
 | `STATUS` | Sin terminador | nada|nada | No apareció nada en el serial monitor y no ocurrió nada con el circuito. Al colocar nuevamente el new line, aparecen los "status" colocados durante el no ending line, como si se guardaran para enviarse cuando se reestablece la conexión.|
 
 ---
