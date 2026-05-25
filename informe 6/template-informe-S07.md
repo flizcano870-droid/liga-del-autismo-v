@@ -176,32 +176,929 @@ Incluir únicamente las secciones del código que el grupo implementó o modific
 ### Actividad 2 — Parser serial y control ON/OFF
 
 ```cpp
-// Pegar aquí:
-// - La función procesarComando() con el comando SET xx
-// - La lectura serial no bloqueante (byte a byte)
-// - La lógica ON/OFF en loop()
+// 
+========================================================
+LAB 07 — ACTIVIDAD 2
+CONTROL ON/OFF DE TEMPERATURA
+Universidad Nacional de Colombia
+========================================================
+// Librería para comunicación I2C
+#include <Wire.h>
+// Librería gráfica base del OLED
+#include <Adafruit_GFX.h>
+// Librería específica para pantallas SSD1306
+#include <Adafruit_SSD1306.h>
+
+// ---------- CONFIGURACIÓN DEL OLED ----------
+
+// Resolución horizontal del OLED
+#define SCREEN_WIDTH 128
+// Resolución vertical del OLED
+#define SCREEN_HEIGHT 32
+// Creación del objeto display OLED
+Adafruit_SSD1306 display(
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  &Wire,
+  -1
+);
+
+// ---------- DEFINICIÓN DE PINES ----------
+
+// Pin analógico conectado al LM35
+const int PIN_LM35 = A3;
+// Pines del módulo L298N
+const int PIN_IN1 = 7;
+const int PIN_IN2 = 8;
+const int PIN_ENA = 9;
+
+// LED integrado del Arduino
+const int LED_PIN = 13;
+
+// ---------- VARIABLES GLOBALES ----------
+
+// PWM máximo permitido
+const int PWM_MAXIMO = 255;
+// Variable donde se almacena la temperatura medida
+float temperatura = 0.0;
+// Temperatura objetivo definida por el usuario
+float setpoint = 0.0;
+// Buffer para almacenar caracteres recibidos por serial
+String bufferSerial = "";
+
+// ---------- VARIABLES DE TIEMPO ----------
+
+// Guarda el instante del último ciclo ejecutado
+unsigned long tiempoAnterior = 0;
+// Intervalo entre mediciones (500 ms)
+const unsigned long intervalo = 500;
+
+// ---------- FUNCIÓN DE CONFIGURACIÓN ----------
+
+void setup() {
+
+  // Inicia comunicación serial a 115200 baudios
+  Serial.begin(115200);
+  // Usa referencia ADC interna de 1.1V
+  analogReference(INTERNAL);
+  // Configuracion de pines del L298N como salidas
+  pinMode(PIN_IN1, OUTPUT);
+  pinMode(PIN_IN2, OUTPUT);
+  pinMode(PIN_ENA, OUTPUT);
+  // Define dirección fija del calefactor
+  digitalWrite(PIN_IN1, LOW);
+  digitalWrite(PIN_IN2, HIGH);
+  // Inicia calefactor apagado
+  analogWrite(PIN_ENA, 0);
+  // Configura LED watchdog como salida
+  pinMode(LED_PIN, OUTPUT);
+  // Inicializa el OLED
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+
+    // Si falla el OLED se detiene el programa
+    while (true);
+  }
+
+  // Limpia el display
+  display.clearDisplay();
+  // Actualiza físicamente el OLED
+  display.display();
+
+  // Mensajes iniciales en monitor serial
+  Serial.println("====================================");
+  Serial.println(" LAB 07 - CONTROL ON/OFF ");
+  Serial.println("====================================");
+  Serial.println();
+
+  // Instrucción para enviar comando
+  Serial.println("Enviar comando:");
+  Serial.println("SET xx");
+  Serial.println();
+}
+
+// ---------- BUCLE PRINCIPAL ----------
+
+void loop() {
+
+  // ====================================================
+  // PARSER SERIAL NO BLOQUEANTE
+  // ====================================================
+
+  // Revisa constantemente si llegaron datos seriales
+  while (Serial.available()) {
+    // Lee un carácter recibido
+    char c = Serial.read();
+    // Si llega ENTER el comando terminó
+    if (c == '\n') {
+      // Procesa el comando completo
+      procesarComando(bufferSerial);
+      // Limpia el buffer
+      bufferSerial = "";
+    } else {
+      // Si aún no llega ENTER se siguen acumulando caracteres
+      bufferSerial += c;
+    }
+  }
+
+  // ====================================================
+  // CONTROL TEMPORAL CON millis()
+  // ====================================================
+
+  // Obtiene el tiempo actual en milisegundos
+  unsigned long tiempoActual = millis();
+  // Verifica si ya pasaron 500 ms
+  if ((tiempoActual - tiempoAnterior) >= intervalo) {
+    // Actualiza la referencia temporal
+    tiempoAnterior = tiempoActual;
+
+    // ----- LECTURA DEL LM35 -----
+
+    // Lee el valor ADC del sensor
+    int raw = analogRead(PIN_LM35);
+    // Convierte el valor ADC a temperatura
+    temperatura = raw * 110.0 / 1023.0;
+
+    // ----- CONTROL ON/OFF -----
+
+    // Calcula el error del sistema
+    float error = setpoint - temperatura;
+    // Si la temperatura es menor al setpoint
+    if (error > 0) {
+      // Enciende el calefactor al máximo PWM
+      analogWrite(PIN_ENA, PWM_MAXIMO);
+    } else {
+      // Si alcanzó el setpoint se apaga el calefactor
+      analogWrite(PIN_ENA, 0);
+    }
+
+    // ----- ENVÍO AL SERIAL PLOTTER -----
+
+    // Envía temperatura en formato compatible con Serial Plotter
+    Serial.print("temperatura:");
+    Serial.println(temperatura);
+
+    // ----- ACTUALIZACIÓN DEL OLED -----
+    // Limpia la pantalla
+    display.clearDisplay();
+    // Configura tamaño del texto
+    display.setTextSize(1);
+    // Configura color del texto
+    display.setTextColor(SSD1306_WHITE);
+
+    // ----- MOSTRAR TEMPERATURA -----
+
+    // Posiciona cursor
+    display.setCursor(0, 0);
+    // Muestra temperatura actual
+    display.print("Temp: ");
+    display.print(temperatura, 1);
+    display.println(" C");
+
+    // ----- MOSTRAR SETPOINT -----
+
+    // Posiciona cursor
+    display.setCursor(0, 12);
+    // Muestra setpoint actual
+    display.print("SET: ");
+    display.print(setpoint, 1);
+    display.println(" C");
+
+    // ----- MOSTRAR ESTADO DEL CALEFACTOR -----
+
+    // Posiciona cursor
+    display.setCursor(0, 24);
+    // Si el error es positivo el calefactor está encendido
+    if (error > 0) {
+      display.print("Heater: ON");
+    } else {
+      // Si no, el calefactor está apagado
+      display.print("Heater: OFF");
+    }
+    // Actualiza físicamente el OLED
+    display.display();
+
+    // ----- LED WATCHDOG -----
+
+    // Cambia el estado del LED D13 cada ciclo
+    digitalWrite(
+      LED_PIN,
+      !digitalRead(LED_PIN)
+    );
+  }
+}
+
+// ---------- FUNCIÓN PARA PROCESAR COMANDOS ----------
+
+void procesarComando(String linea) {
+
+  // Elimina espacios extra
+  linea.trim();
+  // Verifica si el comando comienza con "SET"
+  if (linea.startsWith("SET")) {
+    // Extrae el valor numérico del comando
+    setpoint = linea.substring(4).toFloat();
+    // Limita el setpoint entre 0 °C y 50 °C
+    setpoint = constrain(
+      setpoint,
+      0.0,
+      50.0
+    );
+    // Muestra confirmación en monitor serial
+    Serial.print("Nuevo setpoint: ");
+    Serial.println(setpoint);
+  }
+  // Si el comando no es válido
+  else {
+    // Muestra mensaje de error
+    Serial.println("Comando invalido");
+  }
+}
 ```
 
 ### Actividad 3 — Implementación del controlador P
 
 ```cpp
-// Pegar aquí:
-// - La extensión de procesarComando() con el comando KP xx
-// - El cálculo de salidaPWM = Kp * error con constrain()
+
+========================================================
+LAB 07 - ACTIVIDAD 3
+CONTROL PROPORCIONAL (P)
+Universidad Nacional de Colombia
+========================================================
+//Funcionamiento:
+//1. El LM35 mide la temperatura
+//2. El usuario define:
+      - Setpoint
+      - Ganancia proporcional Kp
+//3. El sistema calcula el error:
+      error = setpoint - temperatura
+//4. La salida PWM se calcula como:
+      salidaPWM = Kp * error
+//5. Mientras mayor sea el error,
+   mayor será la potencia aplicada
+
+=======================================================
+
+// ---------- LIBRERÍAS ----------
+
+// Librería para comunicación I2C
+#include <Wire.h>
+// Librería gráfica base del OLED
+#include <Adafruit_GFX.h>
+// Librería específica para pantallas SSD1306
+#include <Adafruit_SSD1306.h>
+
+// ---------- CONFIGURACIÓN DEL OLED ----------
+// Resolución horizontal del OLED
+#define SCREEN_WIDTH 128
+// Resolución vertical del OLED
+#define SCREEN_HEIGHT 32
+// Creación del objeto display OLED
+Adafruit_SSD1306 display(
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  &Wire,
+  -1
+);
+
+// ---------- DEFINICIÓN DE PINES ----------
+
+// Pin analógico conectado al LM35
+const int PIN_LM35 = A3;
+// Pines del módulo L298N
+const int PIN_IN1 = 7;
+const int PIN_IN2 = 8;
+const int PIN_ENA = 9;
+// LED integrado del Arduino
+const int LED_PIN = 13;
+
+// ---------- VARIABLES DE CONTROL ----------
+// PWM máximo permitido
+const int PWM_MAXIMO = 255;
+// Variable donde se almacena la temperatura
+float temperatura = 0.0;
+// Temperatura objetivo
+float setpoint = 0.0;
+
+// ----- CONTROL P -----
+// Ganancia proporcional
+float Kp = 0.0;
+// Variable donde se almacena la salida PWM
+float salidaPWM = 0.0;
+
+// ---------- VARIABLES SERIAL ----------
+// Buffer para almacenar caracteres seriales
+String bufferSerial = "";
+
+// ---------- VARIABLES DE TIEMPO ----------
+// Intervalo entre ciclos de control
+const unsigned long intervalo = 2000;
+// Guarda el instante del último ciclo
+unsigned long tiempoAnterior = 0;
+
+// ---------- FUNCIÓN DE CONFIGURACIÓN ----------
+void setup() {
+  // Inicia comunicación serial a 115200 baudios
+  Serial.begin(115200);
+  // Usa referencia ADC interna de 1.1V
+  analogReference(INTERNAL);
+
+  // ----- CONFIGURACIÓN DEL L298N -----
+  // Configura pines como salida
+  pinMode(PIN_IN1, OUTPUT);
+  pinMode(PIN_IN2, OUTPUT);
+  pinMode(PIN_ENA, OUTPUT);
+  // Dirección fija del calefactor
+  digitalWrite(PIN_IN1, LOW);
+  digitalWrite(PIN_IN2, HIGH);
+  // Inicia calefactor apagado
+  analogWrite(PIN_ENA, 0);
+
+  // ----- CONFIGURACIÓN DEL LED -----
+
+  // Configura LED watchdog como salida
+  pinMode(LED_PIN, OUTPUT);
+  // ----- INICIALIZACIÓN DEL OLED -----
+  // Inicializa el display OLED
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    // Si falla el OLED se detiene el programa
+    while (true);
+  }
+  // Limpia la pantalla
+  display.clearDisplay();
+  // Actualiza físicamente el OLED
+  display.display();
+
+  // ----- MENSAJES INICIALES -----
+  Serial.println("=================================");
+  Serial.println(" LAB 07 - CONTROL PROPORCIONAL ");
+  Serial.println("=================================");
+  Serial.println();
+  // Muestra comandos disponibles
+  Serial.println("Comandos:");
+  Serial.println("SET xx");
+  Serial.println("KP xx");
+}
+
+// ---------- BUCLE PRINCIPAL ----------
+
+void loop() {
+
+  // ====================================================
+  // PARSER SERIAL NO BLOQUEANTE
+  // ====================================================
+
+  // Revisa continuamente si llegaron datos seriales
+  while (Serial.available()) {
+    // Lee un carácter del puerto serial
+    char c = Serial.read();
+    // Si llega ENTER el comando terminó
+    if (c == '\n' || c == '\r') {
+      // Verifica que el buffer no esté vacío
+      if (bufferSerial.length() > 0) {
+        // Procesa el comando recibido
+        procesarComando(bufferSerial);
+        // Limpia el buffer
+        bufferSerial = "";
+      }
+
+    } else {
+      // Si aún no llega ENTER se siguen acumulando caracteres
+      bufferSerial += c;
+    }
+  }
+
+  // ====================================================
+  // CICLO DE CONTROL
+  // ====================================================
+
+  // Obtiene el tiempo actual
+  unsigned long tiempoActual = millis();
+  // Verifica si ya pasó el intervalo definido
+  if (tiempoActual - tiempoAnterior >= intervalo) {
+    // Actualiza referencia temporal
+    tiempoAnterior = tiempoActual;
+
+    // ==================================================
+    // LECTURA DEL LM35
+    // ==================================================
+
+    // Lee el valor ADC del sensor
+    int raw = analogRead(PIN_LM35);
+    // Convierte el valor ADC a temperatura
+    temperatura = raw * 110.0 / 1023.0;
+
+    // ==================================================
+    // CONTROL PROPORCIONAL (P)
+    // ==================================================
+
+    // Calcula el error del sistema
+    float error = setpoint - temperatura;
+    /*
+      Control proporcional:
+      salidaPWM = Kp * error
+      Mientras más grande sea el error,
+      mayor será la potencia aplicada.
+    */
+    salidaPWM = Kp * error;
+    // Limita el PWM entre 0 y 255
+    salidaPWM = constrain(
+      salidaPWM,
+      0,
+      PWM_MAXIMO
+    );
+    // Aplica la salida PWM al calefactor
+    analogWrite(
+      PIN_ENA,
+      (int)salidaPWM
+    );
+
+    // ==================================================
+    // SERIAL PLOTTER
+    // ==================================================
+
+    // Envía temperatura al Serial Plotter
+    Serial.print("temperatura:");
+    Serial.println(temperatura);
+
+    // ==================================================
+    // ACTUALIZACIÓN DEL OLED
+    // ==================================================
+
+    // Limpia la pantalla
+    display.clearDisplay();
+    // Configuración del texto
+    display.setTextSize(1);
+    display.setTextColor(SSD1306_WHITE);
+
+    // ----- TEMPERATURA -----
+
+    // Posiciona cursor
+    display.setCursor(0, 0);
+    // Muestra temperatura actual
+    display.print("Temp:");
+    display.print(temperatura, 1);
+
+    // ----- SETPOINT -----
+    // Posiciona cursor
+    display.setCursor(0, 10);
+    // Muestra setpoint
+    display.print("SET:");
+    display.print(setpoint, 1);
+
+    // ----- Kp -----
+    // Posiciona cursor
+    display.setCursor(0, 20);
+    // Muestra valor de Kp
+    display.print("Kp:");
+    display.print(Kp, 1);
+
+    // ----- PWM -----
+
+    // Posiciona cursor
+    display.setCursor(70, 20);
+    // Muestra PWM aplicado
+    display.print("PWM:");
+    display.print((int)salidaPWM);
+    // Actualiza físicamente el OLED
+    display.display();
+
+    // ==================================================
+    // LED WATCHDOG
+    // ==================================================
+
+    // Cambia el estado del LED D13 cada ciclo
+    digitalWrite(
+      LED_PIN,
+      !digitalRead(LED_PIN)
+    );
+  }
+}
+
+// ---------- FUNCIÓN PARA PROCESAR COMANDOS ----------
+void procesarComando(String linea) {
+  // Elimina espacios extra
+  linea.trim();
+
+  // ====================================================
+  // COMANDO SET
+  // ====================================================
+
+  // Verifica si el comando comienza con "SET"
+  if (linea.startsWith("SET")) {
+    // Extrae el valor numérico
+    setpoint = constrain(
+      linea.substring(4).toFloat(),
+      0.0,
+      50.0
+    );
+    // Muestra confirmación
+    Serial.print("Nuevo setpoint: ");
+    Serial.println(setpoint);
+  }
+
+  // ====================================================
+  // COMANDO KP
+  // ====================================================
+
+  // Verifica si el comando comienza con "KP"
+  else if (linea.startsWith("KP")) {
+    // Extrae el valor de Kp
+    Kp = linea.substring(3).toFloat();
+    // Muestra confirmación
+    Serial.print("Nuevo Kp: ");
+    Serial.println(Kp);
+  }
+
+  // ====================================================
+  // COMANDO INVÁLIDO
+  // ====================================================
+
+  else {
+    // Muestra mensaje de error
+    Serial.println("Comando invalido");
+  }
+}
 ```
 
 ### Actividad 4 — Implementación del controlador PI
 
 ```cpp
-// Pegar aquí:
-// - La extensión de procesarComando() con el comando KI xx
-// - La acumulación errorSum += error * dt
-// - El constrain(errorSum, -PWM_MAXIMO / Ki, PWM_MAXIMO / Ki)
-//   IMPORTANTE: esta línea solo debe ejecutarse cuando Ki != 0.
-//   Si Ki == 0 y se evalúa PWM_MAXIMO / Ki ocurre una división por cero
-//   que puede causar un reinicio o cuelgue del Arduino.
-//   Proteger con: if (Ki != 0) { errorSum = constrain(...); }
-// - El cálculo salidaPWM = Kp * error + Ki * errorSum con constrain()
+
+// ========================================================
+// LAB 07 - ACTIVIDAD 4
+// CONTROL PI
+// Universidad Nacional de Colombia
+//========================================================
+
+// 1. El LM35 mide la temperatura
+// 2. El usuario define:
+      - Setpoint
+      - Ganancia proporcional Kp
+      - Ganancia integral Ki
+// 3. El sistema calcula el error:
+      error = setpoint - temperatura
+// 4. El controlador PI calcula:
+      salidaPWM = Kp * error + Ki * error acumulado
+// 5. El término integral ayuda a eliminar el error estacionario
+
+========================================================
+
+// ---------- LIBRERÍAS ----------
+// Librería para comunicación I2C
+#include <Wire.h>
+// Librería gráfica base del OLED
+#include <Adafruit_GFX.h>
+// Librería específica para pantallas SSD1306
+#include <Adafruit_SSD1306.h>
+
+// ---------- CONFIGURACIÓN DEL OLED ----------
+// Resolución horizontal del OLED
+#define SCREEN_WIDTH 128
+// Resolución vertical del OLED
+#define SCREEN_HEIGHT 32
+// Creación del objeto display OLED
+Adafruit_SSD1306 display(
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT,
+  &Wire,
+  -1
+);
+
+// ---------- DEFINICIÓN DE PINES ----------
+
+// Pin analógico conectado al LM35
+const int PIN_LM35 = A3;
+// Pines del módulo L298N
+const int PIN_IN1 = 7;
+const int PIN_IN2 = 8;
+const int PIN_ENA = 9;
+// LED integrado del Arduino
+const int LED_PIN = 13;
+
+// ---------- VARIABLES DE CONTROL ----------
+
+// PWM máximo permitido
+const int PWM_MAXIMO = 255;
+// Variable donde se almacena la temperatura medida
+float temperatura = 0.0;
+// Temperatura objetivo definida por el usuario
+float setpoint = 0.0;
+
+// ---------- VARIABLES DEL CONTROL PI ----------
+
+// Ganancia proporcional
+float Kp = 0.0;
+// Ganancia integral
+float Ki = 0.0;
+// Error actual del sistema
+float error = 0.0;
+// Acumulador del error integral
+float errorSum = 0.0;
+// Variable donde se almacena la salida PWM
+float salidaPWM = 0.0;
+// Tiempo de muestreo en segundos
+float dt = 2.0;
+
+// ---------- VARIABLES SERIAL ----------
+
+// Buffer para almacenar caracteres seriales
+String bufferSerial = "";
+
+// ---------- VARIABLES DE TIEMPO ----------
+
+// Intervalo entre ciclos de control
+const unsigned long intervalo = 2000;
+// Guarda el instante del último ciclo
+unsigned long tiempoAnterior = 0;
+
+// ---------- FUNCIÓN DE CONFIGURACIÓN ----------
+
+void setup() {
+  // Inicia comunicación serial a 115200 baudios
+  Serial.begin(115200);
+  // Usa referencia ADC interna de 1.1V
+  analogReference(INTERNAL);
+
+  // ----- CONFIGURACIÓN DEL L298N -----
+
+  // Configura pines del puente H como salidas
+  pinMode(PIN_IN1, OUTPUT);
+  pinMode(PIN_IN2, OUTPUT);
+  pinMode(PIN_ENA, OUTPUT);
+  // Define dirección fija del calefactor
+  digitalWrite(PIN_IN1, LOW);
+  digitalWrite(PIN_IN2, HIGH);
+  // Inicia calefactor apagado
+  analogWrite(PIN_ENA, 0);
+
+  // ----- CONFIGURACIÓN DEL LED -----
+
+  // Configura LED watchdog como salida
+  pinMode(LED_PIN, OUTPUT);
+
+  // ----- INICIALIZACIÓN DEL OLED -----
+
+  // Inicializa el display OLED
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    // Si falla el OLED se detiene el programa
+    while (true);
+  }
+  // Limpia el display
+  display.clearDisplay();
+  // Actualiza físicamente el OLED
+  display.display();
+
+  // ----- MENSAJES INICIALES -----
+
+  Serial.println("=================================");
+  Serial.println(" LAB 07 - CONTROL PI ");
+  Serial.println("=================================");
+  Serial.println();
+
+  // Muestra comandos disponibles
+  Serial.println("Comandos:");
+  Serial.println("SET xx");
+  Serial.println("KP xx");
+  Serial.println("KI xx");
+}
+
+// ---------- BUCLE PRINCIPAL ----------
+
+void loop() {
+  // ====================================================
+  // PARSER SERIAL NO BLOQUEANTE
+  // ====================================================
+  // Revisa continuamente si llegaron datos seriales
+  while (Serial.available()) {
+    // Lee un carácter recibido
+    char c = Serial.read();
+    // Si llega ENTER el comando terminó
+    if (c == '\n' || c == '\r') {
+      // Verifica que el buffer no esté vacío
+      if (bufferSerial.length() > 0) {
+        // Procesa el comando recibido
+        procesarComando(bufferSerial);
+        // Limpia el buffer
+        bufferSerial = "";
+      }
+    } else {
+      // Si aún no llega ENTER se siguen acumulando caracteres
+      bufferSerial += c;
+    }
+  }
+
+  // ====================================================
+  // CICLO DE CONTROL
+  // ====================================================
+
+  // Obtiene el tiempo actual en milisegundos
+  unsigned long tiempoActual = millis();
+  // Verifica si ya transcurrió el intervalo definido
+  if (tiempoActual - tiempoAnterior >= intervalo) {
+    // Actualiza referencia temporal
+    tiempoAnterior = tiempoActual;
+
+    // ==================================================
+    // LECTURA DEL LM35
+    // ==================================================
+
+    // Lee el valor ADC del sensor
+    int raw = analogRead(PIN_LM35);
+    // Convierte el valor ADC a temperatura
+    temperatura = raw * 110.0 / 1023.0;
+
+    // ==================================================
+    // CÁLCULO DEL ERROR
+    // ==================================================
+
+    // Calcula el error del sistema
+    error = setpoint - temperatura;
+
+    // ==================================================
+    // TÉRMINO INTEGRAL
+    // ==================================================
+
+    /*
+      Acumula el error en el tiempo.
+
+      errorSum representa:
+
+      ∫ error dt
+    */
+    errorSum += error * dt;
+
+    // ==================================================
+    // ANTI WIND-UP
+    // ==================================================
+
+    /*
+      Evita crecimiento excesivo del término integral.
+      Si errorSum crece demasiado, el controlador puede saturarse y responder lentamente.
+      constrain() limita el valor máximo, permitido para errorSum.
+    */
+    if (Ki > 0) {
+      errorSum = constrain(
+        errorSum,
+        -PWM_MAXIMO / Ki,
+        PWM_MAXIMO / Ki
+      );
+    }
+
+    // ==================================================
+    // CONTROL PI
+    // ==================================================
+
+    /*
+      Ecuación del controlador PI:
+      salidaPWM =  Kp * error +  Ki * errorSum
+    */
+    salidaPWM =
+      Kp * error
+      +
+      Ki * errorSum;
+    // Limita el PWM entre 0 y 255
+    salidaPWM = constrain(
+      salidaPWM,
+      0,
+      PWM_MAXIMO
+    )
+    // Aplica PWM al calefactor
+    analogWrite(
+      PIN_ENA,
+      (int)salidaPWM
+    );
+
+    // ==================================================
+    // SERIAL PLOTTER
+    // ==================================================
+
+    // Envía temperatura al Serial Plotter
+    Serial.print("temperatura:");
+    Serial.println(temperatura);
+
+    // ==================================================
+    // ACTUALIZACIÓN DEL OLED
+    // ==================================================
+
+    // Limpia la pantalla
+    display.clearDisplay();
+    // Configura tamaño del texto
+    display.setTextSize(1);
+    // Configura color del texto
+    display.setTextColor(SSD1306_WHITE);
+
+    // ----- TEMPERATURA -----
+
+    // Posiciona cursor
+    display.setCursor(0, 0);
+    // Muestra temperatura actual
+    display.print("T:");
+    display.print(temperatura, 1);
+
+    // ----- SETPOINT -----
+
+    // Posiciona cursor
+    display.setCursor(64, 0);
+    // Muestra setpoint
+    display.print("S:");
+    display.print(setpoint, 1);
+
+    // ----- KP -----
+
+    // Posiciona cursor
+    display.setCursor(0, 12);
+    // Muestra Kp
+    display.print("Kp:");
+    display.print(Kp, 1);
+
+    // ----- KI -----
+
+    // Posiciona cursor
+    display.setCursor(64, 12);
+    // Muestra Ki
+    display.print("Ki:");
+    display.print(Ki, 2);
+
+    // ----- PWM -----
+
+    // Posiciona cursor
+    display.setCursor(0, 24);
+    // Muestra PWM aplicado
+    display.print("PWM:");
+    display.print((int)salidaPWM);
+    // Actualiza físicamente el OLED
+    display.display();
+
+    // ==================================================
+    // LED WATCHDOG
+    // ==================================================
+
+    // Cambia el estado del LED D13 cada ciclo
+    digitalWrite(
+      LED_PIN,
+      !digitalRead(LED_PIN)
+    );
+  }
+}
+
+// ---------- FUNCIÓN PARA PROCESAR COMANDOS ----------
+
+void procesarComando(String linea) {
+  // Elimina espacios extra
+  linea.trim();
+
+  // ====================================================
+  // COMANDO SET
+  // ====================================================
+
+  // Verifica si el comando comienza con "SET"
+  if (linea.startsWith("SET")) {
+    // Extrae el valor del setpoint
+    setpoint = constrain(
+      linea.substring(4).toFloat(),
+      0.0,
+      50.0
+    );
+    // Muestra confirmación
+    Serial.print("Nuevo setpoint: ");
+    Serial.println(setpoint);
+  }
+
+  // ====================================================
+  // COMANDO KP
+  // ====================================================
+
+  // Verifica si el comando comienza con "KP"
+  else if (linea.startsWith("KP")) {
+    // Extrae el valor de Kp
+    Kp = linea.substring(3).toFloat();
+    // Muestra confirmación
+    Serial.print("Nuevo Kp: ");
+    Serial.println(Kp);
+  }
+
+  // ====================================================
+  // COMANDO KI
+  // ====================================================
+
+  // Verifica si el comando comienza con "KI"
+  else if (linea.startsWith("KI")) {
+    // Extrae el valor de Ki
+    Ki = linea.substring(3).toFloat();
+    // Muestra confirmación
+    Serial.print("Nuevo Ki: ");
+    Serial.println(Ki);
+  }
+
+  // ====================================================
+  // COMANDO INVÁLIDO
+  // ====================================================
+
+  else {
+    // Muestra mensaje de error
+    Serial.println("Comando invalido");
+  }
+}
 ```
 
 ---
