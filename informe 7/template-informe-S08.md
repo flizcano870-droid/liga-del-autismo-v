@@ -179,7 +179,7 @@ Tanto la media móvil de la Actividad 1 como el oversampling de la Actividad 2 p
       - Señal filtrada media móvil
       - Señal filtrada IIR
 
-========================================================
+// ========================================================
 
 // ---------- PARÁMETROS DEL FILTRO ----------
 // Número de muestras de la media móvil
