@@ -165,9 +165,131 @@ Tanto la media móvil de la Actividad 1 como el oversampling de la Actividad 2 p
 ### Actividad 1 — Filtrado Digital (Generador de señales en A0)
 
 ```cpp
-// Pegar aquí el código comentado de la Actividad de Filtrado Digital.
-// Incluir: buffer circular, filtro de media móvil, filtro IIR,
-// y los barridos de frecuencia con impresión etiquetada para Serial Plotter.
+//============================================
+//LAB 08 - ACTIVIDAD 1
+//FILTRADO DIGITAL
+//Universidad Nacional de Colombia
+//========================================================
+//1. Se lee una señal analógica desde A0
+//2. Se aplica:
+      - Media móvil
+      - Filtro IIR
+//3. Se envían:
+      - Señal cruda
+      - Señal filtrada media móvil
+      - Señal filtrada IIR
+
+========================================================
+
+// ---------- PARÁMETROS DEL FILTRO ----------
+// Número de muestras de la media móvil
+const int N = 8;
+//Buffer circular donde se almacenan las últimas N muestras.
+int buffer[N];
+// Índice que indica la posición actual dentro del buffer circular.
+int cabeza = 0;
+//Coeficiente del filtro IIR.
+//Debe cumplirse:
+//0 < alpha < 1
+// alpha pequeño implica más suavizado
+// alpha grande impica respuesta más rápida
+float alpha = 0.29;
+//Variable que almacena la salida previa del filtro IIR.
+//Se inicializa cerca de la mitad del rango ADC.
+float yPrev = 512;
+
+// ---------- FUNCIÓN DE CONFIGURACIÓN ----------
+
+void setup() {
+  // Inicia comunicación serial
+  Serial.begin(115200);
+  //Inicializa todas las posiciones del buffer en cero.
+  //Esto evita valores basura al iniciar el programa.
+  for (int i = 0; i < N; i++) {
+    buffer[i] = 0;
+  }
+}
+
+// ---------- BUCLE PRINCIPAL ----------
+
+void loop() {
+  // ====================================================
+  // LECTURA ANALÓGICA
+  // ====================================================
+
+  //Lee señal analógica desde A0.
+  //El ADC del Arduino convierte el voltaje en un valor entre: 0 y 1023.
+  int valorCrudo = analogRead(A0);
+
+  // ====================================================
+  // FILTRO DE MEDIA MÓVIL
+  // ====================================================
+
+  //Guarda la nueva muestra en la posición actual del buffer.
+  buffer[cabeza] = valorCrudo;
+  //Avanza el índice del buffer circular.
+  //El operador % permite volver al inicio cuando se alcanza el final del arreglo.
+  cabeza = (cabeza + 1) % N;
+  // Variable para acumular la suma de todas las muestras.
+  long suma = 0;
+  // Recorre todo el buffer y suma las N muestras almacenadas.
+  for (int i = 0; i < N; i++) {
+    suma += buffer[i];
+  }
+  // Calcula el promedio de las N muestras.
+  //Este promedio reduce ruido aleatorio.
+  float mediaMovil = (float)suma / N;
+
+  // ====================================================
+  // FILTRO IIR DE PRIMER ORDEN
+  // ====================================================
+
+  //Ecuación del filtro IIR:
+  // y(k) =alpha * x(k) + (1 - alpha) * y(k-1)
+  // donde:
+  // x(k):entrada actual
+  // y(k-1): salida anterior
+  // y(k): nueva salida filtrada
+  float y =
+    alpha * valorCrudo
+    +
+    (1 - alpha) * yPrev;
+
+  // Actualiza la salida previa para la siguiente iteración.
+  yPrev = y;
+
+  // ====================================================
+  // SERIAL PLOTTER
+  // ====================================================
+
+  /*
+  // Se envían tres señales:
+
+    - Señal cruda
+    - Señal media móvil
+    - Señal IIR
+
+  Esto permite compararlas
+  gráficamente en Serial Plotter.
+  */
+  Serial.print("Cruda:");
+  Serial.print(valorCrudo);
+  Serial.print(",MediaMovil:");
+  Serial.print(mediaMovil);
+  Serial.print(",IIR:");
+  Serial.println(y);
+
+  // ====================================================
+  // CONTROL DE FRECUENCIA DE MUESTREO
+  // ====================================================
+
+  // Espera 20 ms antes de la siguiente lectura.
+  // Frecuencia de muestreo aproximada:
+    fs ≈ 1 / 0.02 s
+    fs ≈ 50 Hz
+  delay(20);
+}
+
 ```
 
 ---
