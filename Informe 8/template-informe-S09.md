@@ -14,9 +14,9 @@
 | | 2. Sergio Andrés Poveda Pérez  |
 | | 3. Sara Romero Chaves|
 | | 4. Simon Gabriel Sandoval Palma|
-| | 5. |
-| **Grupo** | |
-| **Fecha de la práctica** | Miércoles 22 de Abril, 2026 |
+|
+| **Grupo** | 3|
+| **Fecha de la práctica** | Miércoles 27 de mayo, 2026 |
 | **Fecha de entrega** | Viernes 25 de Abril, 2026 |
 
 ---
@@ -30,26 +30,26 @@
 Coloque aquí una captura del osciloscopio mostrando una forma de onda periódica
 (diente de sierra, triangular o senoidal) con amplitud ~0–5 V.
 
-![Captura — Forma de onda periódica](imagenes/reto-1-onda-periodica.png)
+![Captura — Forma de onda periódica](ss1.jpeg)
 
 #### Capturas 2–4: Tres formas de onda
 
 Coloque aquí tres capturas del osciloscopio, una por cada forma de onda implementada.
 
-![Diente de sierra](imagenes/reto-1-diente-sierra.png)
+![Diente de sierra](ss2.jpeg)
 
-![Triangular](imagenes/reto-1-triangular.png)
+![Triangular](ss3.jpeg)
 
-![Senoidal con LUT](imagenes/reto-1-senoidal.png)
+![Senoidal con LUT](ss1.jpeg)
 
 #### Captura 5: Control de frecuencia
 
 Coloque aquí dos capturas del osciloscopio mostrando las dos condiciones extremas
 del potenciómetro: frecuencia mínima (~0.5 Hz) y frecuencia máxima (~15 Hz).
 
-![Frecuencia mínima](imagenes/reto-1-freq-min.png)
+![Frecuencia mínima](ssmin.jpeg)
 
-![Frecuencia máxima](imagenes/reto-1-freq-max.png)
+![Frecuencia máxima](ssmax.jpeg)
 
 ---
 
