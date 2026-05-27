@@ -110,11 +110,11 @@ Barrido (1 → 10 Hz)
 
 **Lo que debe demostrarse:** el ratio medido decrece siguiendo la tendencia 1/√N. Para N = 16: ratio ≈ 0.25; para N = 256: ratio ≈ 0.0625.
 
-![Gráfica 2 — Reducción de ruido oversampling](imagenes/grafica-2-oversampling.png)
+![Gráfica 2 — Reducción de ruido oversampling](graf_oversampling.png)
 
 **Interpretación:** *(A partir de la gráfica: ¿el ratio medido sigue la curva 1/√N? Si hay discrepancia, ¿en qué valores de N es mayor? ¿Qué podría explicarlo?)*
 
-> [Respuesta del estudiante aquí]
+> En general, el ratio medido sigue la curva teórica. Sin embargo, se observa discrepancias en todos los N diferentes a 1. Para N=4 la diferencia 0.031, para N=16 la diferencia es de 0.055, para N=64 la diferencia es de 0.063 y para N=256 la diferencia es de 0.028. Estas discrepancias podrían explicarse, principalmente, por el redondeo que realiza el código durante los cálculos de σ_over y σ_cruda, y que al aumentar N el valor debe hacerse tan pequeño que el redondeo tiene un impacto mayor. Otra posible causa es que el ruido del LM35 no sea completamente aleatorio, lo que podría afectar la reducción de ruido ideal esperada con el oversampling.
 
 ---
 
@@ -184,12 +184,12 @@ Tanto la media móvil de la Actividad 1 como el oversampling de la Actividad 2 p
 
 ## 5. Dificultades Encontradas y Soluciones Aplicadas
 
-### Dificultad 1: [Descripción breve]
+### Dificultad 1: Al conectar el osciloscopio en el canal 1 y colocar las especificaciones del generador soolicitadas, lo que se generaba no coincidia.
 
-- **Síntoma observado:**
-- **Causa identificada:**
-- **Solución aplicada:**
-- **Lección aprendida:**
+- **Síntoma observado:** Al conectar el osciloscopio al canal 1 y configurar el generador de señales con las especificaciones solicitadas, la señal generada no coincidía con lo esperado. La amplitud y la frecuencia de la señal no correspondían a los valores configurados en el generador.
+- **Causa identificada:** El canal del osciloscopio parecía tener una interferencia o un problema de calibración que afectaba la lectura de la señal.
+- **Solución aplicada:** Se cambió al canal 2 del osciloscopio, lo que permitió obtener una señal que coincidía con las especificaciones del generador. Además, se verificó la calibración del osciloscopio para asegurar lecturas precisas.
+- **Lección aprendida:**No siempre el error está en la configuración del aparato. Es importante verificar que el hardware esté funcionando correctamente y considerar la posibilidad de fallas en los instrumentos de medición.
 
 ---
 

@@ -4,7 +4,6 @@ import pandas as pd
 from scipy import stats
 
 
-# Datos de ejemplo
 datos = {
     'Flancos espurios': [0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2]
 }
