@@ -297,9 +297,149 @@ void loop() {
 ### Actividad 2 — Oversampling del LM35 (LM35 en A1)
 
 ```cpp
-// Pegar aquí el código comentado de la Actividad de Oversampling.
-// Incluir: acumulación de N lecturas con float, estadísticas periódicas
-// (σ cruda y σ_over) con millis(), y barrido de N = 1, 4, 16, 64, 256.
+
+//========================================================
+//LAB 08 - ACTIVIDAD 2
+//OVERSAMPLING Y REDUCCIÓN DE RUIDO
+//Universidad Nacional de Colombia
+//========================================================
+
+//1. Se toman N muestras consecutivas
+//2. Las muestras se promedian
+//3. Se calcula:
+      - media
+      - varianza
+      - desviación estándar
+//4. Cada 5 segundos se reporta:
+      Sigma_over
+
+//========================================================
+
+// ---------- PARÁMETROS DEL OVERSAMPLING ----------
+
+//Número de muestras utilizadas para el oversampling.
+// Mientras mayor sea N:
+//  - menor ruido
+//  - mayor tiempo de medición
+const int N = 16;
+
+// ---------- VARIABLES ESTADÍSTICAS ----------
+
+//Acumula todas las muestras oversampleadas.
+float sum = 0;
+//Acumula el cuadrado de todas las muestras.
+//Se usa para calcular varianza.
+float sumSq = 0;
+//Cuenta cuántas muestras se han tomado.
+long count = 0;
+
+// ---------- VARIABLES DE TIEMPO ----------
+
+//Guarda el instante inicial de la ventana de medición.
+unsigned long t0;
+
+// ---------- FUNCIÓN DE CONFIGURACIÓN ----------
+
+void setup() {
+  // Inicia comunicación serial
+  Serial.begin(115200);
+  // Usa referencia interna de 1.1V para mejorar resolución del ADC.
+  analogReference(INTERNAL);
+  // Guarda tiempo inicial.
+  t0 = millis();
+}
+
+// ---------- BUCLE PRINCIPAL ----------
+
+void loop() {
+  // ====================================================
+  // OVERSAMPLING
+  // ====================================================
+
+  // Variable donde se acumulan las N lecturas ADC.
+  float suma = 0;
+  // Toma N muestras consecutivas del pin analógico A1.
+  for (int i = 0; i < N; i++) {
+    suma += analogRead(A1);
+  }
+  // Calcula el promedio de las N muestras.
+  //Este promedio reduce ruido aleatorio.
+  float over = suma / N;
+
+  // ====================================================
+  // ESTADÍSTICAS
+  // ====================================================
+
+  // Acumula valores para calcular media y varianza.
+  sum += over;
+  sumSq += over * over;
+  //Incrementa contador de muestras.
+  count++;
+
+  // ====================================================
+  // CÁLCULO CADA 5 SEGUNDOS
+  // ====================================================
+
+  // Verifica si ya transcurrieron 5 segundos.
+  if (millis() - t0 >= 5000) {
+
+    // ==================================================
+    // MEDIA
+    // ==================================================
+
+    //Calcula promedio de todas las muestras oversampleadas.
+    float media = sum / count;
+
+    // ==================================================
+    // VARIANZA
+    // ==================================================
+
+    // Fórmula de varianza muestral:
+
+    //           Σx² - (Σx)² / n
+    //var = -----------------------
+    //              n - 1
+    float varianza =
+      (sumSq - (sum * sum) / count)
+      /
+      (count - 1);
+
+    // ==================================================
+    // DESVIACIÓN ESTÁNDAR
+    // ==================================================
+    
+    // Sigma representa el nivel de dispersión o ruido.
+    // Menor sigma: Señal más estable
+    float sigma = sqrt(varianza);
+
+    // ==================================================
+    // SERIAL MONITOR
+    // ==================================================
+
+    //Envía desviación estándar al monitor serial.
+    Serial.print("Sigma_over:");
+    Serial.println(sigma, 4);
+
+    // ==================================================
+    // REINICIAR ESTADÍSTICAS
+    // ==================================================
+
+    // Reinicia acumuladores para comenzar nueva ventana de medición.
+    sum = 0;
+    sumSq = 0;
+    count = 0;
+    // Reinicia referencia temporal.
+    t0 = millis();
+  }
+
+  // ====================================================
+  // CONTROL DE FRECUENCIA DE MUESTREO
+  // ====================================================
+
+  //Espera 50 ms antes del siguiente ciclo.
+  //Esto controla la velocidad de adquisición.
+  delay(50);
+}
 ```
 
 ---
