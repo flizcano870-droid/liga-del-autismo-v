@@ -38,7 +38,7 @@ Coloque aquí tres capturas del osciloscopio, una por cada forma de onda impleme
 
 ![Diente de sierra](ss2.jpeg)
 
-![Triangular](ss3.jpeg)
+![Triangular]()
 
 ![Senoidal con LUT](ss1.jpeg)
 
