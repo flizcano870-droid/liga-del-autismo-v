@@ -28,7 +28,7 @@ Los sensores utilizados serán:
 - Sensor de temperatura 
 - Sensor de humedad del suelo
 - Sensor de luz (LDR)
-- Sensor de CO2
+- Sensor de calidad del aire 
 - Sensor de conductividad eléctrica 
 - Sensor ultrasónico
 
@@ -118,22 +118,19 @@ Dibujen el esquemático completo mostrando:
 | Pin Arduino | Conectado a | Función |
 |---|---|---|
 | A0 | LM35 | Medición de temperatura |
-| A1 | YL11 | Medición de la humedad del suelo |
-| A2 | LDR | Medición de la intensidad luminosa |
-| A3 | EC | Medición de la conductividad eléctrica |
+| A1 | YL100 | Medición de la humedad del suelo |
+| A2 | MQ- 135 | Medición de la calidad del aire |
+| A3 | LDR | Medición de la intensidad luminosa |
 | A4 | OLED SDA| Comuicación I2C | 
 | A5 | OLED SCL| Comunicación I2C |
 | D2 | Echo HC-SR04| Medición del nivel de agua del tanque|
 | D3 | Trig HC-SR04 | Generación pulso ultrasónico|
-| D4 | Led EC| Alerta de nutrientes bajos|
-| D5 | Led CO2 | Alerta de CO2 alto|
+| D4 | Led agua | Alerta de nivel bajo del agua |
+| D5 | Led calidad del aire | Alerta de mala calidad del aire|
 | D6 | Led luz | Alerta de baja luminosidad|
-| D7 | Led agua | Alerta de nivel bajo de agua|
 | D9 PWM| MOSFET ventilador | Control de ventilador (sist. enfriamiento) |
 | D10 PWM| MOSFET bomba | Control de bomba de agua (sist. riego) |
 | D11 PWM | MOSFET termoresistencia | Control de termoresistencia (sist. calefacción) |
-| D12 | RX Software serial | Recepción desde el sensor de CO2|
-| D13 | TX  Software serial | Envío hacía sensr de CO2|
 |VIn | Sensores y OLED | Alimentación de energía |
 | GND | conectado a todos los módulos | Tierra común| 
 
@@ -187,10 +184,20 @@ void loop() {
 | Componente | Cant. | Costo unit. | Costo total | Proveedor | Disponible? | Plan B si no se consigue |
 |---|---|---|---|---|---|---|
 | Arduino Uno | 1 | Ya tienen | $0 | Kit | ✅ | — |
-| Sensor LM35 | 1 | $1.50 | $1.50 | Cra 9 | ✅ | Termistor NTC + calibración manual |
-| ... | | | | | | |
+| Sensor LM35 | 1 | Ya se tiene | $0 | Caja de componentes propia| ✅ | Termistor NTC + calibración manual |
+| Sensor YL100 | 1 | $6000 | $6000 | Mactronica | ✅ | DHT22 + calibración |
+| Sensor LDR | 1 | Ya se tiene | $0 | Caja de componentes propia | ✅  | GY-302
+Ferretería | ✅ | No es seguro su uso todavía |
+| Pantalla OLED | 1 | Ya se tiene | $0 | Caja de componentes propia | ✅ | LCD 16x2 + multiplexor I2C |
+| Sensor HC-SR04 | 1 | $5950 | $5950 | Sigma electrónica | ✅ | Sensor de nivel ultrasónico JSN-SR04T |
+| LEDs (diferentes colores)| 3 |  $357 | $1071 | Sigma electrónica | ✅ | — |
+| MOSFET IRLZ44N | 3 | $4284 | $12852 | Sigma electrónica | ✅ | NMOS |
+| Sensor MQ-135 | 1 | $8925 | $8925 | Sigma electrónica | ✅ | Sensor de CO2 MH-Z19B |
 
-**Costo total estimado:** $___
+
+
+
+**Costo total estimado:** $35000
 
 > ⚠️ **Crítico:** Si un componente es indispensable y no se consigue, el proyecto está en riesgo. Definan un Plan B para cada componente crítico.
 
