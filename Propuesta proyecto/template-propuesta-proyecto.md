@@ -1,11 +1,11 @@
 # Propuesta de Proyecto Final — Electrónica Digital 2026-1
 
-**Grupo #:** ___  
+**Grupo #:** _3_  
 **Integrantes:**  
-1. ___  
-2. ___  
-3. ___  
-4. ___  
+1. _Felipe Lizcano Quimbaya__  
+2. _Sergio Andres Poveda Perez__  
+3. _Sara Romero Chaves__  
+4. _Simon Gabriel Sandoval Palma__  
 
 **Fecha de entrega:** ___
 
