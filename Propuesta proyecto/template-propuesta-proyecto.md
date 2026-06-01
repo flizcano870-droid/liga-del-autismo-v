@@ -19,22 +19,31 @@
 
 **¿Qué van a construir?**
 
-Describan el dispositivo, instrumento o sistema que van a diseñar y fabricar. Puede ser:
+Se diseñará un sistema electrónico capaz de monitorear continuamente ciertas condiciones ambiantales (temperatura, humedad de la tierra, CO2, etc.) de un prototipo de inverrnadero.
+El sistema tendrá procesos automatizados con sensores y actuadores, además de alertas de alertas visuales que indican la necesidad de realizar alguna acción de mantenimiento. Por lo tanto, el sistema influye y optimiza el cuidado de una planta. 
 
-- La automatización de un experimento de física
-- Un instrumento de medición
-- Un dispositivo interactivo (instrumento musical, controlador, juego electrónico)
-- Un sistema de control o monitoreo
-- Cualquier proyecto que aproveche el toolkit del curso
+El prototipo busca aportar a la agricultura urbana, permitiendo facilitar el cuidado de cultivos alimenticios en espacios reducidos, como apartamentos o balcones. 
 
-Incluyan:
+Los sensores utilizados serán:
+- Sensor de temperatura 
+- Sensor de humedad del suelo
+- Sensor de luz (LDR)
+- Sensor de CO2
+- Sensor de conductividad eléctrica 
+- Sensor ultrasónico
 
-- ¿Qué hace su dispositivo? ¿Qué problema resuelve o qué necesidad satisface?
-- ¿Quién lo usaría y para qué?
-- ¿Qué entradas recibe y qué salidas produce? (señales, movimiento, sonido, luz, datos, etc.)
-- **Describan una sesión típica de uso:** desde que el usuario enciende el dispositivo hasta que obtiene un resultado. ¿Qué ve, qué escucha, qué hace?
+La salidas del circuito serán:
+- Ventilador para controlar la temperatura
+- Termoresistencia 
+- Bomba de agua para sistema de riego automático
+- LEDs indicadores de alerta (para índices de CO2 y nivel del agua en el tanque)
+- Display OLED para mostrar datos en tiempo real
+- Comunicación serial con PC
+  
+**Describan una sesión típica de uso:** 
 
----
+El diseño se piensa como un sistema que debe funcionar prácticamente de forma autónoma, con alertas visuales para el usuario. El usuario solo debe interactuar para realizar tareas de mantenimiento (regar, abrir ventana, etc.) cuando el sistema lo indique. Luego de la instalación inicial, el dispositivo se encarga de monitorear y controlar las condiciones por sí mismo, el usuario solo debería revisar el estado de los LEDs y la información de la pantalla OLED para saber si es necesario realizar alguna acción. Por ejemplo, si el LED que indica que el sistema de riego necesita agua en su tanque está encendido, el usuario deberá llenarlo; por otro lardo, si se indican en la pantalla OLED bajos niveles de luz dentro del invernadero, el usuario deberá remover la parte superior de la estructura que se lo permite.
+
 
 ## 2. Solución Propuesta — Diagrama de Bloques
 
@@ -76,17 +85,17 @@ La arquitectura depende del tipo de proyecto. Algunos ejemplos:
 
 Marquen con ✅ y describan cómo aplican cada habilidad. Si un subsistema no usa cierta habilidad, déjenlo en blanco.
 
-| Habilidad del curso | Subsistema 1: (nombre) | Subsistema 2: (nombre) | Subsistema 3: (nombre) |
+| Habilidad del curso | Subsistema 1: Monitoreo ambiental | Subsistema 2: Control ambiental | Subsistema 3: interfaz y registro |
 |---|---|---|---|
-| **S1** — E/S digital, protoboard | | | |
-| **S2** — Timing preciso, interrupciones | | | |
-| **S3** — Debouncing, ADC, sensores analógicos | | | |
-| **S4** — Comunicación UART + Python | | | |
-| **S5** — PWM, H-Bridge, actuadores | | | |
-| **S6** — Adquisición multicanal, OLED I2C | | | |
-| **S7** — Control PID | | | |
-| **S8** — Filtrado digital, oversampling, triggers | | | |
-| **S9** — DAC MCP4725, FSM, generación de señales | | | |
+| **S1** — E/S digital, protoboard |✅ Conexión de sensores|✅ Control digital y actuadores |✅ Leds de alerta|
+| **S2** — Timing preciso, interrupciones |✅ Muestreo de sensores (millis) |✅ Activación de actuadores (no bloqueante) |✅ Actualización de display OLED (sin delay)|
+| **S3** — Debouncing, ADC, sensores analógicos |✅ Lectura de sensores analógicos (ADC) | | |
+| **S4** — Comunicación UART + Python | | |✅ Envío de datos ambientales a CCV |
+| **S5** — PWM, H-Bridge, actuadores | |✅ Control PWM mediante MOSFET (ventilador bomba, resistencia) | |
+| **S6** — Adquisición multicanal, OLED I2C |✅ Adquisición simultánea de sensores| |✅ Visualización de datos en OLED I2C|
+| **S7** — Control PID | |✅ Control de la temperatura (termoresistencias) | |
+| **S8** — Filtrado digital, oversampling, triggers |✅ Filtrado del ruido para sensores (humedad, conductividad y CO2) | | |
+| **S9** — DAC MCP4725, FSM, generación de señales | |✅ FSM para decidir qué actuador utilizar | |
 
 > Si el proyecto completo usa menos de 4 habilidades distintas del curso, probablemente es demasiado simple. Pero no inflen la matriz: solo marquen las habilidades que REALMENTE usan.
 
@@ -108,8 +117,25 @@ Dibujen el esquemático completo mostrando:
 
 | Pin Arduino | Conectado a | Función |
 |---|---|---|
-| D2 | Botón 1 (INPUT_PULLUP, LOW al presionar) | Cambio de modo |
-| ... | ... | ... |
+| A0 | LM35 | Medición de temperatura |
+| A1 | YL11 | Medición de la humedad del suelo |
+| A2 | LDR | Medición de la intensidad luminosa |
+| A3 | EC | Medición de la conductividad eléctrica |
+| A4 | OLED SDA| Comuicación I2C | 
+| A5 | OLED SCL| Comunicación I2C |
+| D2 | Echo HC-SR04| Medición del nivel de agua del tanque|
+| D3 | Trig HC-SR04 | Generación pulso ultrasónico|
+| D4 | Led EC| Alerta de nutrientes bajos|
+| D5 | Led CO2 | Alerta de CO2 alto|
+| D6 | Led luz | Alerta de baja luminosidad|
+| D7 | Led agua | Alerta de nivel bajo de agua|
+| D9 PWM| MOSFET ventilador | Control de ventilador (sist. enfriamiento) |
+| D10 PWM| MOSFET bomba | Control de bomba de agua (sist. riego) |
+| D11 PWM | MOSFET termoresistencia | Control de termoresistencia (sist. calefacción) |
+| D12 | RX Software serial | Recepción desde el sensor de CO2|
+| D13 | TX  Software serial | Envío hacía sensr de CO2|
+|VIn | Sensores y OLED | Alimentación de energía |
+| GND | conectado a todos los módulos | Tierra común| 
 
 ### 4.3 Arquitectura de Software
 
