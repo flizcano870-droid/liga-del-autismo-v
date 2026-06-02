@@ -94,7 +94,7 @@ Marquen con ✅ y describan cómo aplican cada habilidad. Si un subsistema no us
 | **S5** — PWM, H-Bridge, actuadores | |✅ Control PWM mediante MOSFET (ventilador bomba, resistencia) | |
 | **S6** — Adquisición multicanal, OLED I2C |✅ Adquisición simultánea de sensores| |✅ Visualización de datos en OLED I2C|
 | **S7** — Control PID | |✅ Control de la temperatura (termoresistencias) | |
-| **S8** — Filtrado digital, oversampling, triggers |✅ Filtrado del ruido para sensores (humedad, conductividad y CO2) | | |
+| **S8** — Filtrado digital, oversampling, triggers |✅ Filtrado del ruido para sensores (humedad, conductividad y calidad del aire) | | |
 | **S9** — DAC MCP4725, FSM, generación de señales | |✅ FSM para decidir qué actuador utilizar | |
 
 > Si el proyecto completo usa menos de 4 habilidades distintas del curso, probablemente es demasiado simple. Pero no inflen la matriz: solo marquen las habilidades que REALMENTE usan.
@@ -186,18 +186,20 @@ void loop() {
 | Arduino Uno | 1 | Ya tienen | $0 | Kit | ✅ | — |
 | Sensor LM35 | 1 | Ya se tiene | $0 | Caja de componentes propia| ✅ | Termistor NTC + calibración manual |
 | Sensor YL100 | 1 | $6000 | $6000 | Mactronica | ✅ | DHT22 + calibración |
-| Sensor LDR | 1 | Ya se tiene | $0 | Caja de componentes propia | ✅  | GY-302
-Ferretería | ✅ | No es seguro su uso todavía |
+| Sensor LDR | 1 | Ya se tiene | $0 | Caja de componentes propia | ✅  | GY-302|
 | Pantalla OLED | 1 | Ya se tiene | $0 | Caja de componentes propia | ✅ | LCD 16x2 + multiplexor I2C |
 | Sensor HC-SR04 | 1 | $5950 | $5950 | Sigma electrónica | ✅ | Sensor de nivel ultrasónico JSN-SR04T |
 | LEDs (diferentes colores)| 3 |  $357 | $1071 | Sigma electrónica | ✅ | — |
 | MOSFET IRLZ44N | 3 | $4284 | $12852 | Sigma electrónica | ✅ | NMOS |
 | Sensor MQ-135 | 1 | $8925 | $8925 | Sigma electrónica | ✅ | Sensor de CO2 MH-Z19B |
+|Resistencias | 6 (220 $\Omega$)  4 (10 K$\Omega$)| $200| $2000 | Chaza de electronica |✅|-
+|Protoboard| 2 | Ya se tiene | $0 | $0 | Caja de componenetes propia|✅ |-
+|Diodos| 2 | $150| $300 | Sigma electronica | ✅ |-
 
 
 
 
-**Costo total estimado:** $35000
+**Costo total estimado:** $37000
 
 > ⚠️ **Crítico:** Si un componente es indispensable y no se consigue, el proyecto está en riesgo. Definan un Plan B para cada componente crítico.
 
