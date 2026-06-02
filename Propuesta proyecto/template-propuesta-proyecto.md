@@ -131,7 +131,8 @@ Dibujen el esquemático completo mostrando:
 | D9 PWM| MOSFET ventilador | Control de ventilador (sist. enfriamiento) |
 | D10 PWM| MOSFET bomba | Control de bomba de agua (sist. riego) |
 | D11 PWM | MOSFET termoresistencia | Control de termoresistencia (sist. calefacción) |
-|VIn | Sensores y OLED | Alimentación de energía |
+|VIn | Bomba, resistencia calefactora, ventilador, diodos| Alimentación de energía |
+|5.5V| Sensores, leds, oled | Alimentacion de emergia|
 | GND | conectado a todos los módulos | Tierra común| 
 
 ### 4.3 Arquitectura de Software
