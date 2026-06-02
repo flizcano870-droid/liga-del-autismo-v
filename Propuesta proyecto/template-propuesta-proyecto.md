@@ -19,7 +19,7 @@
 
 **¿Qué van a construir?**
 
-Se diseñará un sistema electrónico capaz de monitorear continuamente ciertas condiciones ambiantales (temperatura, humedad de la tierra, CO2, etc.) de un prototipo de inverrnadero.
+Se diseñará un sistema electrónico capaz de monitorear continuamente ciertas condiciones ambiantales (temperatura, humedad de la tierra, CO2, etc.) de un prototipo de invernadero.
 El sistema tendrá procesos automatizados con sensores y actuadores, además de alertas de alertas visuales que indican la necesidad de realizar alguna acción de mantenimiento. Por lo tanto, el sistema influye y optimiza el cuidado de una planta. 
 
 El prototipo busca aportar a la agricultura urbana, permitiendo facilitar el cuidado de cultivos alimenticios en espacios reducidos, como apartamentos o balcones. 
