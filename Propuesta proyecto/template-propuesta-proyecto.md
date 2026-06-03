@@ -2,19 +2,13 @@
 
 **Grupo #:** _3_  
 **Integrantes:**  
-1. _Felipe Lizcano Quimbaya__  
-2. _Sergio Andres Poveda Perez__  
-3. _Sara Romero Chaves__  
-4. _Simon Gabriel Sandoval Palma__  
-
-**Fecha de entrega:** ___
+1. _Felipe Lizcano Quimbaya_ 
+2. _Sergio Andres Poveda Perez_  
+3. _Sara Romero Chaves_  
+4. _Simon Gabriel Sandoval Palma_  
 
 ---
-
-> ⚠️ **Regla de oro:** Cada integrante debe poder explicar y defender cada decisión de diseño y cada línea de código. En cada entregable y en la presentación final se hará una pregunta aleatoria a cualquier miembro del grupo.
-
 ---
-
 ## 1. Descripción del Proyecto
 
 **¿Qué van a construir?**
@@ -40,34 +34,17 @@ La salidas del circuito serán:
 - Display OLED para mostrar datos en tiempo real
 - Comunicación serial con PC
   
-**Describan una sesión típica de uso:** 
+**Sesión típica de uso:** 
 
-El diseño se piensa como un sistema que debe funcionar prácticamente de forma autónoma, con alertas visuales para el usuario. El usuario solo debe interactuar para realizar tareas de mantenimiento (regar, abrir ventana, etc.) cuando el sistema lo indique. Luego de la instalación inicial, el dispositivo se encarga de monitorear y controlar las condiciones por sí mismo, el usuario solo debería revisar el estado de los LEDs y la información de la pantalla OLED para saber si es necesario realizar alguna acción. Por ejemplo, si el LED que indica que el sistema de riego necesita agua en su tanque está encendido, el usuario deberá llenarlo; por otro lardo, si se indican en la pantalla OLED bajos niveles de luz dentro del invernadero, el usuario deberá remover la parte superior de la estructura que se lo permite.
+El diseño se piensa como un sistema que debe funcionar prácticamente de forma autónoma, con alertas visuales para el usuario. El usuario solo debe interactuar para realizar tareas de mantenimiento (abrir ventana como ejemplo) cuando el sistema lo indique. Luego de la instalación inicial, el dispositivo se encarga de monitorear y controlar las condiciones por sí mismo, el usuario solo debería revisar el estado de los LEDs y la información de la pantalla OLED para saber si es necesario realizar alguna acción. Por ejemplo, si el LED que indica que el sistema de riego necesita agua en su tanque está encendido, el usuario deberá llenarlo; por otro lardo, si se indican en la pantalla OLED bajos niveles de luz dentro del invernadero, el usuario deberá remover la parte superior de la estructura que se lo permite.
 
+---
 
 ## 2. Solución Propuesta — Diagrama de Bloques
 
 **¿Cómo resuelven el problema con el toolkit del curso?**
 
-Dibujen un diagrama de bloques del sistema completo. Cada bloque debe ser un subsistema identificable con su función específica.
-
-La arquitectura depende del tipo de proyecto. Algunos ejemplos:
-
-**Tipo A — Instrumento de medición / automatización:**
-
 ![Diagrama de bloques circuito](Diagrama%20de%20bloques%20circuito.png)
-
-**Tipo B — Dispositivo interactivo (instrumento musical, juego, controlador):**
-```
-┌──────────┐    ┌──────────┐    ┌──────────┐
-│ ENTRADAS │ →  │ ARDUINO  │ →  │  SALIDAS │
-│(botones, │    │(FSM,     │    │(sonido,  │
-│ potenció-│    │ lógica)  │    │ LEDs,    │
-│ metros)  │    │          │    │ display) │
-└──────────┘    └──────────┘    └──────────┘
-```
-
-*Elijan la arquitectura que corresponda a su proyecto o dibujen una propia. Identifiquen cada bloque con su función específica. Si su proyecto usa comunicación serial con Python (S4), agreguen el bloque PC/LOG.*
 
 ---
 
@@ -89,7 +66,6 @@ Marquen con ✅ y describan cómo aplican cada habilidad. Si un subsistema no us
 | **S8** — Filtrado digital, oversampling, triggers |✅ Filtrado del ruido para sensores (humedad, conductividad y calidad del aire) | | |
 | **S9** — DAC MCP4725, FSM, generación de señales | |✅ FSM para decidir qué actuador utilizar | |
 
-> Si el proyecto completo usa menos de 4 habilidades distintas del curso, probablemente es demasiado simple. Pero no inflen la matriz: solo marquen las habilidades que REALMENTE usan.
 
 ---
 
@@ -99,15 +75,7 @@ Marquen con ✅ y describan cómo aplican cada habilidad. Si un subsistema no us
 
 ![Diagrama del circuito](Fantastic%20Allis-Vihelmo.png)
 
-
-Dibujen el esquemático completo mostrando:
-- Todos los pines de Arduino utilizados
-- Conexiones de sensores, actuadores, display, DAC
-- Resistencias, capacitores y componentes de protección
-- Alimentación (5V, 12V, GND)
-
-*Pueden dibujarlo a mano (foto) o usar Fritzing/Tinkercad.*
-
+---
 ### 4.2 Tabla de Pines
 
 | Pin Arduino | Conectado a | Función |
@@ -130,13 +98,14 @@ Dibujen el esquemático completo mostrando:
 |5.5V| Sensores, leds, oled | Alimentacion de emergia|
 | GND | conectado a todos los módulos | Tierra común| 
 
+---
 ### 4.3 Arquitectura de Software
 
-Describan la máquina de estados (FSM) de su sistema. La FSM es la implementación concreta de S9 que ya identificaron en la matriz de trazabilidad (Sección 3). Aquí la detallan con diagrama y pseudocódigo:
+Diagrama de bloques de la maquina de estados finitos FSM:
 
 ![Diagrama de bloques de FSM](Diagrama%20de%20bloques%20de%20FSM.png)
 
-Incluyan pseudocódigo de la FSM principal y las funciones clave:
+Pseudocódigo de la FSM principal y las funciones clave:
 
 ```cpp
 // Pseudocódigo — FSM principal
@@ -294,8 +263,6 @@ void loop()
 }
 ```
 
-> ⚠️ Este pseudocódigo es solo la estructura. En el código real deben usar `millis()` o interrupciones para el timing (S2). **Nada de `delay()` en una FSM.**
-
 ---
 
 ## 5. Lista de Materiales
@@ -328,8 +295,6 @@ void loop()
 
 **Costo total estimado:** $204558
 
-> ⚠️ **Crítico:** Si un componente es indispensable y no se consigue, el proyecto está en riesgo. Definan un Plan B para cada componente crítico.
-
 ---
 
 ## 6. Cronograma — Entregables
@@ -349,9 +314,6 @@ void loop()
 - **Definición de "terminado":** ¿Cómo se sabe, sin ambigüedad, que este entregable está completo?
 - ¿Qué riesgos podrían retrasar este entregable y cómo los mitigan?
 
-> Si un entregable se retrasa, ¿afecta a los demás? Si el Entregable 1 depende de un componente que no llegó, ¿hay Plan B?
-
-> 🔄 **Cambio de rumbo:** Si después del Entregable 1 descubren que el proyecto no es viable, pueden proponer un ajuste del alcance o un pivoteo justificado — pero DEBEN discutirlo con el profesor ANTES del Entregable 2. No se aceptan cambios de proyecto en la última semana.
 
 ---
 
@@ -378,6 +340,9 @@ El MVP se considerará completado cuando:
 5. El sistema transmita continuamente los datos de los cuatro sensores mediante comunicación UART al computador durante al menos 2 minutos sin errores ni reinicios.
 6. Se registren al menos 50 mediciones consecutivas correctas de todas las variables monitoreadas.
 7. La pantalla OLED muestre los valores de temperatura, humedad del suelo, luminosidad y nivel de agua.
+
+---
+
 ## 8. Métrica de Éxito
 
 **¿Cómo se sabe, sin ambigüedad, que el proyecto funciona?**
@@ -385,7 +350,7 @@ El MVP se considerará completado cuando:
 
 El proyecto se considerará exitoso si durante una prueba continua de 2 horas el sistema mantiene la temperatura entre 15 °C y 20 °C al menos el 90% del tiempo, activa automáticamente el riego cuando la humedad del suelo cae por debajo del umbral establecido y transmite correctamente más del 95% de las mediciones de los sensores (temperatura, humedad, luminosidad y nivel de agua) a la pantalla OLED y al computador mediante UART.
 
-
+---
 
 ## 9. Plan de Validación
 
@@ -402,6 +367,8 @@ El proyecto se considerará exitoso si durante una prueba continua de 2 horas el
 * Los actuadores (bomba, ventilador y termoresistencia) deberán responder en menos de **3 segundos** después de que una variable exceda su umbral de activación.
 
 Además, se esperará lograr una, por lo menos, germinación exitosa de dos plantas de lechugas durante el período del proyecto, demostrando que el sistema de monitoreo y control ambiental contribuye efectivamente al cuidado de las plantas. Esto se comparará con una planta de prueba que se cuidará de manera más tradicional siguiendo los cuidados sugeridos por guias de cultivos.
+
+---
 
 
 ## 10. Bitácora de Diseño
