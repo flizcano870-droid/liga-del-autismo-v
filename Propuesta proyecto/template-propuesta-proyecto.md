@@ -231,6 +231,8 @@ void loop() {
 
 **Nuestro MVP es:**
 
+Un sistema capaz de monitorear temperatura, humedad del suelo, intensidad lumínica y nivel de agua del tanque, mostrando la información en una pantalla OLED y enviándola por comunicación serial al computador. Además, el sistema generará alertas visuales mediante LEDs cuando se detecten condiciones fuera de los rangos establecidos para el cultivo.
+
 ___
 
 **Prueba de aceptación del MVP:** ¿Qué evidencia concreta demostraría que el MVP está completo?
