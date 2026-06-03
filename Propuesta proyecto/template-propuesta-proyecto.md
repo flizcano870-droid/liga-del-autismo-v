@@ -54,16 +54,8 @@ Dibujen un diagrama de bloques del sistema completo. Cada bloque debe ser un sub
 La arquitectura depende del tipo de proyecto. Algunos ejemplos:
 
 **Tipo A — Instrumento de medición / automatización:**
-```
-┌──────────┐    ┌──────────┐    ┌──────────┐
-│ SENSORES │ →  │ ARDUINO  │ →  │ACTUADORES│
-└──────────┘    └──────────┘    └──────────┘
-                      │
-               ┌──────┴──────┐
-               │  DISPLAY /  │
-               │  PC / LOG   │
-               └─────────────┘
-```
+
+![Diagrama de bloques circuito](Diagrama%20de%20bloques%20circuito.png)
 
 **Tipo B — Dispositivo interactivo (instrumento musical, juego, controlador):**
 ```
@@ -104,6 +96,9 @@ Marquen con ✅ y describan cómo aplican cada habilidad. Si un subsistema no us
 ## 4. Diseño Técnico
 
 ### 4.1 Diagrama Esquemático
+
+![Diagrama del circuito](Fantastic%20Allis-Vihelmo.png)
+
 
 Dibujen el esquemático completo mostrando:
 - Todos los pines de Arduino utilizados
