@@ -383,16 +383,8 @@ El MVP se considerará completado cuando:
 **¿Cómo se sabe, sin ambigüedad, que el proyecto funciona?**
 ### Nuestra métrica de éxito
 
-✅ **El proyecto se considerará exitoso si durante una prueba continua de 2 horas el sistema mantiene la temperatura entre 22 °C y 28 °C al menos el 90% del tiempo, activa automáticamente el riego cuando la humedad del suelo cae por debajo del umbral establecido y transmite correctamente más del 95% de las mediciones de los sensores (temperatura, humedad, luminosidad y nivel de agua) a la pantalla OLED y al computador mediante UART.**
+El proyecto se considerará exitoso si durante una prueba continua de 2 horas el sistema mantiene la temperatura entre 15 °C y 20 °C al menos el 90% del tiempo, activa automáticamente el riego cuando la humedad del suelo cae por debajo del umbral establecido y transmite correctamente más del 95% de las mediciones de los sensores (temperatura, humedad, luminosidad y nivel de agua) a la pantalla OLED y al computador mediante UART.
 
-Además:
-
-* El sensor de temperatura deberá presentar un error menor a **±1 °C** respecto a un termómetro de referencia.
-* El sensor de nivel de agua deberá presentar un error menor a **±2 cm** respecto a una medición manual.
-* El sistema deberá detectar correctamente el estado de tanque vacío en **10 de 10 pruebas consecutivas**.
-* Los actuadores (bomba, ventilador y termoresistencia) deberán responder en menos de **3 segundos** después de que una variable exceda su umbral de activación.
-
-Esta métrica es **cuantitativa, medible y observable**, porque puede verificarse experimentalmente y determinar claramente si se cumple o no.
 
 
 ## 9. Plan de Validación
@@ -403,7 +395,13 @@ Esta métrica es **cuantitativa, medible y observable**, porque puede verificars
 - Si es un instrumento de medición: ¿cuántas mediciones van a tomar? (mínimo N ≥ 10)
 - Si es un dispositivo interactivo: ¿cómo prueban que la experiencia funciona?
 - ¿Qué análisis van a hacer? (promedio, desviación estándar, error relativo, tasa de aciertos, etc.)
+  
+* El sensor de temperatura deberá presentar un error menor a **±1 °C** respecto a un termómetro de referencia.
+* El sensor de nivel de agua deberá presentar un error menor a **±2 cm** respecto a una medición manual.
+* El sistema deberá detectar correctamente el estado de tanque vacío en **10 de 10 pruebas consecutivas**.
+* Los actuadores (bomba, ventilador y termoresistencia) deberán responder en menos de **3 segundos** después de que una variable exceda su umbral de activación.
 
+Además, se esperará lograr una, por lo menos, germinación exitosa de dos plantas de lechugas durante el período del proyecto, demostrando que el sistema de monitoreo y control ambiental contribuye efectivamente al cuidado de las plantas. Esto se comparará con una planta de prueba que se cuidará de manera más tradicional siguiendo los cuidados sugeridos por guias de cultivos.
 ---
 
 ## 10. Bitácora de Diseño
