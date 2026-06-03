@@ -191,13 +191,15 @@ void loop() {
 |Resistencias | 6 (220 $\Omega$)  4 (10 K$\Omega$)| $200| $2000 | Chaza de electronica |✅|-
 |Protoboard| 2 | Ya se tiene | $0 | $0 | Caja de componenetes propia|✅ |-
 |Diodos| 2 | $150| $300 | Sigma electronica | ✅ |-
-|Ventilador 12
-|Bomba de agua 
-|Resistencia calefactora 
-|Plantula de lechuga
-|Maceta
-|Tierra 
-|
+|Ventilador 12v|1| $7900| $7900 | Zamux | ✅ | motor con aspas|
+|Bomba de agua |1|$39900|$39900|Zamux|✅|Bomba sumergible de acuario|
+|Resistencia calefactora |1|$23000|$23000|yorobotics|✅|Resistencia de cartucho|
+|Plantula de lechuga|3|$2000|$6000|Viveros de colombia|✅|-|
+|Maceta|1| 48900$|$48900|Homecenter|✅|-|
+|Tierra |1kg|
+|Tubos de PVC
+|Balso
+|Tanque de agua 
 
 
 **Costo total estimado:** $37000
