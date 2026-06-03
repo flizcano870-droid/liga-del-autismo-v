@@ -315,17 +315,18 @@ void loop()
 |Protoboard| 2 | Ya se tiene | $0 | $0 | Caja de componenetes propia|✅ |-
 |Diodos| 2 | $150| $300 | Sigma electronica | ✅ |-
 |Ventilador 12v|1| $7900| $7900 | Zamux | ✅ | motor con aspas|
-|Bomba de agua |1|$39900|$39900|Zamux|✅|Bomba sumergible de acuario|
+|Bomba de agua |1|$10000|$10000|Zamux|✅|Bomba sumergible de acuario|
 |Resistencia calefactora |1|$23000|$23000|yorobotics|✅|Resistencia de cartucho|
-|Plantula de lechuga|3|$2000|$6000|Viveros de colombia|✅|-|
+|Plantula de lechuga|3|$2000|$6000|Viveros de colombia|✅| Albahaca|
 |Maceta|1| 48900$|$48900|Homecenter|✅|-|
 |Tierra |1kg|$5500|$5500|Homecenter|✅|-
 |Tubos de PVC y accesorios de PVC | tubo de PVC (6m) Tee de PVC (4 und) Codo de PVC (8und) |tubo $12900 Tee 640$ Codo $2100| $32260|Homecenter| ✅|-
 |Balso| 2m | Ya se tiene | 0$| Caja de componentes propia|✅|-
 |Tanque de agua (8lts) |1| $14900|$14900|Homecenter|✅|-
+|Manguera 1/4" para bomba sumergible|1|$2900|$2900|zamux|✅|-
 
 
-**Costo total estimado:** $215158
+**Costo total estimado:** $187158
 
 > ⚠️ **Crítico:** Si un componente es indispensable y no se consigue, el proyecto está en riesgo. Definan un Plan B para cada componente crítico.
 
