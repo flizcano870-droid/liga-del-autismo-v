@@ -319,14 +319,14 @@ void loop()
 |Resistencia calefactora |1|$23000|$23000|yorobotics|✅|Resistencia de cartucho|
 |Plantula de lechuga|3|$2000|$6000|Viveros de colombia|✅| Albahaca|
 |Maceta|1| 48900$|$48900|Homecenter|✅|-|
-|Tierra |1kg|$5500|$5500|Homecenter|✅|-
-|Tubos de PVC y accesorios de PVC | tubo de PVC (6m) Tee de PVC (4 und) Codo de PVC (8und) |tubo $12900 Tee 640$ Codo $2100| $32260|Homecenter| ✅|-
-|Balso| 2m | Ya se tiene | 0$| Caja de componentes propia|✅|-
-|Tanque de agua (8lts) |1| $14900|$14900|Homecenter|✅|-
-|Manguera 1/4" para bomba sumergible|1|$2900|$2900|zamux|✅|-
+|Tierra |1kg|$5500|$5500|Homecenter|✅|-|
+|Tubos de PVC y accesorios de PVC | tubo de PVC (6m) Tee de PVC (4 und) Codo de PVC (8und) |tubo $12900 Tee 640$ Codo $2100| $32260|Homecenter| ✅|-|
+|Balso| 2m | Ya se tiene | 0$| Caja de componentes propia|✅|-|
+|Tanque de agua (8lts) |1| $14900|$14900|Homecenter|✅|-|
+|Manguera 1/4" para bomba sumergible|1|$2900|$2900|zamux|✅|-|
+|Plástico invernadero agrolene 1x4m| 1 | $17400 | $17400 | Homecenter | ✅ |Plastico de cometa|
 
-
-**Costo total estimado:** $187158
+**Costo total estimado:** $204558
 
 > ⚠️ **Crítico:** Si un componente es indispensable y no se consigue, el proyecto está en riesgo. Definan un Plan B para cada componente crítico.
 
