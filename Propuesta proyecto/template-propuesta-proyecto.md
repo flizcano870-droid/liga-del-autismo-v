@@ -140,26 +140,158 @@ Incluyan pseudocódigo de la FSM principal y las funciones clave:
 
 ```cpp
 // Pseudocódigo — FSM principal
-enum Estado {ESPERA, MIDIENDO, MUESTRA, CALIBRANDO};
-Estado estado = ESPERA;
+//=========================================
+// FSM PRINCIPAL DEL INVERNADERO INTELIGENTE
+//=========================================
 
-void loop() {
-  switch(estado) {
-    case ESPERA:
-      // Esperar trigger del sensor
-      // Transición → MIDIENDO
-      break;
-    case MIDIENDO:
-      // Adquirir datos de sensores
-      // Si completado → MUESTRA
-      break;
-    case MUESTRA:
-      // Mostrar en OLED + enviar CSV
-      // Si botón presionado → ESPERA
-      break;
-  }
+enum Estado {
+    INICIO,
+    MONITOREO,
+    CONTROL,
+    ALARMA
+};
+
+Estado estado = INICIO;
+
+void loop()
+{
+    switch(estado)
+    {
+
+        //=================================
+        // ESTADO INICIO
+        //=================================
+        case INICIO:
+
+            // Inicializar sensores
+            inicializarLM35();
+            inicializarYL100();
+            inicializarMQ135();
+            inicializarLDR();
+            inicializarHCSR04();
+
+            // Inicializar OLED
+            inicializarOLED();
+
+            // Inicializar comunicación serial
+            inicializarUART();
+
+            // Inicializar actuadores
+            inicializarBomba();
+            inicializarVentilador();
+            inicializarTermoresistencia();
+
+            estado = MONITOREO;
+
+        break;
+
+
+        //=================================
+        // ESTADO MONITOREO
+        //=================================
+        case MONITOREO:
+
+            // Lectura de variables ambientales
+            leerTemperatura();
+            leerHumedadSuelo();
+            leerCalidadAire();
+            leerLuminosidad();
+            leerNivelAgua();
+
+            // Filtrado digital de señales
+            filtrarDatos();
+
+            // Mostrar información en OLED
+            mostrarOLED();
+
+            // Enviar datos al PC mediante UART
+            enviarDatosSerial();
+
+            // Alarma por falta de agua
+            if(nivelAgua < NIVEL_MINIMO)
+            {
+                estado = ALARMA;
+            }
+
+            // Verificar necesidad de control
+            else if(
+                humedadSuelo < HUM_MIN ||
+                temperatura < TEMP_MIN ||
+                temperatura > TEMP_MAX ||
+                calidadAire > AIRE_MAX
+            )
+            {
+                estado = CONTROL;
+            }
+
+        break;
+
+
+        //=================================
+        // ESTADO CONTROL
+        //=================================
+        case CONTROL:
+
+            // Control de humedad del suelo
+            controlarBomba();
+
+            // Control de temperatura
+            controlarVentilador();
+
+            controlarTermoresistencia();
+
+            // Indicadores luminosos
+            actualizarLEDs();
+
+            // Verificar tanque vacío
+            if(nivelAgua < NIVEL_MINIMO)
+            {
+                estado = ALARMA;
+            }
+
+            // Regresar cuando todas las
+            // variables estén en rango
+            else if(
+                humedadSuelo >= HUM_MIN &&
+                temperatura >= TEMP_MIN &&
+                temperatura <= TEMP_MAX &&
+                calidadAire <= AIRE_MAX
+            )
+            {
+                estado = MONITOREO;
+            }
+
+        break;
+
+
+        //=================================
+        // ESTADO ALARMA
+        //=================================
+        case ALARMA:
+
+            // Apagar sistema de riego
+            apagarBomba();
+
+            // Encender LED de tanque vacío
+            digitalWrite(LED_AGUA, HIGH);
+
+            // Mostrar mensaje de alerta
+            mostrarMensajeTanqueVacio();
+
+            // Enviar alerta al PC
+            Serial.println("ALARMA: Tanque de agua vacío");
+
+            // Esperar recarga del tanque
+            if(nivelAgua >= NIVEL_MINIMO)
+            {
+                digitalWrite(LED_AGUA, LOW);
+
+                estado = MONITOREO;
+            }
+
+        break;
+    }
 }
-```
 
 > ⚠️ Este pseudocódigo es solo la estructura. En el código real deben usar `millis()` o interrupciones para el timing (S2). **Nada de `delay()` en una FSM.**
 
