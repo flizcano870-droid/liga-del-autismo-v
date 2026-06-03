@@ -387,37 +387,39 @@ La bitácora es un diario de ingeniería en Markdown que registra:
 ```markdown
 # Bitácora — Proyecto [Nombre]
 
-## Semana 1 — [Fecha]
+## Semana 1 — [1/06/2026]
 
 **Qué hicimos:**
-- Conectamos el LM35 al pin A0
-- Probamos lectura básica con analogRead()
+- Planteamos el proyecto
+- Esquematizar el circuito y presupuestar sus componentes
 
 **Qué falló:**
-- El sensor marcaba 10°C de más — descubrimos que era ruido de la fuente
+- 
 
 **Qué decidimos:**
-- Agregar filtro de media móvil (S8)
-- Usar fuente externa en vez de USB para reducir ruido
+- Presentar el proyecto y dividirlo en dos subsistemas principales, torre de control e invernadero principal
+- Separar los entregables logicamente
+- Dimensionar correctamente el proyecto
 
 **Plan próxima sesión:**
-- Implementar filtro y verificar precisión con termómetro de referencia
+- Empezar el diseño y construcción del circuito principal de toma de datos usando los sensores
 ```
 
 ---
 
 ## Checklist de Verificación (antes de entregar)
 
-- [ ] ¿Cada integrante puede explicar el proyecto completo?
-- [ ] ¿El diagrama de bloques muestra todos los subsistemas?
-- [ ] ¿El proyecto usa al menos 4 habilidades distintas de S1-S9?
-- [ ] ¿La lista de materiales incluye costo, proveedor, disponibilidad y Plan B?
-- [ ] ¿El cronograma define los 3 entregables (semanas 2, 5, 7) con demos claras?
-- [ ] ¿El MVP está definido? (si todo falla, ¿qué muestran?)
-- [ ] ¿La métrica de éxito es cuantitativa y falsable?
-- [ ] ¿El plan de validación especifica referencia y número de mediciones?
-- [ ] ¿Iniciaron la bitácora de diseño?
+- [✅] ¿Cada integrante puede explicar el proyecto completo?
+- [✅] ¿El diagrama de bloques muestra todos los subsistemas?
+- [✅] ¿El proyecto usa al menos 4 habilidades distintas de S1-S9?
+- [✅] ¿La lista de materiales incluye costo, proveedor, disponibilidad y Plan B?
+- [✅] ¿El cronograma define los 3 entregables (semanas 2, 5, 7) con demos claras?
+- [✅] ¿El MVP está definido? (si todo falla, ¿qué muestran?)
+- [✅] ¿La métrica de éxito es cuantitativa y falsable?
+- [✅] ¿El plan de validación especifica referencia y número de mediciones?
+- [✅] ¿Iniciaron la bitácora de diseño?
 
 ---
+## Anexos
 
-> 🎯 **Recuerden:** El objetivo NO es hacer el proyecto más complejo posible, sino un proyecto **bien ejecutado, robusto y que demuestre lo que aprendieron.** Con 7 semanas, proyectos bien acotados y bien hechos brillan más que proyectos ambiciosos a medias. No importa si es un instrumento de medición, un dispositivo interactivo, o la automatización de un experimento — lo importante es que uses el toolkit S1-S9 y funcione.
+-[Circuito esquematico](Circuito.pdf)
