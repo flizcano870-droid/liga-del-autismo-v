@@ -191,8 +191,13 @@ void loop() {
 |Resistencias | 6 (220 $\Omega$)  4 (10 K$\Omega$)| $200| $2000 | Chaza de electronica |✅|-
 |Protoboard| 2 | Ya se tiene | $0 | $0 | Caja de componenetes propia|✅ |-
 |Diodos| 2 | $150| $300 | Sigma electronica | ✅ |-
-
-
+|Ventilador 12
+|Bomba de agua 
+|Resistencia calefactora 
+|Plantula de lechuga
+|Maceta
+|Tierra 
+|
 
 
 **Costo total estimado:** $37000
