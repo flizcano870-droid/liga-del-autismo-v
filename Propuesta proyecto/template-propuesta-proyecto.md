@@ -292,6 +292,7 @@ void loop()
         break;
     }
 }
+```
 
 > ⚠️ Este pseudocódigo es solo la estructura. En el código real deben usar `millis()` o interrupciones para el timing (S2). **Nada de `delay()` en una FSM.**
 
