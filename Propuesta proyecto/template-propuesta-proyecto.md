@@ -402,7 +402,7 @@ El proyecto se considerará exitoso si durante una prueba continua de 2 horas el
 * Los actuadores (bomba, ventilador y termoresistencia) deberán responder en menos de **3 segundos** después de que una variable exceda su umbral de activación.
 
 Además, se esperará lograr una, por lo menos, germinación exitosa de dos plantas de lechugas durante el período del proyecto, demostrando que el sistema de monitoreo y control ambiental contribuye efectivamente al cuidado de las plantas. Esto se comparará con una planta de prueba que se cuidará de manera más tradicional siguiendo los cuidados sugeridos por guias de cultivos.
----
+
 
 ## 10. Bitácora de Diseño
 
