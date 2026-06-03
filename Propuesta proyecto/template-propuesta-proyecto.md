@@ -337,9 +337,9 @@ void loop()
 
 | Entregable | Semana | ¿Qué se demuestra? | Pre-requisitos | Definición de "terminado" |
 |:---:|:---:|---|---|---|
-| **Entregable 1** | Semana 2 | ___ | ___ | ___ |
-| **Entregable 2** | Semana 5 | ___ | ___ | ___ |
-| **Entregable 3 (Final)** | Semana 7 | Sistema completo funcionando + defensa | ___ | ___ |
+| **Entregable 1** | Semana 2 | Estructura base y circuito funcional (midiendo) | Circuito previamente armado y código términado, además de tener los materiales de la maqueta ya armados | Tener los dos módulos principales del proyecto perfectamente terminados para empezar el acople de estos |
+| **Entregable 2** | Semana 5 | Unión entre el circuito y la maqueta mostrando funcionalidad| Tener el entregable 1 completado, además de las maquetas de los dos módulos construidas totalmente | Cuando ya estén en acción medición de los sensores y actuadores sobre el pototipo de invernadero |
+| **Entregable 3 (Final)** | Semana  7 | Sistema completo funcionando + defensa | entregable 1 y 2 + un avance del crecimiento del cultivo  | El sistema demuestra funcionalmente el monitoreo de la planta, a su vez actúa y avisa cuando las condiciones internas lo requieren |
 
 **Para cada entregable, definan:**
 - ¿Qué subsistemas estarán funcionando?
