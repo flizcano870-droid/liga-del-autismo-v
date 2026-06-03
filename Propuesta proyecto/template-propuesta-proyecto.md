@@ -134,17 +134,7 @@ Dibujen el esquemático completo mostrando:
 
 Describan la máquina de estados (FSM) de su sistema. La FSM es la implementación concreta de S9 que ya identificaron en la matriz de trazabilidad (Sección 3). Aquí la detallan con diagrama y pseudocódigo:
 
-```
-┌─────────┐   botón   ┌─────────┐
-│ ESPERA  │ ────────→ │ MIDIENDO │
-└─────────┘           └─────────┘
-                           │
-                     timeout │
-                           ↓
-                      ┌─────────┐
-                      │ MUESTRA │
-                      └─────────┘
-```
+![Diagrama de bloques de FSM](Diagrama%20de%20bloques%20de%20FSM.png)
 
 Incluyan pseudocódigo de la FSM principal y las funciones clave:
 
