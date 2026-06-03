@@ -380,17 +380,19 @@ El MVP se considerará completado cuando:
 ## 8. Métrica de Éxito
 
 **¿Cómo se sabe, sin ambigüedad, que el proyecto funciona?**
+### Nuestra métrica de éxito
 
-Definan al menos UNA métrica cuantitativa y falsable:
+✅ **El proyecto se considerará exitoso si durante una prueba continua de 2 horas el sistema mantiene la temperatura entre 22 °C y 28 °C al menos el 90% del tiempo, activa automáticamente el riego cuando la humedad del suelo cae por debajo del umbral establecido y transmite correctamente más del 95% de las mediciones de los sensores (temperatura, humedad, luminosidad y nivel de agua) a la pantalla OLED y al computador mediante UART.**
 
-*Ejemplo malo:* ❌ "El sistema mide temperatura."  
-*Ejemplo bueno:* ✅ "El sistema mide temperatura con error < ±1°C respecto a un termómetro de referencia, para temperaturas entre 20°C y 60°C."
+Además:
 
-**Nuestra métrica de éxito:**
+* El sensor de temperatura deberá presentar un error menor a **±1 °C** respecto a un termómetro de referencia.
+* El sensor de nivel de agua deberá presentar un error menor a **±2 cm** respecto a una medición manual.
+* El sistema deberá detectar correctamente el estado de tanque vacío en **10 de 10 pruebas consecutivas**.
+* Los actuadores (bomba, ventilador y termoresistencia) deberán responder en menos de **3 segundos** después de que una variable exceda su umbral de activación.
 
-___
+Esta métrica es **cuantitativa, medible y observable**, porque puede verificarse experimentalmente y determinar claramente si se cumple o no.
 
----
 
 ## 9. Plan de Validación
 
