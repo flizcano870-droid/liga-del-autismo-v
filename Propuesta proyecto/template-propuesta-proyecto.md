@@ -227,22 +227,23 @@ void loop() {
 
 **¿Cuál es la demostración MÁS PEQUEÑA que prueba que aprendieron?**
 
-*Ejemplo: "Aunque no funcione el control PID completo, al menos mostraremos el sensor midiendo temperatura con logging CSV y visualización en OLED."*
-
 **Nuestro MVP es:**
 
 Un sistema capaz de monitorear temperatura, humedad del suelo, intensidad lumínica y nivel de agua del tanque, mostrando la información en una pantalla OLED y enviándola por comunicación serial al computador. Además, el sistema generará alertas visuales mediante LEDs cuando se detecten condiciones fuera de los rangos establecidos para el cultivo.
 
-___
+---
 
 **Prueba de aceptación del MVP:** ¿Qué evidencia concreta demostraría que el MVP está completo?
 
-*Ejemplo: "El sensor LM35 muestra temperatura en el OLED con actualización cada 500 ms, y el script Python guarda un CSV con al menos 100 filas de datos correctos."*
+El MVP se considerará completado cuando:
 
-___
-
----
-
+1. El sensor LM35 mida la temperatura y la muestre correctamente en la pantalla OLED con una actualización máxima de 1 segundo.
+2. El sensor YL-100 reporte el nivel de humedad del suelo y este valor sea visible tanto en la OLED como en el monitor serial.
+3. El sensor LDR detecte cambios de iluminación, activando un LED de alerta cuando la intensidad lumínica se encuentre por debajo del umbral establecido.
+4. El sensor ultrasónico HC-SR04 mida el nivel de agua del tanque y active un LED de alerta cuando el nivel sea inferior al mínimo definido.
+5. El sistema transmita continuamente los datos de los cuatro sensores mediante comunicación UART al computador durante al menos 2 minutos sin errores ni reinicios.
+6. Se registren al menos 50 mediciones consecutivas correctas de todas las variables monitoreadas.
+7. La pantalla OLED muestre los valores de temperatura, humedad del suelo, luminosidad y nivel de agua.
 ## 8. Métrica de Éxito
 
 **¿Cómo se sabe, sin ambigüedad, que el proyecto funciona?**
