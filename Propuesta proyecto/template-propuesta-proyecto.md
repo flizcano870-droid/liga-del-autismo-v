@@ -413,6 +413,7 @@ Además, se esperará lograr una, por lo menos, germinación exitosa de dos plan
 * Recortar ligeramente los palos de balso para mejorar el ensamblaje.
 * Reforzar las uniones estructurales más críticas.
 * Continuar con pruebas de sensores antes de integrar todos los componentes.
+* Modificar el sistema de despliego del techo
 
 ### Plan próxima sesión
 
