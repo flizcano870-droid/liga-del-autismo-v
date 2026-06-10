@@ -375,28 +375,18 @@ Además, se esperará lograr una, por lo menos, germinación exitosa de dos plan
 
 > 📓 **Obligatorio para presentar en cada entregable (no tiene nota, pero sin bitácora no hay presentación).**
 
-La bitácora es un diario de ingeniería en Markdown que registra:
-
-- Qué hicieron en cada sesión de trabajo
-- Qué funcionó y qué falló
-- Decisiones de diseño y su justificación
-- Cambios respecto al plan original (y por qué)
-
-**Formato sugerido:**
-
-```markdown
 # Bitácora — Proyecto [Invernadero_inteligente]
 
 ## Semana 0 — [1/06/2026]
 
-**Qué hicimos:**
+### Qué hicimos
 - Planteamos el proyecto
 - Esquematizar el circuito y presupuestar sus componentes
 
-**Qué falló:**
+### Qué decidimos
 - 
 
-**Qué decidimos:**
+### Plan próxima sesión
 - Presentar el proyecto y dividirlo en dos subsistemas principales, torre de control e invernadero principal
 - Separar los entregables logicamente
 - Dimensionar correctamente el proyecto
@@ -432,7 +422,6 @@ La bitácora es un diario de ingeniería en Markdown que registra:
 * Realizar pruebas adicionales de estabilidad de la estructura.
 
 ## Semana 2 -[]
-```
 
 ---
 
