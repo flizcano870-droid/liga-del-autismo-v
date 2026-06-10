@@ -385,9 +385,9 @@ La bitácora es un diario de ingeniería en Markdown que registra:
 **Formato sugerido:**
 
 ```markdown
-# Bitácora — Proyecto [Nombre]
+# Bitácora — Proyecto [Invernadero_inteligente]
 
-## Semana 1 — [1/06/2026]
+## Semana 0 — [1/06/2026]
 
 **Qué hicimos:**
 - Planteamos el proyecto
@@ -403,6 +403,35 @@ La bitácora es un diario de ingeniería en Markdown que registra:
 
 **Plan próxima sesión:**
 - Empezar el diseño y construcción del circuito principal de toma de datos usando los sensores
+
+## Semana 1 — [10/06/2026]
+
+### Qué hicimos
+* Construimos la base y el techo del invernadero.
+* Verificamos el funcionamiento de los sensores mediante lecturas preliminares.
+* Programamos un borrador de código para visualizar los datos de los sensores.
+* Probamos el ventilador y la bomba de agua utilizando una batería de 9 V.
+* Pintamos con laca aerosol la CASA (Centro de Administración y Supervisión Agrícola).
+
+### Qué falló
+
+* La instalación de los soportes en la maceta fue más complicada de lo esperado debido al uso de silicona caliente y cinta como fijación temporal.
+* Uno de los soportes se desprendió, afectando momentaneamente la estabilidad de la estructura.
+
+### Qué decidimos
+
+* Recortar ligeramente los palos de balso para mejorar el ensamblaje.
+* Reforzar las uniones estructurales más críticas.
+* Continuar con pruebas de sensores antes de integrar todos los componentes.
+
+### Plan próxima sesión
+
+* Presentar el primer avance según el cronograma.
+* Planificar la construcción del COFA (Centro de Operaciones Funcionales del Arduino).
+* Iniciar la integración entre Arduino, sensores y actuadores.
+* Realizar pruebas adicionales de estabilidad de la estructura.
+
+## Semana 2 -[]
 ```
 
 ---
