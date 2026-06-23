@@ -21,8 +21,9 @@ const int LED3_PIN = 6;
 const int FAN_PIN = 9;
 const int TRIG_PIN = 3;
 const int ECHO_PIN = 2;
-const int PUMP_PIN = 10;
+const int PUMP_PIN = 10
 const int BUZZER_PIN = 11;
+
 
 float medirDistancia() {
 
