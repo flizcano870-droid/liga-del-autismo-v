@@ -187,11 +187,9 @@ Avanzar en la construcción del sistema físico y electrónico mediante el desar
 
 ## 📌 Tareas pendientes
 
-- [  ] Comprobar el funcionamiento del buzzer.
-- [  ] Finalizar la construcción del COFA.
+- [ X ] Finalizar la construcción del COFA.
 - [  ] Completar el cableado interno definitivo.
 - [ X ] Integrar todos los sensores y actuadores.
-- [  ] Realizar pruebas completas del sistema automatizado.
 
 ---
 
@@ -260,9 +258,9 @@ Avanzar en el diseño del sistema de riego y soldar los primeros sensores
 
 ## 📌 Tareas pendientes
 
-- [  ] Finalizar el sistema de riego.
-- [  ] Integrar completamente la bomba con el Arduino.
-- [  ] Realizar mediciones de humedad con tierra en la matera.
+- [ X ] Adelantar el sistema de riego.
+- [ X ] Integrar completamente la bomba con el Arduino.
+- [ X ] Realizar mediciones de humedad con tierra en la matera.
 - [ X ] Verificar el funcionamiento conjunto de sensores y actuadores.
 - [ X ] Organizar el cableado interno del sistema.
 
@@ -285,5 +283,68 @@ Avanzar en el diseño del sistema de riego y soldar los primeros sensores
 # Día 2 - [23/06/2026]
 
 ## Objetivo de la sesión
-Terminar el sistema de riego y hacer mediciones preliminares con tierra ya en la matera
+Continuar con el sistema de riego, hacer mediciones preliminares con tierra ya en la matera y comprobar el funcionamiento de la termoresistencia
 ---
+
+## Qué hicimos
+* Se agregó la tierra a la matera
+* Se hicieron múltiples pruebas de riego
+* Se midieron umbrales para el sensor de calidad del aire por medio de exposición a condiciones de aire buenas y malas (ambiente, gas de mechero, dióxido de carbono)
+* Soldamos la resistencia calefactora a cables y se comprobó su funcionamiento
+* Se avanzó ligeramente en la organización de los cables de la protoboard
+* Comprobamos que el ventilador ya puesto sobre la maceta funcionara
+---
+
+## Resultados obtenidos
+* Sensor de calidad de aire funcionando
+* Resistencia calefactora funcionando
+* Riego parcial
+* LDR funcional con cableado bajo tierra y cubierto por una cupula
+---
+## ❌ Qué falló / dificultades encontradas
+* El sistema de riego falló en todas las pruebas, por lo que se trabajará en la próxima sesión en reintentar el riego
+* Para el sensor YL-100 (humedad en tierra) se tuvieron complicaciones con la comunicación con el OLED
+* La ventilación dentro de la matera resultó más compleja de lo esperado, incluso con el ventilador ya instalado
+* El sensor de temperatura LM35 parece estar dañado.
+---
+## ✅ Qué decidimos
+
+* Agregar un ventilador adicional en próximas sesiones para mejorar la circulación de aire dentro de la matera.
+* Rediseñar el sistema de riego para mejorar la distribución del agua y la confiabilidad de su funcionamiento.
+* Sustituir o verificar el sensor LM35 para determinar si el problema corresponde al sensor o al circuito de medición.
+* Continuar organizando el cableado interno antes de realizar la integración definitiva de los componentes.
+* Buscar la resolución de los problemas de comunicación entre el sensor YL-100 y la pantalla OLED.
+
+---
+
+## 📌 Tareas pendientes
+
+- [ ] Corregir el sistema de riego y realizar nuevas pruebas.
+- [ ] Diagnosticar y reemplazar el sensor LM35 si es necesario.
+- [ ] Completar la organización del cableado interno.
+- [ ] Integrar correctamente el sensor YL-100 con la pantalla OLED.
+- [ ] Instalar un segundo ventilador para mejorar la ventilación.
+- [ ] Realizar pruebas de funcionamiento conjunto de sensores y actuadores.
+- [ ] Definir los umbrales definitivos para la activación automática de los sistemas de control.
+
+---
+
+## 🚀 Plan para la próxima sesión
+
+* Rediseñar e implementar una nueva versión del sistema de riego.
+* Resolver los problemas de lectura y visualización del sensor de humedad del suelo.
+* Continuar la integración de los sensores al sistema principal.
+* Avanzar en la organización y fijación permanente del cableado.
+* Realizar pruebas más cercanas a las condiciones reales de operación del invernadero.
+
+---
+
+## 📷 Evidencias
+
+### COFA
+
+![COFA](Imagenes%20bitácora/Semana3/Semana3D2_COFA.jpeg)
+
+### Maceta
+
+![Maceta](Imagenes%20bitácora/Semana3/Semana3D2_Matera.jpeg)
