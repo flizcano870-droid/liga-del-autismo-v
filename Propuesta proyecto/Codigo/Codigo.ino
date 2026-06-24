@@ -21,8 +21,9 @@ const int LED3_PIN = 6;
 const int FAN_PIN = 9;
 const int TRIG_PIN = 3;
 const int ECHO_PIN = 2;
-const int PUMP_PIN = 10
+const int PUMP_PIN = 10 ;
 const int BUZZER_PIN = 11;
+const int TEMP_PIN= 7;
 
 
 float medirDistancia() {
@@ -50,6 +51,7 @@ void setup() {
   pinMode(ECHO_PIN, INPUT);
 
   pinMode(FAN_PIN, OUTPUT);
+  pinMode(TEMP_PIN, OUTPUT);
   pinMode(PUMP_PIN, OUTPUT);
   digitalWrite(LED1_PIN, LOW);
   digitalWrite(LED2_PIN, LOW);
@@ -139,6 +141,7 @@ void loop() {
   digitalWrite(PUMP_PIN, HIGH); // encender  
   digitalWrite(LED1_PIN, HIGH);
   digitalWrite(LED2_PIN, HIGH);
+  digitalWrite(TEMP_PIN, HIGH);
   digitalWrite(LED3_PIN, HIGH);
   digitalWrite(BUZZER_PIN, HIGH);
 
