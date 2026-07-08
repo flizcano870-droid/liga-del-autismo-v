@@ -52,10 +52,6 @@ Se buscará plantear y presentar una idea y esquema del proyecto para empezar a 
 
 ![Circuito esquemático](Imagenes%20bitácora/Semana0/Semana%200_circuito%20esquema.jpeg)
 
-### Planeación del proyecto
-
-![Preparación](Imagenes%20bitácora/Semana0/Semana%200_prepracion.jpeg)
-
 ### Compra de materiales
 
 ![Plástico](Imagenes%20bitácora/Semana0/Semana0_mats.jpeg)
