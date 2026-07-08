@@ -108,7 +108,7 @@ Iniciar la construcción física del proyecto, trabajando en la estructura princ
 ## 📌 Tareas pendientes
 
 - [ X ] Finalizar la construcción del techo del invernadero.
-- [  ] Construir el COFA.
+- [ X ] Construir el COFA.
 - [ X ] Verificar el funcionamiento de sensores y actuadores.
 - [ X ] Implementar el cableado interno del sistema.
 - [ X ] Realizar pruebas hidráulicas preliminares.
@@ -188,7 +188,6 @@ Avanzar en la construcción del sistema físico y electrónico mediante el desar
 ## 📌 Tareas pendientes
 
 - [ X ] Finalizar la construcción del COFA.
-- [  ] Completar el cableado interno definitivo.
 - [ X ] Integrar todos los sensores y actuadores.
 
 ---
@@ -216,6 +215,7 @@ Avanzar en la construcción del sistema físico y electrónico mediante el desar
 
 ---
 # Semana [3] 
+
 # Día 1 - [22/06/2026]
 
 ## Objetivo de la sesión
@@ -319,13 +319,12 @@ Continuar con el sistema de riego, hacer mediciones preliminares con tierra ya e
 
 ## 📌 Tareas pendientes
 
-- [ ] Corregir el sistema de riego y realizar nuevas pruebas.
-- [ ] Diagnosticar y reemplazar el sensor LM35 si es necesario.
-- [ ] Completar la organización del cableado interno.
-- [ ] Integrar correctamente el sensor YL-100 con la pantalla OLED.
-- [ ] Instalar un segundo ventilador para mejorar la ventilación.
-- [ ] Realizar pruebas de funcionamiento conjunto de sensores y actuadores.
-- [ ] Definir los umbrales definitivos para la activación automática de los sistemas de control.
+- [ X ] Corregir el sistema de riego y realizar nuevas pruebas.
+- [ X ] Diagnosticar y reemplazar el sensor LM35 si es necesario.
+- [ X  ] Integrar correctamente el sensor YL-100 con la pantalla OLED.
+- [ X ] Instalar un segundo ventilador para mejorar la ventilación.
+- [ X ] Realizar pruebas de funcionamiento conjunto de sensores y actuadores.
+- [ X ] Definir los umbrales definitivos para la activación automática de los sistemas de control.
 
 ---
 
@@ -348,3 +347,154 @@ Continuar con el sistema de riego, hacer mediciones preliminares con tierra ya e
 ### Maceta
 
 ![Maceta](Imagenes%20bitácora/Semana3/Semana3D2_Matera.jpeg)
+
+# Día [3] - [24/06/2026]
+
+## Objetivo de la sesión
+
+* Rediseñar y terminar el sistema de riego
+* Agregar el ventilador adicional a la CASA
+* Pegar mas sensores a la CASA
+* Comprobar el funcionamiento del sensor ultrasónico
+* Comprar las plantulas de lechuga
+
+---
+
+## Qué hicimos
+
+* Terminamos por completo el sistema de riego y probamos su funcionamiento
+* Pegamos el ventilador, el sensor de calidad de aire, el sensor de temperatura y la resistencia calefactora a la CASA
+* Comprobamos el funcionamiento correcto del sensor ultrasónico y como varia el valor que mide al variar el nivel del agua
+* Agregamos un capacitor de 10nf al sensor de temperatura para estabilizar bastante las medidas
+* Se consiguio y planto en una maceta aparte las plantulas de lechuga
+
+---
+
+## Resultados obtenidos
+
+* El sistema de riego funciona correctamente
+* Las lecturas de temperatura resultaron mas estables
+* La resistencia calefactora calentó correctamente
+* Hubo buena estabilidad estructural de los sensores ahora implementados
+* Se logró un funcionamiento correcto del sensor ultrasónico
+
+---
+
+## ❌ Qué falló / dificultades encontradas
+
+* Debido a la cantidad excesiva de sensores y actuadores se observó una caida de voltaje muy superior a la esperada
+* Hubo daños en la estructura del invernadero
+* Debido a las multiples pruebas de riego el agua quedo excesivamente humeda, por lo que se terminará prolongando la plantación
+* Mientras aumenta la cantidad de cableado en el arduino aumenta la cantidad de cableado, que dificulta la organización del circuito correctamente
+
+---
+
+## ✅ Qué decidimos
+
+* Agregar una fuente de voltaje externa al sistema
+* Cambiar los orificios de salida del COFA hacia la casa para facilitar la organización
+* Agregar una fuente de voltaje externa mas cercana a los 12V
+
+---
+
+## 📌 Tareas pendientes
+
+- [ X ] Conseguir e integrar la fuente de voltaje externa (cercana a 12V) para mitigar la caída de tensión.
+- [ X ] Modificar los orificios de salida del COFA para optimizar la ruta de los cables.
+- [ X ] Reparar los daños estructurales presentados en el invernadero.
+- [ X ] Monitorear la humedad de la tierra y esperar a que se estabilice antes de trasplantar las plántulas de lechuga.
+- [ X ] Retomar la organización del cableado para evitar enredos en el Arduino.
+- [  ] Retomar las pruebas pendientes de comunicación entre el sensor YL-100 y la pantalla OLED (arrastradas del día anterior).
+- [ X ] Instalar y conectar físicamente los LEDs y la pantalla OLED al lado del COFA.
+
+---
+
+## 🚀 Plan para la próxima sesión
+
+* Implementar la nueva fuente de alimentación externa de 12V y verificar la estabilidad del voltaje general.
+* Realizar las modificaciones físicas en los orificios del COFA y reorganizar el cableado crítico.
+* Reparar la estructura afectada del invernadero y asegurar su estabilidad.
+* Medir los niveles de humedad del suelo para evaluar si ya es apto realizar el trasplante definitivo de la lechuga.
+* Avanzar en las pruebas de software para la integración final de sensores y actuadores trabajando en conjunto.
+
+---
+
+## 📷 Evidencias
+
+![Plantulas](Imagenes%20bitácora/Semana3/Semana3D3_Plantula.jpeg)
+
+---
+# Semana [4] - [30/06/2026]
+
+## Objetivo de la sesión
+
+* Soldar y probar el voltaje de salida de la nueva fuente de alimentación
+* Agregar los led y OLED al lado del COFA
+* Medir umbrales para otros sensores
+* Arreglar la base frente a los problemas estructurales vistos en sesiones pasadas
+
+---
+
+## Qué hicimos
+
+* Arreglamos la base pegandola con pegamento EPOXY a la maceta
+* Calibramos los umbrales para el sensor de humedad
+* Se modifico las salidas del COFA cambiando la orientación de los orificios
+* Cortamos y adaptamos un cargador de computador al circuito que provee el voltaje adecuado para el sistema, adicionalmente se soldaron cables mas aptos a las puntas de el cargador para conectar a la protoboard
+
+---
+
+## Resultados obtenidos
+
+* Funcionamiento de la fuente y voltaje necesitado comprobado con un multimetro
+* Arduino mas organizado gracias al cambio de las salidas del COFA
+* Mayor estabilidad estructural de la base gracias al pegamento EPOXY
+* Umbrales del sensor de humedad definidos para la programación del riego
+* LEDS y OLED cableados al exterior del COFA
+
+---
+
+## ❌ Qué falló / dificultades encontradas
+
+* El manejo y manipulación del cargador de computadora requirió extremo cuidado al soldar para evitar cortos con filamentos sueltos.
+* En cierto momento hubo cortocircuito con las conexiones del cargador, haciendo que se generara una llama y alta temperatura en los cables de prueba, que por suerte fue cortado de suministro rapidamente para evitar un accidente
+* La tierra sigue reteniendo una humedad considerable de las sesiones pasadas, lo que dificulta probar el comportamiento del sensor en un ciclo real de secado rápido.
+
+---
+
+## ✅ Qué decidimos
+
+* Utilizar termoencogible (shrink tube) o cinta aislante reforzada en los puntos de soldadura del cargador adaptado para garantizar la seguridad eléctrica.
+
+---
+
+## 📌 Tareas pendientes
+
+- [ X ] Programar e integrar los umbrales de humedad recién calibrados en el código principal del Arduino.
+- [ X ] Aislar y asegurar correctamente los cables soldados de la nueva fuente de alimentación.
+- [ X ] Realizar una prueba de estrés del sistema completo utilizando la nueva fuente para verificar que no existan caídas de voltaje con los actuadores encendidos.
+- [  ] Trasplantar finalmente las plántulas de lechuga una vez la humedad del suelo sea la óptima.
+
+---
+
+## 🚀 Plan para la próxima sesión
+
+* Integrar la lógica de control por software (código) utilizando los umbrales de humedad y calidad de aire medidos.
+* Energizar todo el circuito con la fuente adaptada del cargador y validar el comportamiento de los motores/ventiladores en paralelo.
+* Evaluar el estado de la tierra y, si las condiciones lo permiten, proceder con el trasplante de las lechugas.
+
+---
+
+## 📷 Evidencias
+
+### Interfaz OLED y LEDs
+![OLED](Imagenes%20bitácora/Semana%204/Semana4_1.jpeg)
+
+### Salida del COFA de cableados
+![Cables](Imagenes%20bitácora/Semana%204/Semana4_2.jpeg)
+
+### Fuente de voltaje
+![Alimentación](Imagenes%20bitácora/Semana%204/Semana4_alimentación.jpeg)
+
+
+---
