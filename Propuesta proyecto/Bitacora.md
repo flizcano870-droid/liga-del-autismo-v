@@ -1,4 +1,4 @@
-# 📓 Bitácora — [Presidente Lechugardo de la Espriella]
+# 📓 Bitácora — [Invernadero automatico]
 
 > **Integrantes:** [Sara Romero Chavez | Simón Gabriel Sandoval Palma | Felipe Lizcano Quimbaya | Sergio Andres Poveda Perez]
 >
