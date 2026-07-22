@@ -7,17 +7,17 @@
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-// Pines
+// ===== PINES =====
 const int TRIG_PIN = 2;
 const int ECHO_PIN = 3;
-const int LED1_PIN = 4; // Luz baja
-const int LED2_PIN = 5; // Falta de agua
-const int LED3_PIN = 6; // Aire malo
+const int LED1_PIN = 4; // Luz baja (LDR)
+const int LED2_PIN = 5; // Falta de agua (Ultrasonido)
+const int LED3_PIN = 6; // Aire malo (MQ135)
 
 const int TEMP_PIN = 7; // Calefacción
-const int PUMP_PIN = 8; // Bomba
-const int FAN1_PIN = 9;
-const int FAN2_PIN = 10;
+const int PUMP_PIN = 8; // Bomba de riego
+const int FAN1_PIN = 9; // Ventilador 1
+const int FAN2_PIN = 10;// Ventilador 2
 const int BUZZER_PIN = 11;
 
 const int LM35_PIN = A1;
@@ -25,7 +25,7 @@ const int SOIL_PIN = A3;
 const int MQ135_PIN = A0;
 const int LDR_PIN = A2;
 
-// Umbrales
+// ===== UMBRALES =====
 const float NIVEL_MAX = 6.47;
 const float NIVEL_MIN = 13.0;
 
@@ -38,12 +38,75 @@ const int LDR_MAX = 440;
 const int MQ_MALO = 170;
 const int MQ_PELIGRO = 250;
 
+// ===== MAQUINA DE ESTADOS / LISTA DE TAREAS =====
+enum TareaSensor {
+  TAREA_AGUA = 0,
+  TAREA_SUELO,
+  TAREA_TEMP,
+  TAREA_MQ,
+  TAREA_LUZ
+};
+
+TareaSensor tareaActual = TAREA_AGUA;
+unsigned long tiempoInicioTarea = 0;
+const unsigned long DURACION_TAREA = 4000; // 4 segundos por sensor
+
+// ===== VARIABLES PERSISTENTES DE SENSORES Y ACTUADORES =====
+float distanciaGuardada = 10.0;
+int aguaPctGuardado = 50;
+bool tanqueVacio = false;
+
+int sueloRawGuardado = 450;
+int sueloPctGuardado = 50;
+
+float tempGuardada = 20.0;
+bool ventiladorPorTemp = false;
+
+int mqRawGuardado = 100;
+int mqPctGuardado = 0;
+bool ventiladorPorMQ = false;
+
+int ldrRawGuardado = 300;
+int luzPctGuardado = 50;
+
 bool buzzerAgua = false;
 bool buzzerMQ = false;
 
-unsigned long ultimoCambioBuzzer = 0;
-bool estadoBuzzer = false;
+// Acumuladores de muestras dentro de cada intervalo de 4s
+float sumaLecturas = 0;
+int cantidadMuestras = 0;
+unsigned long ultimoMuestreo = 0;
 
+// ===== ESTRUCTURA PARA BEAT NO BLOQUEANTE EN BUZZER =====
+struct PasoBeat {
+  int frecuencia; // 0 = silencio
+  unsigned long duracionMs;
+};
+
+// Beat de Reggaetón para MQ-135 > 200: TUM - ta - TUM - ta
+PasoBeat beatReggaeton[] = {
+  {220, 180},
+  {0,    80},
+  {440, 120},
+  {0,    80},
+  {220, 180},
+  {0,    80},
+  {440, 120},
+  {0,   250}
+};
+const int TOTAL_PASOS_REGGAETON = 8;
+
+// Pitido de falta de agua
+PasoBeat beatAgua[] = {
+  {500, 150},
+  {0,   150}
+};
+const int TOTAL_PASOS_AGUA = 2;
+
+int pasoBeatActual = 0;
+unsigned long ultimoCambioPasoBeat = 0;
+
+// ===== FUNCIONES AUXILIARES DE CÁLCULO =====
 float medirDistancia() {
   digitalWrite(TRIG_PIN, LOW);
   delayMicroseconds(2);
@@ -54,17 +117,13 @@ float medirDistancia() {
   digitalWrite(TRIG_PIN, LOW);
 
   long duracion = pulseIn(ECHO_PIN, HIGH, 30000);
-
   if (duracion == 0) return -1;
 
   return duracion * 0.0343 / 2.0;
 }
 
 int calcularPorcentajeAgua(float distancia) {
-  int porcentaje = map(distancia * 100,
-                       NIVEL_MIN * 100,
-                       NIVEL_MAX * 100,
-                       0, 100);
+  int porcentaje = map(distancia * 100, NIVEL_MIN * 100, NIVEL_MAX * 100, 0, 100);
   return constrain(porcentaje, 0, 100);
 }
 
@@ -89,6 +148,88 @@ float leerTemperatura() {
   return voltaje * 100.0;
 }
 
+// ===== GESTIÓN NO BLOQUEANTE DEL BUZZER =====
+void actualizarBuzzer(unsigned long tiempoActual) {
+  if (buzzerMQ) {
+    // Alarma MQ-135 con beat de Reggaetón
+    PasoBeat paso = beatReggaeton[pasoBeatActual];
+    if (tiempoActual - ultimoCambioPasoBeat >= paso.duracionMs) {
+      ultimoCambioPasoBeat = tiempoActual;
+      pasoBeatActual = (pasoBeatActual + 1) % TOTAL_PASOS_REGGAETON;
+      
+      if (beatReggaeton[pasoBeatActual].frecuencia > 0) {
+        tone(BUZZER_PIN, beatReggaeton[pasoBeatActual].frecuencia);
+      } else {
+        noTone(BUZZER_PIN);
+      }
+    }
+  } 
+  else if (buzzerAgua) {
+    // Alarma de Falta de Agua
+    PasoBeat paso = beatAgua[pasoBeatActual];
+    if (tiempoActual - ultimoCambioPasoBeat >= paso.duracionMs) {
+      ultimoCambioPasoBeat = tiempoActual;
+      pasoBeatActual = (pasoBeatActual + 1) % TOTAL_PASOS_AGUA;
+      
+      if (beatAgua[pasoBeatActual].frecuencia > 0) {
+        tone(BUZZER_PIN, beatAgua[pasoBeatActual].frecuencia);
+      } else {
+        noTone(BUZZER_PIN);
+      }
+    }
+  } 
+  else {
+    noTone(BUZZER_PIN);
+    pasoBeatActual = 0;
+  }
+}
+
+// ===== PANTALLA OLED =====
+void actualizarOLED() {
+  display.clearDisplay();
+  display.setTextColor(SSD1306_WHITE);
+  display.setTextSize(1);
+
+  // Fila 0: Indicador de la tarea que se está midiendo en este momento
+  display.setCursor(0, 0);
+  display.print("[");
+  switch (tareaActual) {
+    case TAREA_AGUA:  display.print("1/5 MIDE: AGUA"); break;
+    case TAREA_SUELO: display.print("2/5 MIDE: SUELO"); break;
+    case TAREA_TEMP:  display.print("3/5 MIDE: TEMP"); break;
+    case TAREA_MQ:    display.print("4/5 MIDE: AIRE"); break;
+    case TAREA_LUZ:   display.print("5/5 MIDE: LUZ"); break;
+  }
+  display.print("]");
+
+  // Fila 1: Valores registrados
+  display.setCursor(0, 10);
+  display.print("T:");
+  display.print(tempGuardada, 1);
+  display.print("C  S:");
+  display.print(sueloPctGuardado);
+  display.print("%");
+
+  // Fila 2: Aire y Agua
+  display.setCursor(0, 18);
+  display.print("MQ:");
+  display.print(mqRawGuardado);
+  display.print("  Agua:");
+  display.print(aguaPctGuardado);
+  display.print("%");
+
+  // Fila 3: Luz y Estado general
+  display.setCursor(0, 26);
+  display.print("Luz:");
+  display.print(luzPctGuardado);
+  display.print("%  ");
+  if (tanqueVacio) display.print("!VACIO!");
+  else if (buzzerMQ) display.print("!GAS!");
+  else display.print("OK");
+
+  display.display();
+}
+
 void setup() {
   Serial.begin(9600);
 
@@ -108,179 +249,170 @@ void setup() {
   digitalWrite(LED1_PIN, LOW);
   digitalWrite(LED2_PIN, LOW);
   digitalWrite(LED3_PIN, LOW);
+  digitalWrite(TEMP_PIN, LOW);
+  digitalWrite(PUMP_PIN, LOW);
+  digitalWrite(FAN1_PIN, LOW);
+  digitalWrite(FAN2_PIN, LOW);
   digitalWrite(BUZZER_PIN, LOW);
 
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
     while (1);
   }
 
-  display.clearDisplay();
-  display.display();
+  tiempoInicioTarea = millis();
 }
 
 void loop() {
-
-  // =========================
-  // PROMEDIO DURANTE 10 SEGUNDOS
-  // =========================
-  float sumaTemp = 0;
-  float sumaDist = 0;
-  long sumaSuelo = 0;
-  long sumaMQ = 0;
-  long sumaLDR = 0;
-
-  const int muestras = 50; // 50 muestras en 10 segundos (cada 200 ms)
-
-  for (int i = 0; i < muestras; i++) {
-    sumaTemp += leerTemperatura();
-    sumaDist += medirDistancia();
-    sumaSuelo += analogRead(SOIL_PIN);
-    sumaMQ += analogRead(MQ135_PIN);
-    sumaLDR += analogRead(LDR_PIN);
-
-    delay(200); // 50 x 200 ms = 10 s
-  }
-
-  // Valores promediados
-  float temperatura = (sumaTemp / muestras);
-  float distancia = sumaDist / muestras;
-  int sueloRaw = sumaSuelo / muestras;
-  int mqRaw = sumaMQ / muestras;
-  int ldrRaw = sumaLDR / muestras;
-
-  // Porcentajes
-  int aguaPct = calcularPorcentajeAgua(distancia);
-  int sueloPct = calcularPorcentajeSuelo(sueloRaw);
-  int luzPct = calcularPorcentajeLuz(ldrRaw);
-  int mqPct = calcularPorcentajeMQ(mqRaw);
-
-  // =========================
-  // ACTUADORES Y LEDS
-  // =========================
-
-  // Luz baja
-  digitalWrite(LED1_PIN, (ldrRaw < LDR_SOMBRA));
-
-  // Nivel de agua bajo
-  bool tanqueVacio = (distancia >= NIVEL_MIN);
-  digitalWrite(LED2_PIN, tanqueVacio);
-  buzzerAgua = tanqueVacio;
-
-  // Calidad del aire
-  bool aireMalo = (mqRaw > 200); // ahora solo por encima de 200
-  digitalWrite(LED3_PIN, aireMalo);
-  buzzerMQ = aireMalo;
-
-  // Calefacción
-  digitalWrite(TEMP_PIN, (temperatura < 12.0));
-
-  // Ventiladores: SOLO si temperatura muy alta o MQ > 200
-  bool ventiladorON = (temperatura > 25.0 || mqRaw > 200);
-  digitalWrite(FAN1_PIN, ventiladorON);
-  digitalWrite(FAN2_PIN, ventiladorON);
-
-  // Bomba de riego
-  if (sueloRaw >= SOIL_SECO && !tanqueVacio) {
-    digitalWrite(PUMP_PIN, HIGH);
-  } else if (sueloRaw <= SOIL_HUMEDO || tanqueVacio) {
-    digitalWrite(PUMP_PIN, LOW);
-  }
-
-  // =========================
-  // BUZZER CON DOS RITMOS
-  // =========================
   unsigned long tiempoActual = millis();
 
-  // =========================
-// BUZZER CON BEAT DE REGGAETON
-// =========================
-if (buzzerMQ) {
+  // ========================================================
+  // 1. TOMA DE MUESTRAS DEL SENSOR ACTUAL (CADA 100 ms)
+  // ========================================================
+  if (tiempoActual - ultimoMuestreo >= 100) {
+    ultimoMuestreo = tiempoActual;
 
-  // Beat de reggaetón: TUM - ta - TUM - ta
-  tone(BUZZER_PIN, 220); // TUM grave
-  delay(180);
-  noTone(BUZZER_PIN);
-  delay(80);
+    switch (tareaActual) {
+      case TAREA_AGUA: {
+        float d = medirDistancia();
+        if (d >= 0) {
+          sumaLecturas += d;
+          cantidadMuestras++;
+        }
+        break;
+      }
+      case TAREA_SUELO:
+        sumaLecturas += analogRead(SOIL_PIN);
+        cantidadMuestras++;
+        break;
 
-  tone(BUZZER_PIN, 440); // ta agudo
-  delay(120);
-  noTone(BUZZER_PIN);
-  delay(80);
+      case TAREA_TEMP:
+        sumaLecturas += leerTemperatura();
+        cantidadMuestras++;
+        break;
 
-  tone(BUZZER_PIN, 220); // TUM grave
-  delay(180);
-  noTone(BUZZER_PIN);
-  delay(80);
+      case TAREA_MQ:
+        sumaLecturas += analogRead(MQ135_PIN);
+        cantidadMuestras++;
+        break;
 
-  tone(BUZZER_PIN, 440); // ta agudo
-  delay(120);
-  noTone(BUZZER_PIN);
-  delay(250); // pausa para repetir el beat
-}
+      case TAREA_LUZ:
+        sumaLecturas += analogRead(LDR_PIN);
+        cantidadMuestras++;
+        break;
+    }
+  }
 
-else if (buzzerAgua) {
+  // ========================================================
+  // 2. CAMBIO DE TAREA (CADA 4 SEGUNDOS) Y ACTUALIZACIÓN
+  // ========================================================
+  if (tiempoActual - tiempoInicioTarea >= DURACION_TAREA) {
+    
+    // Calcular promedio final del sensor si hubo muestras
+    float promedio = (cantidadMuestras > 0) ? (sumaLecturas / cantidadMuestras) : 0;
 
-  // Falta de agua: pitido normal y más lento
-  tone(BUZZER_PIN, 500);
-  delay(150);
-  noTone(BUZZER_PIN);
-  delay(150);
-}
+    // Procesar según la tarea que acaba de terminar y dejar actuadores guardados
+    switch (tareaActual) {
 
-else {
-  noTone(BUZZER_PIN);
-}
+      case TAREA_AGUA:
+        if (cantidadMuestras > 0) {
+          distanciaGuardada = promedio;
+          aguaPctGuardado = calcularPorcentajeAgua(distanciaGuardada);
+          tanqueVacio = (distanciaGuardada >= NIVEL_MIN);
 
-  // =========================
-  // OLED
-  // =========================
-  display.clearDisplay();
-  display.setTextColor(SSD1306_WHITE);
-  display.setTextSize(1);
+          // Actuadores de Agua (Persisten hasta que vuelva a tocar medir Agua)
+          digitalWrite(LED2_PIN, tanqueVacio);
+          buzzerAgua = tanqueVacio;
 
-  display.setCursor(0, 0);
-  display.print("Temp:");
-  display.print(temperatura, 1);
-  display.println("C");
+          // Si se vació el tanque, la bomba debe apagarse de inmediato por seguridad
+          if (tanqueVacio) {
+            digitalWrite(PUMP_PIN, LOW);
+          }
+        }
+        break;
 
-  display.setCursor(0, 8);
-  display.print("Suelo:");
-  display.print(sueloPct);
-  display.print("%");
+      case TAREA_SUELO:
+        if (cantidadMuestras > 0) {
+          sueloRawGuardado = (int)promedio;
+          sueloPctGuardado = calcularPorcentajeSuelo(sueloRawGuardado);
 
-  display.setCursor(64, 8);
-  display.print("Luz:");
-  display.print(luzPct);
-  display.print("%");
+          // Actuador de Bomba (Persiste hasta la siguiente medición de Suelo)
+          if (sueloRawGuardado >= SOIL_SECO && !tanqueVacio) {
+            digitalWrite(PUMP_PIN, HIGH);
+          } else if (sueloRawGuardado <= SOIL_HUMEDO || tanqueVacio) {
+            digitalWrite(PUMP_PIN, LOW);
+          }
+        }
+        break;
 
-  display.setCursor(0, 16);
-  display.print("MQ:");
-  display.print(mqRaw);
-  display.print(" ");
-  display.print(mqPct);
-  display.print("%");
+      case TAREA_TEMP:
+        if (cantidadMuestras > 0) {
+          tempGuardada = promedio;
 
-  display.setCursor(0, 24);
-  display.print("Agua:");
-  display.print(aguaPct);
-  display.print("%");
+          // Calefacción (Persiste hasta la siguiente medición de Temp)
+          digitalWrite(TEMP_PIN, (tempGuardada < 12.0));
 
-  display.display();
+          // Evaluador de Ventiladores por temperatura
+          ventiladorPorTemp = (tempGuardada > 25.0);
 
-  // =========================
-  // SERIAL
-  // =========================
-  Serial.print("Temp: ");
-  Serial.print(temperatura, 1);
-  Serial.print(" C | Suelo: ");
-  Serial.print(sueloPct);
-  Serial.print("% | MQ: ");
-  Serial.print(mqRaw);
-  Serial.print(" (");
-  Serial.print(mqPct);
-  Serial.print("%) | Luz: ");
-  Serial.print(luzPct);
-  Serial.print("% | Agua: ");
-  Serial.print(aguaPct);
-  Serial.println("%");
+          // Aplica el estado combinado a ventiladores
+          bool estadoVentiladores = (ventiladorPorTemp || ventiladorPorMQ);
+          digitalWrite(FAN1_PIN, estadoVentiladores);
+          digitalWrite(FAN2_PIN, estadoVentiladores);
+        }
+        break;
+
+      case TAREA_MQ:
+        if (cantidadMuestras > 0) {
+          mqRawGuardado = (int)promedio;
+          mqPctGuardado = calcularPorcentajeMQ(mqRawGuardado);
+
+          bool aireMalo = (mqRawGuardado > 200);
+          digitalWrite(LED3_PIN, aireMalo);
+          buzzerMQ = aireMalo;
+
+          // Evaluador de Ventiladores por MQ135
+          ventiladorPorMQ = aireMalo;
+
+          // Aplica el estado combinado a ventiladores
+          bool estadoVentiladores = (ventiladorPorTemp || ventiladorPorMQ);
+          digitalWrite(FAN1_PIN, estadoVentiladores);
+          digitalWrite(FAN2_PIN, estadoVentiladores);
+        }
+        break;
+
+      case TAREA_LUZ:
+        if (cantidadMuestras > 0) {
+          ldrRawGuardado = (int)promedio;
+          luzPctGuardado = calcularPorcentajeLuz(ldrRawGuardado);
+
+          // LED1 Alarma Luz Baja (Persiste hasta la siguiente medición de Luz)
+          digitalWrite(LED1_PIN, (ldrRawGuardado < LDR_SOMBRA));
+        }
+        break;
+    }
+
+    // Imprimir reporte Serial al terminar cada tarea
+    Serial.print("Tarea Finalizada: ");
+    Serial.print(tareaActual);
+    Serial.print(" | Temp: "); Serial.print(tempGuardada, 1);
+    Serial.print("C | Suelo: "); Serial.print(sueloPctGuardado);
+    Serial.print("% | MQ: "); Serial.print(mqRawGuardado);
+    Serial.print(" | Luz: "); Serial.print(luzPctGuardado);
+    Serial.print("% | Agua: "); Serial.print(aguaPctGuardado);
+    Serial.println("%");
+
+    // Pasar a la siguiente tarea en la lista (0 -> 1 -> 2 -> 3 -> 4 -> 0...)
+    tareaActual = (TareaSensor)((tareaActual + 1) % 5);
+    
+    // Reiniciar contadores para los siguientes 4 segundos
+    sumaLecturas = 0;
+    cantidadMuestras = 0;
+    tiempoInicioTarea = tiempoActual;
+  }
+
+  // ========================================================
+  // 3. TAREAS DE FONDO CONTINUAS (BUZZER Y PANTALLA)
+  // ========================================================
+  actualizarBuzzer(tiempoActual);
+  actualizarOLED();
 }
