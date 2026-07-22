@@ -1,291 +1,286 @@
-  #include <Wire.h>
-  #include <Adafruit_GFX.h>
-  #include <Adafruit_SSD1306.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
 
-  #define SCREEN_WIDTH 128
-  #define SCREEN_HEIGHT 32
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 32
 
-  Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
-  // Pines
-  const int LM35_PIN = A1;
-  const int SOIL_PIN = A3;
-  const int MQ_PIN   = A0;
-  const int LDR_PIN  = A2;
+// Pines
+const int TRIG_PIN = 2;
+const int ECHO_PIN = 3;
+const int LED1_PIN = 4; // Luz baja
+const int LED2_PIN = 5; // Falta de agua
+const int LED3_PIN = 6; // Aire malo
 
-  const int TRIG_PIN = 2;
-  const int ECHO_PIN = 3;
-  const int LED1_PIN = 4;
-  const int LED2_PIN = 5;
-  const int LED3_PIN = 6;
+const int TEMP_PIN = 7; // Calefacción
+const int PUMP_PIN = 8; // Bomba
+const int FAN1_PIN = 9;
+const int FAN2_PIN = 10;
+const int BUZZER_PIN = 11;
 
-  const int TEMP_PIN = 7;
-  const int PUMP_PIN = 8;
-  const int FAN1_PIN = 9;
-  const int FAN2_PIN = 10;
-  const int BUZZER_PIN = 11;
+const int LM35_PIN = A1;
+const int SOIL_PIN = A3;
+const int MQ135_PIN = A0;
+const int LDR_PIN = A2;
 
-  //Alertas y umbrales
-  const int MQ_ALERTA = 150;
-  const int MQ_PELIGRO = 400;
+// Umbrales
+const float NIVEL_MAX = 6.47;
+const float NIVEL_MIN = 13.0;
 
-  // Ajusta este valor según tus pruebas con el LDR
-  const int LDR_DIA = 500;
+const int SOIL_SECO = 494;
+const int SOIL_HUMEDO = 421;
 
-  // Temperaturas (°C)
-  const float TEMP_MAX_DIA = 18.0;
-  const float TEMP_MIN_DIA = 14.0;
+const int LDR_SOMBRA = 250;
+const int LDR_MAX = 440;
 
-  const float TEMP_MAX_NOCHE = 8.0;
-  const float TEMP_MIN_NOCHE = 5.0;
+const int MQ_MALO = 170;
+const int MQ_PELIGRO = 250;
 
-  bool bombaProbada = false;
+bool buzzerAgua = false;
+bool buzzerMQ = false;
 
-  // ===== Promedio de temperatura =====
-  const int NUM_MUESTRAS = 10;
-  float temperaturas[NUM_MUESTRAS];
-  int indiceTemp = 0;
-  bool bufferLleno = false;
+unsigned long ultimoCambioBuzzer = 0;
+bool estadoBuzzer = false;
 
-  // ===== Histéresis =====
-  const float HISTERESIS = 1.0;
+float medirDistancia() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
 
-  // Estado de actuadores
-  bool ventiladoresEncendidos = false;
-  bool calefactorEncendido = false;
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
 
-  // ===== Buzzer no bloqueante =====
-  unsigned long tiempoAnteriorBuzzer = 0;
-  bool estadoBuzzer = false;
+  digitalWrite(TRIG_PIN, LOW);
 
+  long duracion = pulseIn(ECHO_PIN, HIGH, 30000);
 
-  float medirDistancia() {
+  if (duracion == 0) return -1;
 
-    digitalWrite(TRIG_PIN, LOW);
-    delayMicroseconds(2);
+  return duracion * 0.0343 / 2.0;
+}
 
-    digitalWrite(TRIG_PIN, HIGH);
-    delayMicroseconds(10);
+int calcularPorcentajeAgua(float distancia) {
+  int porcentaje = map(distancia * 100,
+                       NIVEL_MIN * 100,
+                       NIVEL_MAX * 100,
+                       0, 100);
+  return constrain(porcentaje, 0, 100);
+}
 
-    digitalWrite(TRIG_PIN, LOW);
+int calcularPorcentajeSuelo(int raw) {
+  int porcentaje = map(raw, SOIL_SECO, SOIL_HUMEDO, 0, 100);
+  return constrain(porcentaje, 0, 100);
+}
 
-    long duracion = pulseIn(ECHO_PIN, HIGH, 30000);
+int calcularPorcentajeLuz(int raw) {
+  int porcentaje = map(raw, 210, LDR_MAX, 0, 100);
+  return constrain(porcentaje, 0, 100);
+}
 
-    if (duracion == 0) return -1;
+int calcularPorcentajeMQ(int raw) {
+  int porcentaje = map(raw, MQ_MALO, MQ_PELIGRO, 0, 100);
+  return constrain(porcentaje, 0, 100);
+}
 
-    return duracion * 0.0343 / 2.0;
+float leerTemperatura() {
+  int lectura = analogRead(LM35_PIN);
+  float voltaje = lectura * (5.0 / 1023.0);
+  return voltaje * 100.0;
+}
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+
+  pinMode(LED1_PIN, OUTPUT);
+  pinMode(LED2_PIN, OUTPUT);
+  pinMode(LED3_PIN, OUTPUT);
+
+  pinMode(TEMP_PIN, OUTPUT);
+  pinMode(PUMP_PIN, OUTPUT);
+  pinMode(FAN1_PIN, OUTPUT);
+  pinMode(FAN2_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  digitalWrite(LED1_PIN, LOW);
+  digitalWrite(LED2_PIN, LOW);
+  digitalWrite(LED3_PIN, LOW);
+  digitalWrite(BUZZER_PIN, LOW);
+
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    while (1);
   }
 
-  void setup() {
+  display.clearDisplay();
+  display.display();
+}
 
-    Serial.begin(9600);
+void loop() {
 
-    pinMode(TRIG_PIN, OUTPUT);
-    pinMode(ECHO_PIN, INPUT);
+  // =========================
+  // PROMEDIO DURANTE 10 SEGUNDOS
+  // =========================
+  float sumaTemp = 0;
+  float sumaDist = 0;
+  long sumaSuelo = 0;
+  long sumaMQ = 0;
+  long sumaLDR = 0;
 
-    pinMode(LED1_PIN, OUTPUT);
-    pinMode(LED2_PIN, OUTPUT);
-    pinMode(LED3_PIN, OUTPUT);
+  const int muestras = 50; // 50 muestras en 10 segundos (cada 200 ms)
 
-    pinMode(BUZZER_PIN, OUTPUT);
+  for (int i = 0; i < muestras; i++) {
+    sumaTemp += leerTemperatura();
+    sumaDist += medirDistancia();
+    sumaSuelo += analogRead(SOIL_PIN);
+    sumaMQ += analogRead(MQ135_PIN);
+    sumaLDR += analogRead(LDR_PIN);
 
-    pinMode(FAN1_PIN, OUTPUT);
-    pinMode(FAN2_PIN, OUTPUT);
-    pinMode(TEMP_PIN, OUTPUT);
-    pinMode(PUMP_PIN, OUTPUT);
-
-
-    digitalWrite(LED1_PIN, LOW);
-    digitalWrite(LED2_PIN, LOW);
-    digitalWrite(LED3_PIN, LOW);
-
-    digitalWrite(BUZZER_PIN, LOW);
-    digitalWrite(FAN1_PIN, LOW);
-    digitalWrite(FAN2_PIN, LOW);
-    digitalWrite(PUMP_PIN, LOW);
-    
-
-    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-      Serial.println("Error OLED");
-      while (1);
-    }
-
-    display.clearDisplay();
-    display.display();
-    
+    delay(200); // 50 x 200 ms = 10 s
   }
 
-  void loop() {
+  // Valores promediados
+  float temperatura = (sumaTemp / muestras);
+  float distancia = sumaDist / muestras;
+  int sueloRaw = sumaSuelo / muestras;
+  int mqRaw = sumaMQ / muestras;
+  int ldrRaw = sumaLDR / muestras;
 
-    int soilValue = analogRead(SOIL_PIN);
+  // Porcentajes
+  int aguaPct = calcularPorcentajeAgua(distancia);
+  int sueloPct = calcularPorcentajeSuelo(sueloRaw);
+  int luzPct = calcularPorcentajeLuz(ldrRaw);
+  int mqPct = calcularPorcentajeMQ(mqRaw);
 
-    // LDR
-    int ldrValue  = analogRead(LDR_PIN);
-    bool esDia = (ldrValue > LDR_DIA);
+  // =========================
+  // ACTUADORES Y LEDS
+  // =========================
 
-    // TEMPERATURA
-    // LM35
-    int lm35Raw = analogRead(LM35_PIN);
-    float voltaje = lm35Raw * (5.0 / 1023.0);
-    float temperatura = voltaje * 100.0;
+  // Luz baja
+  digitalWrite(LED1_PIN, (ldrRaw < LDR_SOMBRA));
 
-    temperaturas[indiceTemp] = temperatura;
+  // Nivel de agua bajo
+  bool tanqueVacio = (distancia >= NIVEL_MIN);
+  digitalWrite(LED2_PIN, tanqueVacio);
+  buzzerAgua = tanqueVacio;
 
-    indiceTemp++;
+  // Calidad del aire
+  bool aireMalo = (mqRaw > 200); // ahora solo por encima de 200
+  digitalWrite(LED3_PIN, aireMalo);
+  buzzerMQ = aireMalo;
 
-    if (indiceTemp >= NUM_MUESTRAS) {
-      indiceTemp = 0;
-      bufferLleno = true;
-    }
+  // Calefacción
+  digitalWrite(TEMP_PIN, (temperatura < 12.0));
 
-    float temperaturaProm = 0;
+  // Ventiladores: SOLO si temperatura muy alta o MQ > 200
+  bool ventiladorON = (temperatura > 25.0 || mqRaw > 200);
+  digitalWrite(FAN1_PIN, ventiladorON);
+  digitalWrite(FAN2_PIN, ventiladorON);
 
-    int cantidad = bufferLleno ? NUM_MUESTRAS : indiceTemp;
-
-    for (int i = 0; i < cantidad; i++) {
-      temperaturaProm += temperaturas[i];
-    }
-
-    temperaturaProm /= cantidad;
-
-    float tempMin;
-    float tempMax;
-    if (esDia) {
-      tempMin = TEMP_MIN_DIA;
-      tempMax = TEMP_MAX_DIA;
-    }
-    else {
-      tempMin = TEMP_MIN_NOCHE;
-      tempMax = TEMP_MAX_NOCHE;
-    }
-
-        // ===== Ventilación =====
-    if (!ventiladoresEncendidos && temperaturaProm > tempMax + HISTERESIS) {
-
-      ventiladoresEncendidos = true;
-
-    }
-    else if (ventiladoresEncendidos && temperaturaProm < tempMax) {
-
-      ventiladoresEncendidos = false;
-
-    }
-
-    // ===== Calefacción =====
-    if (!calefactorEncendido && temperaturaProm < tempMin - HISTERESIS) {
-
-      calefactorEncendido = true;
-
-    }
-    else if (calefactorEncendido && temperaturaProm > tempMin) {
-
-      calefactorEncendido = false;
-
-    }
-
-    // Aplicar estados
-    digitalWrite(FAN1_PIN, ventiladoresEncendidos);
-    digitalWrite(FAN2_PIN, ventiladoresEncendidos);
-    digitalWrite(TEMP_PIN, calefactorEncendido);
-
-    // CALIDAD DEL AIRE
-    int mqValue   = analogRead(MQ_PIN); 
-    unsigned long tiempoActual = millis();
-
-    if (mqValue >= MQ_PELIGRO) {
-
-      digitalWrite(LED3_PIN, HIGH);
-      digitalWrite(BUZZER_PIN, HIGH);
-
-    }
-    else if (mqValue >= MQ_ALERTA) {
-
-      digitalWrite(LED3_PIN, HIGH);
-
-      if (tiempoActual - tiempoAnteriorBuzzer >= 250) {
-
-        tiempoAnteriorBuzzer = tiempoActual;
-
-        estadoBuzzer = !estadoBuzzer;
-
-        digitalWrite(BUZZER_PIN, estadoBuzzer);
-
-      }
-
-    }
-    else {
-
-      digitalWrite(LED3_PIN, LOW);
-      digitalWrite(BUZZER_PIN, LOW);
-      estadoBuzzer = false;
-
-    }
-
-    // Ultrasonico
-    float distancia = medirDistancia();
-
-    // Monitor serial
-    Serial.print("Temp: ");
-    Serial.print(temperaturaProm);
-    Serial.print(" C  ");
-
-    Serial.print("Suelo: ");
-    Serial.print(soilValue);
-    Serial.print("  ");
-
-    Serial.print("MQ: ");
-    Serial.print(mqValue);
-    Serial.print("  ");
-
-    Serial.print("LDR: ");
-    Serial.print(ldrValue);
-    Serial.print("  ");
-
-    Serial.print("Dist: ");
-    Serial.print(distancia);
-    Serial.println(" cm");
-
-    // OLED
-    display.clearDisplay();
-
-    display.setTextSize(1);
-    display.setTextColor(SSD1306_WHITE);
-
-    display.setCursor(0,0);
-    
-    display.print("T:");
-    display.print(temperaturaProm,1);
-    display.println(" C");
-
-    display.print("Soil:");
-    display.println(soilValue);
-
-    display.print("MQ:");  
-    display.println(mqValue);
-
-    display.print("LDR:");
-    display.println(ldrValue);
-
-    display.print("Lvl:");
-    if(distancia < 0)
-      display.println("--");
-    else {
-      display.print(distancia,1);
-      display.println("cm");
-    }
-
-  // Pulso de la bomba (solo una vez)
-  if (!bombaProbada) {
-
+  // Bomba de riego
+  if (sueloRaw >= SOIL_SECO && !tanqueVacio) {
     digitalWrite(PUMP_PIN, HIGH);
-    delay(1500);  // 1.5 segundos
-
+  } else if (sueloRaw <= SOIL_HUMEDO || tanqueVacio) {
     digitalWrite(PUMP_PIN, LOW);
-
-    bombaProbada = true;
   }
+
+  // =========================
+  // BUZZER CON DOS RITMOS
+  // =========================
+  unsigned long tiempoActual = millis();
+
+  // =========================
+// BUZZER CON BEAT DE REGGAETON
+// =========================
+if (buzzerMQ) {
+
+  // Beat de reggaetón: TUM - ta - TUM - ta
+  tone(BUZZER_PIN, 220); // TUM grave
+  delay(180);
+  noTone(BUZZER_PIN);
+  delay(80);
+
+  tone(BUZZER_PIN, 440); // ta agudo
+  delay(120);
+  noTone(BUZZER_PIN);
+  delay(80);
+
+  tone(BUZZER_PIN, 220); // TUM grave
+  delay(180);
+  noTone(BUZZER_PIN);
+  delay(80);
+
+  tone(BUZZER_PIN, 440); // ta agudo
+  delay(120);
+  noTone(BUZZER_PIN);
+  delay(250); // pausa para repetir el beat
+}
+
+else if (buzzerAgua) {
+
+  // Falta de agua: pitido normal y más lento
+  tone(BUZZER_PIN, 500);
+  delay(150);
+  noTone(BUZZER_PIN);
+  delay(150);
+}
+
+else {
+  noTone(BUZZER_PIN);
+}
+
+  // =========================
+  // OLED
+  // =========================
+  display.clearDisplay();
+  display.setTextColor(SSD1306_WHITE);
+  display.setTextSize(1);
+
+  display.setCursor(0, 0);
+  display.print("Temp:");
+  display.print(temperatura, 1);
+  display.println("C");
+
+  display.setCursor(0, 8);
+  display.print("Suelo:");
+  display.print(sueloPct);
+  display.print("%");
+
+  display.setCursor(64, 8);
+  display.print("Luz:");
+  display.print(luzPct);
+  display.print("%");
+
+  display.setCursor(0, 16);
+  display.print("MQ:");
+  display.print(mqRaw);
+  display.print(" ");
+  display.print(mqPct);
+  display.print("%");
+
+  display.setCursor(0, 24);
+  display.print("Agua:");
+  display.print(aguaPct);
+  display.print("%");
 
   display.display();
 
-  delay(100);
-  }
+  // =========================
+  // SERIAL
+  // =========================
+  Serial.print("Temp: ");
+  Serial.print(temperatura, 1);
+  Serial.print(" C | Suelo: ");
+  Serial.print(sueloPct);
+  Serial.print("% | MQ: ");
+  Serial.print(mqRaw);
+  Serial.print(" (");
+  Serial.print(mqPct);
+  Serial.print("%) | Luz: ");
+  Serial.print(luzPct);
+  Serial.print("% | Agua: ");
+  Serial.print(aguaPct);
+  Serial.println("%");
+}
