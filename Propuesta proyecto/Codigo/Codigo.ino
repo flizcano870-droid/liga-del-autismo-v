@@ -127,7 +127,7 @@
     // LM35
     int lm35Raw = analogRead(LM35_PIN);
     float voltaje = lm35Raw * (5.0 / 1023.0);
-    float temperatura = voltaje * 100.0;
+    float temperatura = (voltaje * 100.0)-10 ;
 
     temperaturas[indiceTemp] = temperatura;
 
