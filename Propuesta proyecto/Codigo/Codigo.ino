@@ -1,3 +1,217 @@
+<<<<<<< HEAD
+  #include <Wire.h>
+  #include <Adafruit_GFX.h>
+  #include <Adafruit_SSD1306.h>
+
+  #define SCREEN_WIDTH 128
+  #define SCREEN_HEIGHT 32
+
+  Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+  // Pines
+  const int LM35_PIN = A1;
+  const int SOIL_PIN = A3;
+  const int MQ_PIN   = A0;
+  const int LDR_PIN  = A2;
+
+  const int TRIG_PIN = 2;
+  const int ECHO_PIN = 3;
+  const int LED1_PIN = 4;
+  const int LED2_PIN = 5;
+  const int LED3_PIN = 6;
+
+  const int TEMP_PIN = 7;
+  const int PUMP_PIN = 8;
+  const int FAN1_PIN = 9;
+  const int FAN2_PIN = 10;
+  const int BUZZER_PIN = 11;
+
+  //Alertas y umbrales
+  const int MQ_ALERTA = 150;
+  const int MQ_PELIGRO = 400;
+
+  // Ajusta este valor según tus pruebas con el LDR
+  const int LDR_DIA = 500;
+
+  // Temperaturas (°C)
+  const float TEMP_MAX_DIA = 18.0;
+  const float TEMP_MIN_DIA = 14.0;
+
+  const float TEMP_MAX_NOCHE = 8.0;
+  const float TEMP_MIN_NOCHE = 5.0;
+
+  bool bombaProbada = false;
+
+  // ===== Promedio de temperatura =====
+  const int NUM_MUESTRAS = 10;
+  float temperaturas[NUM_MUESTRAS];
+  int indiceTemp = 0;
+  bool bufferLleno = false;
+
+  // ===== Histéresis =====
+  const float HISTERESIS = 1.0;
+
+  // Estado de actuadores
+  bool ventiladoresEncendidos = false;
+  bool calefactorEncendido = false;
+
+  // ===== Buzzer no bloqueante =====
+  unsigned long tiempoAnteriorBuzzer = 0;
+  bool estadoBuzzer = false;
+
+
+  float medirDistancia() {
+
+    digitalWrite(TRIG_PIN, LOW);
+    delayMicroseconds(2);
+
+    digitalWrite(TRIG_PIN, HIGH);
+    delayMicroseconds(10);
+
+    digitalWrite(TRIG_PIN, LOW);
+
+    long duracion = pulseIn(ECHO_PIN, HIGH, 30000);
+
+    if (duracion == 0) return -1;
+
+    return duracion * 0.0343 / 2.0;
+  }
+
+  void setup() {
+
+    Serial.begin(9600);
+
+    pinMode(TRIG_PIN, OUTPUT);
+    pinMode(ECHO_PIN, INPUT);
+
+    pinMode(LED1_PIN, OUTPUT);
+    pinMode(LED2_PIN, OUTPUT);
+    pinMode(LED3_PIN, OUTPUT);
+
+    pinMode(BUZZER_PIN, OUTPUT);
+
+    pinMode(FAN1_PIN, OUTPUT);
+    pinMode(FAN2_PIN, OUTPUT);
+    pinMode(TEMP_PIN, OUTPUT);
+    pinMode(PUMP_PIN, OUTPUT);
+
+
+    digitalWrite(LED1_PIN, LOW);
+    digitalWrite(LED2_PIN, LOW);
+    digitalWrite(LED3_PIN, LOW);
+
+    digitalWrite(BUZZER_PIN, LOW);
+    digitalWrite(FAN1_PIN, LOW);
+    digitalWrite(FAN2_PIN, LOW);
+    digitalWrite(PUMP_PIN, LOW);
+    
+
+    if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+      Serial.println("Error OLED");
+      while (1);
+    }
+
+    display.clearDisplay();
+    display.display();
+    
+  }
+
+  void loop() {
+
+    int soilValue = analogRead(SOIL_PIN);
+
+    // LDR
+    int ldrValue  = analogRead(LDR_PIN);
+    bool esDia = (ldrValue > LDR_DIA);
+
+    // TEMPERATURA
+    // LM35
+    int lm35Raw = analogRead(LM35_PIN);
+    float voltaje = lm35Raw * (5.0 / 1023.0);
+    float temperatura = (voltaje * 100.0)-10 ;
+
+    temperaturas[indiceTemp] = temperatura;
+
+    indiceTemp++;
+
+    if (indiceTemp >= NUM_MUESTRAS) {
+      indiceTemp = 0;
+      bufferLleno = true;
+    }
+
+    float temperaturaProm = 0;
+
+    int cantidad = bufferLleno ? NUM_MUESTRAS : indiceTemp;
+
+    for (int i = 0; i < cantidad; i++) {
+      temperaturaProm += temperaturas[i];
+    }
+
+    temperaturaProm /= cantidad;
+
+    float tempMin;
+    float tempMax;
+    if (esDia) {
+      tempMin = TEMP_MIN_DIA;
+      tempMax = TEMP_MAX_DIA;
+    }
+    else {
+      tempMin = TEMP_MIN_NOCHE;
+      tempMax = TEMP_MAX_NOCHE;
+    }
+
+        // ===== Ventilación =====
+    if (!ventiladoresEncendidos && temperaturaProm > tempMax + HISTERESIS) {
+
+      ventiladoresEncendidos = true;
+
+    }
+    else if (ventiladoresEncendidos && temperaturaProm < tempMax) {
+
+      ventiladoresEncendidos = false;
+
+    }
+
+    // ===== Calefacción =====
+    if (!calefactorEncendido && temperaturaProm < tempMin - HISTERESIS) {
+
+      calefactorEncendido = true;
+
+    }
+    else if (calefactorEncendido && temperaturaProm > tempMin) {
+
+      calefactorEncendido = false;
+
+    }
+
+    // Aplicar estados
+    digitalWrite(FAN1_PIN, ventiladoresEncendidos);
+    digitalWrite(FAN2_PIN, ventiladoresEncendidos);
+    digitalWrite(TEMP_PIN, calefactorEncendido);
+
+    // CALIDAD DEL AIRE
+    int mqValue   = analogRead(MQ_PIN); 
+    unsigned long tiempoActual = millis();
+
+    if (mqValue >= MQ_PELIGRO) {
+
+      digitalWrite(LED3_PIN, HIGH);
+      digitalWrite(BUZZER_PIN, HIGH);
+
+    }
+    else if (mqValue >= MQ_ALERTA) {
+
+      digitalWrite(LED3_PIN, HIGH);
+
+      if (tiempoActual - tiempoAnteriorBuzzer >= 250) {
+
+        tiempoAnteriorBuzzer = tiempoActual;
+
+        estadoBuzzer = !estadoBuzzer;
+
+        digitalWrite(BUZZER_PIN, estadoBuzzer);
+
+=======
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
@@ -161,6 +375,7 @@ void actualizarBuzzer(unsigned long tiempoActual) {
         tone(BUZZER_PIN, beatReggaeton[pasoBeatActual].frecuencia);
       } else {
         noTone(BUZZER_PIN);
+>>>>>>> 848579de75e52e0f82258fa58e4f7c5dedd4588c
       }
     }
   } 
@@ -262,110 +477,133 @@ void setup() {
   tiempoInicioTarea = millis();
 }
 
-  void loop() {
+void loop() {
+  unsigned long tiempoActual = millis();
 
-    int soilValue = analogRead(SOIL_PIN);
+  // ========================================================
+  // 1. TOMA DE MUESTRAS DEL SENSOR ACTUAL (CADA 100 ms)
+  // ========================================================
+  if (tiempoActual - ultimoMuestreo >= 100) {
+    ultimoMuestreo = tiempoActual;
 
-    // LDR
-    int ldrValue  = analogRead(LDR_PIN);
-    bool esDia = (ldrValue > LDR_DIA);
-
-    // TEMPERATURA
-    // LM35
-    int lm35Raw = analogRead(LM35_PIN);
-    float voltaje = lm35Raw * (5.0 / 1023.0);
-    float temperatura = voltaje * 100.0;
-
-    temperaturas[indiceTemp] = temperatura;
-
-    indiceTemp++;
-
-    if (indiceTemp >= NUM_MUESTRAS) {
-      indiceTemp = 0;
-      bufferLleno = true;
-    }
-
-    float temperaturaProm = 0;
-
-    int cantidad = bufferLleno ? NUM_MUESTRAS : indiceTemp;
-
-    for (int i = 0; i < cantidad; i++) {
-      temperaturaProm += temperaturas[i];
-    }
-
-    temperaturaProm /= cantidad;
-
-    float tempMin;
-    float tempMax;
-    if (esDia) {
-      tempMin = TEMP_MIN_DIA;
-      tempMax = TEMP_MAX_DIA;
-    }
-    else {
-      tempMin = TEMP_MIN_NOCHE;
-      tempMax = TEMP_MAX_NOCHE;
-    }
-
-        // ===== Ventilación =====
-    if (!ventiladoresEncendidos && temperaturaProm > tempMax + HISTERESIS) {
-
-      ventiladoresEncendidos = true;
-
-    }
-    else if (ventiladoresEncendidos && temperaturaProm < tempMax) {
-
-      ventiladoresEncendidos = false;
-
-    }
-
-    // ===== Calefacción =====
-    if (!calefactorEncendido && temperaturaProm < tempMin - HISTERESIS) {
-
-      calefactorEncendido = true;
-
-    }
-    else if (calefactorEncendido && temperaturaProm > tempMin) {
-
-      calefactorEncendido = false;
-
-    }
-
-    // Aplicar estados
-    digitalWrite(FAN1_PIN, ventiladoresEncendidos);
-    digitalWrite(FAN2_PIN, ventiladoresEncendidos);
-    digitalWrite(TEMP_PIN, calefactorEncendido);
-
-    // CALIDAD DEL AIRE
-    int mqValue   = analogRead(MQ_PIN); 
-    unsigned long tiempoActual = millis();
-
-    if (mqValue >= MQ_PELIGRO) {
-
-      digitalWrite(LED3_PIN, HIGH);
-      digitalWrite(BUZZER_PIN, HIGH);
-
-    }
-    else if (mqValue >= MQ_ALERTA) {
-
-      digitalWrite(LED3_PIN, HIGH);
-
-      if (tiempoActual - tiempoAnteriorBuzzer >= 250) {
-
-        tiempoAnteriorBuzzer = tiempoActual;
-
-        estadoBuzzer = !estadoBuzzer;
-
-        digitalWrite(BUZZER_PIN, estadoBuzzer);
-
+    switch (tareaActual) {
+      case TAREA_AGUA: {
+        float d = medirDistancia();
+        if (d >= 0) {
+          sumaLecturas += d;
+          cantidadMuestras++;
+        }
+        break;
       }
+      case TAREA_SUELO:
+        sumaLecturas += analogRead(SOIL_PIN);
+        cantidadMuestras++;
+        break;
 
+      case TAREA_TEMP:
+        sumaLecturas += leerTemperatura();
+        cantidadMuestras++;
+        break;
+
+      case TAREA_MQ:
+        sumaLecturas += analogRead(MQ135_PIN);
+        cantidadMuestras++;
+        break;
+
+      case TAREA_LUZ:
+        sumaLecturas += analogRead(LDR_PIN);
+        cantidadMuestras++;
+        break;
     }
-    else {
+  }
 
-      digitalWrite(LED3_PIN, LOW);
-      digitalWrite(BUZZER_PIN, LOW);
-      estadoBuzzer = false;
+  // ========================================================
+  // 2. CAMBIO DE TAREA (CADA 4 SEGUNDOS) Y ACTUALIZACIÓN
+  // ========================================================
+  if (tiempoActual - tiempoInicioTarea >= DURACION_TAREA) {
+    
+    // Calcular promedio final del sensor si hubo muestras
+    float promedio = (cantidadMuestras > 0) ? (sumaLecturas / cantidadMuestras) : 0;
 
+    // Procesar según la tarea que acaba de terminar y dejar actuadores guardados
+    switch (tareaActual) {
+
+      case TAREA_AGUA:
+        if (cantidadMuestras > 0) {
+          distanciaGuardada = promedio;
+          aguaPctGuardado = calcularPorcentajeAgua(distanciaGuardada);
+          tanqueVacio = (distanciaGuardada >= NIVEL_MIN);
+
+          // Actuadores de Agua (Persisten hasta que vuelva a tocar medir Agua)
+          digitalWrite(LED2_PIN, tanqueVacio);
+          buzzerAgua = tanqueVacio;
+
+          // Si se vació el tanque, la bomba debe apagarse de inmediato por seguridad
+          if (tanqueVacio) {
+            digitalWrite(PUMP_PIN, LOW);
+          }
+        }
+        break;
+
+      case TAREA_SUELO:
+        if (cantidadMuestras > 0) {
+          sueloRawGuardado = (int)promedio;
+          sueloPctGuardado = calcularPorcentajeSuelo(sueloRawGuardado);
+
+          // Actuador de Bomba (Persiste hasta la siguiente medición de Suelo)
+          if (sueloRawGuardado >= SOIL_SECO && !tanqueVacio) {
+            digitalWrite(PUMP_PIN, HIGH);
+          } else if (sueloRawGuardado <= SOIL_HUMEDO || tanqueVacio) {
+            digitalWrite(PUMP_PIN, LOW);
+          }
+        }
+        break;
+
+      case TAREA_TEMP:
+        if (cantidadMuestras > 0) {
+          tempGuardada = promedio;
+
+          // Calefacción (Persiste hasta la siguiente medición de Temp)
+          digitalWrite(TEMP_PIN, (tempGuardada < 12.0));
+
+          // Evaluador de Ventiladores por temperatura
+          ventiladorPorTemp = (tempGuardada > 25.0);
+
+          // Aplica el estado combinado a ventiladores
+          bool estadoVentiladores = (ventiladorPorTemp || ventiladorPorMQ);
+          digitalWrite(FAN1_PIN, estadoVentiladores);
+          digitalWrite(FAN2_PIN, estadoVentiladores);
+        }
+        break;
+
+      case TAREA_MQ:
+        if (cantidadMuestras > 0) {
+          mqRawGuardado = (int)promedio;
+          mqPctGuardado = calcularPorcentajeMQ(mqRawGuardado);
+
+          bool aireMalo = (mqRawGuardado > 200);
+          digitalWrite(LED3_PIN, aireMalo);
+          buzzerMQ = aireMalo;
+
+          // Evaluador de Ventiladores por MQ135
+          ventiladorPorMQ = aireMalo;
+
+          // Aplica el estado combinado a ventiladores
+          bool estadoVentiladores = (ventiladorPorTemp || ventiladorPorMQ);
+          digitalWrite(FAN1_PIN, estadoVentiladores);
+          digitalWrite(FAN2_PIN, estadoVentiladores);
+        }
+        break;
+
+      case TAREA_LUZ:
+        if (cantidadMuestras > 0) {
+          ldrRawGuardado = (int)promedio;
+          luzPctGuardado = calcularPorcentajeLuz(ldrRawGuardado);
+
+          // LED1 Alarma Luz Baja (Persiste hasta la siguiente medición de Luz)
+          digitalWrite(LED1_PIN, (ldrRawGuardado < LDR_SOMBRA));
+        }
+        break;
     }
 
     // Imprimir reporte Serial al terminar cada tarea
