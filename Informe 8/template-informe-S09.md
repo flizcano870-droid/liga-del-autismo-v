@@ -94,7 +94,7 @@ Las últimas 10 filas deben incluir la fila con el valor máximo de V_DAC (5.00 
 Coloque aquí una foto del OLED mostrando cada uno de los tres estados de la FSM
 (ESPERA, SUBIDA, COMPLETADO) durante la operación del Reto 2.
 
-![OLED — Estados de la FSM](imagenes/reto-2-oled-fsm.png)
+![OLED — Estados de la FSM](OLED.jpeg)
 
 ---
 
@@ -107,13 +107,11 @@ Graficar todos los datos del barrido completo del LED rojo (≥ 50 filas del CSV
 **Eje X:** V_LED (V)
 **Eje Y:** I (mA)
 
-![Curva I-V LED rojo](imagenes/grafica-1-iv-rojo.png)
+![Curva I-V LED rojo](VISUALIZACION1.png)
 
 **Interpretación:**
 
-> [Identifique el voltaje umbral (V_th) donde la corriente comienza a crecer
-> apreciablemente. Describa la forma de la curva y por qué es consistente con
-> el comportamiento exponencial de una unión p-n.]
+ Como se aprecia en la gráfica, el oltaje umbral del LED rojo es en el punto 2.0659. La curva empieza como una constante, cuando el voltaje no ha superado la barrera interna de material, luego crece exponencialmente en el momento que supera los 2.0V; según la teoría, un pequeño aumento en el voltaje a partir de este punto produce un incremento drástico en la cantidad de portadores que cruzan la unión, lo que se traduce matemáticamente en un aumento de corriente de naturaleza exponencial. Sin embargo, el crecimiento de la corriente tiende a seguir más una linea recta que una curva exponencial, esto se debe a que el LED tiene una resistencia interna que limita el crecimiento de la corriente. 
 
 ---
 
@@ -124,13 +122,11 @@ Superponer las curvas I-V del LED rojo y del LED verde en un mismo gráfico.
 **Eje X:** V_LED (V)
 **Eje Y:** I (mA)
 
-![Comparación I-V rojo vs verde](imagenes/grafica-2-iv-comparacion.png)
+![Comparación I-V rojo vs verde](visualizacion2.png)
 
 **Interpretación:**
 
-> [Identifique los voltajes umbral (V_th) para cada color (~1.8 V rojo, ~2.1 V
-> verde). Explique por qué la diferencia de voltaje umbral es consistente con
-> la relación entre el color (longitud de onda) y el bandgap del semiconductor.]
+El color rojo tiene una longitud de onda mayor (aprox. 620-750 nm) que el color verde (aprox. 495-570 nm). Al tener una longitud de onda mayor, la energía requerida para emitir un fotón rojo es menor. Por lo tanto, el semiconductor utilizado para fabricar el LED rojo tiene un bandgap más pequeño, lo que se traduce directamente en que necesita un voltaje umbral ($V_{th}$) más bajo para empezar a conducir y emitir luz (alrededor de 1.8 V).Por el contrario, el fotón verde requiere más energía, por lo que su semiconductor exige un bandgap mayor, necesitando un voltaje umbral más alto (alrededor de 2.1 V) para encenderse, tal como se comprueba en las curvas experimentales.
 
 ---
 
@@ -148,7 +144,7 @@ obtener 1 Hz? ¿Y para 15 Hz?
 **Pregunta 2 (Reto 2):** ¿Por qué la corriente no crece linealmente con el voltaje
 en el LED? Relacione la forma de la curva I-V con el modelo físico de una unión p-n.
 
-> [Respuesta aquí]
+> La corriente no crece linealmente con el voltaje en un LED porque, a diferencia de una resistencia común que obedece la Ley de Ohm, el diodo es un componente semiconductor basado en una unión p-n, cuyo comportamiento está regido por la ecuación del diodo de Shockley, $I = I_s \left( e^{\frac{qV}{nkT}} - 1 \right)$. Físicamente, la interfaz de esta unión crea una zona de agotamiento que actúa como una barrera de potencial eléctrico; cuando se aplican voltajes bajos, los portadores de carga (electrones y huecos) no poseen la energía suficiente para atravesarla, manteniendo la corriente en un valor casi nulo. Sin embargo, a medida que el voltaje directo aumenta y supera el umbral de energía dictado por el bandgap del material, la barrera colapsa y la probabilidad termodinámica de que los electrones crucen la unión se dispara exponencialmente. Es esta superación probabilística de una barrera de energía cuántica, y no el simple flujo a través de un medio con resistencia constante, lo que provoca que un pequeño incremento de voltaje resulte en un crecimiento exponencial de la corriente.
 
 ---
 
@@ -158,7 +154,7 @@ precalculada (senoidal). ¿En qué situaciones es preferible una LUT sobre un c�
 en tiempo real, y viceversa? Fundamente con base en la precisión temporal, el uso
 de memoria y la flexibilidad de cambiar parámetros.
 
-> [Respuesta aquí]
+Al comparar los métodos de generación de ondas periódicas, el cálculo en tiempo real mediante barrido lineal (usado para ondas triangulares o diente de sierra) y la Lookup Table (LUT) precalculada (para ondas senoidales) presentan ventajas opuestas según los recursos del microcontrolador. El cálculo en tiempo real es altamente eficiente en el uso de memoria, ya que solo requiere unas pocas variables dinámicas, y ofrece gran flexibilidad para modificar parámetros como la amplitud o los límites de la onda sobre la marcha; además, mantiene una excelente precisión temporal en señales geométricas al usar únicamente operaciones aritméticas simples (sumas y restas). Por el contrario, intentar calcular funciones trigonométricas en tiempo real generaría una carga computacional excesiva y retardos (*jitter*), por lo que en estos casos se recurre a una LUT. La LUT garantiza un tiempo de ejecución mínimo, constante y determinista para formas de onda complejas al limitarse a leer valores ya calculados, pero lo hace a costa de un consumo significativo de memoria estática (Flash o ROM) y de una menor flexibilidad, ya que alterar la amplitud implicaría operaciones de multiplicación adicionales que restan velocidad. En conclusión, es preferible emplear una LUT cuando se requiere generar funciones matemáticas no lineales (como senos o audio) a altas frecuencias en sistemas con suficiente memoria pero capacidad de procesamiento limitada; en cambio, el cálculo en tiempo real es el método ideal para señales lineales simples donde se necesita máxima flexibilidad para ajustes dinámicos o donde el espacio de almacenamiento es un recurso muy restringido.
 
 ---
 
@@ -179,20 +175,658 @@ original ni el I2C Scanner. Comente cada bloque funcional.
 ### Reto 1 — Generador de Señales (lab-09-generacion-senales.ino)
 
 ```cpp
-// Pegar aquí el código final del generador, con comentarios explicando:
-//   - Cómo se implementó cada forma de onda
-//   - Cómo funciona la FSM de selección
-//   - Cómo se conecta el potenciómetro al control de frecuencia
+// ========================================================
+// LAB 09 - ACTIVIDAD 2
+// GENERADOR DE SEÑALES MULTIMODO
+//
+// El programa genera tres tipos de señales utilizando un
+// convertidor Digital-Analógico (MCP4725):
+//
+// 0 -> Diente de sierra
+// 1 -> Triangular
+// 2 -> Senoidal (mediante una tabla LUT)
+//
+// Un botón permite cambiar entre los modos y un
+// potenciómetro controla la velocidad (frecuencia)
+// de generación de la señal.
+//
+// La pantalla OLED muestra la forma de onda activa.
+// ========================================================
+
+
+// ========================================================
+// LIBRERÍAS
+// ========================================================
+
+// Comunicación I2C
+#include <Wire.h>
+
+// Librería para controlar el DAC MCP4725
+#include <Adafruit_MCP4725.h>
+
+// Librerías para la pantalla OLED
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_GFX.h>
+
+
+// ========================================================
+// CREACIÓN DE OBJETOS
+// ========================================================
+
+// Objeto del DAC
+Adafruit_MCP4725 dac;
+
+// Dimensiones de la pantalla OLED
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 32
+
+// Objeto de la pantalla OLED
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+
+// ========================================================
+// DEFINICIÓN DE PINES
+// ========================================================
+
+// Botón para cambiar de modo
+const int boton = 2;
+
+// Potenciómetro para controlar la frecuencia
+const int pot = A0;
+
+
+// ========================================================
+// VARIABLES DE LA MÁQUINA DE ESTADOS (FSM)
+// ========================================================
+
+// Modo actual de funcionamiento
+// 0 = Sierra
+// 1 = Triangular
+// 2 = Senoidal
+int modo = 0;
+
+// Guarda el estado anterior del botón
+// Se utiliza para detectar únicamente el flanco de bajada
+bool ultimoBoton = HIGH;
+
+
+// ========================================================
+// TABLA DE BÚSQUEDA (LOOK-UP TABLE)
+// PARA LA ONDA SENOIDAL
+// ========================================================
+
+// Número de muestras de la señal senoidal
+const int N = 64;
+
+// Arreglo donde se almacenan los valores de la senoide
+uint16_t lutSeno[N];
+
+
+// ========================================================
+// CONTROL DE ACTUALIZACIÓN DE LA OLED
+// ========================================================
+
+// Evita actualizar continuamente la pantalla para reducir
+// el parpadeo.
+unsigned long ultimoOLED = 0;
+
+
+// ========================================================
+// SETUP
+// ========================================================
+
+void setup() {
+
+  // Inicializa comunicación serial
+  Serial.begin(115200);
+
+  // Inicializa el bus I2C
+  Wire.begin();
+
+  // Configura el botón con resistencia Pull-Up interna
+  pinMode(boton, INPUT_PULLUP);
+
+  // Inicializa el DAC
+  // Cambiar la dirección si el escáner I2C detecta 0x62
+  dac.begin(0x60);
+
+  // Inicializa la pantalla OLED
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+
+  display.clearDisplay();
+
+  display.setTextSize(1);
+
+  display.setTextColor(SSD1306_WHITE);
+
+  display.setCursor(0,0);
+
+  display.println("LAB 09");
+
+  display.display();
+
+
+  // =====================================================
+  // CONSTRUCCIÓN DE LA TABLA LUT
+  // =====================================================
+  //
+  // Se calcula una única vez la senoide para evitar
+  // llamar continuamente a la función sin(), lo cual
+  // hace el programa más eficiente.
+  //
+
+  for(int i=0; i<N; i++) {
+
+    // Ángulo correspondiente a cada muestra
+    float angulo = 2.0 * PI * i / N;
+
+    // Escalamiento al rango del DAC (0-4095)
+    lutSeno[i] = 2048 + 2047 * sin(angulo);
+  }
+}
+
+
+// ========================================================
+// LOOP PRINCIPAL
+// ========================================================
+
+void loop() {
+
+  // =====================================================
+  // LECTURA DEL BOTÓN
+  // =====================================================
+
+  bool lectura = digitalRead(boton);
+
+  // Detecta únicamente cuando el botón pasa
+  // de no presionado a presionado
+  if(ultimoBoton == HIGH && lectura == LOW) {
+
+    // Cambia al siguiente modo
+    modo++;
+
+    // Si supera el último modo vuelve al primero
+    if(modo > 2)
+      modo = 0;
+
+    // Pequeño debounce
+    delay(50);
+  }
+
+  // Guarda el estado actual para la siguiente iteración
+  ultimoBoton = lectura;
+
+
+  // =====================================================
+  // LECTURA DEL POTENCIÓMETRO
+  // =====================================================
+
+  int valorPot = analogRead(pot);
+
+  // Convierte el valor del potenciómetro
+  // en el tiempo entre muestras.
+  //
+  // Pot al mínimo -> señal lenta (20 ms)
+  // Pot al máximo -> señal rápida (1 ms)
+  int tiempo = map(valorPot, 0, 1023, 20, 1);
+
+
+  // =====================================================
+  // MÁQUINA DE ESTADOS
+  // =====================================================
+
+  switch(modo) {
+
+    // Genera una onda de diente de sierra
+    case 0:
+      ondaSierra(tiempo);
+      break;
+
+    // Genera una onda triangular
+    case 1:
+      ondaTriangular(tiempo);
+      break;
+
+    // Genera una onda senoidal
+    case 2:
+      ondaSenoidal(tiempo);
+      break;
+  }
+}
+
+
+// ========================================================
+// ACTUALIZACIÓN DE LA PANTALLA OLED
+// ========================================================
+
+void actualizarOLED(String texto) {
+
+  // Sólo actualiza la pantalla cada 50 ms
+  // para evitar parpadeos.
+  if(millis() - ultimoOLED > 50) {
+
+    ultimoOLED = millis();
+
+    display.clearDisplay();
+
+    display.setCursor(0,0);
+
+    display.println("Forma de onda:");
+
+    display.setCursor(0,15);
+
+    // Muestra el nombre de la señal activa
+    display.println(texto);
+
+    display.display();
+  }
+}
+
+
+// ========================================================
+// GENERACIÓN DE ONDA DIENTE DE SIERRA
+// ========================================================
+
+void ondaSierra(int t) {
+
+  // Actualiza el texto de la OLED
+  actualizarOLED("SIERRA");
+
+  // Incrementa el valor del DAC desde 0 hasta 4095
+  // produciendo una rampa ascendente.
+  for(int i=0; i<4096; i+=50) {
+
+    // Envía el valor al DAC
+    dac.setVoltage(i, false);
+
+    // Controla la frecuencia
+    delay(t);
+  }
+}
+
+
+// ========================================================
+// GENERACIÓN DE ONDA TRIANGULAR
+// ========================================================
+
+void ondaTriangular(int t) {
+
+  actualizarOLED("TRIANGULAR");
+
+  // -----------------------------
+  // RAMPA ASCENDENTE
+  // -----------------------------
+  for(int i=0; i<4096; i+=50) {
+
+    dac.setVoltage(i, false);
+
+    delay(t);
+  }
+
+  // -----------------------------
+  // RAMPA DESCENDENTE
+  // -----------------------------
+  for(int i=4095; i>=0; i-=50) {
+
+    dac.setVoltage(i, false);
+
+    delay(t);
+  }
+}
+
+
+// ========================================================
+// GENERACIÓN DE ONDA SENOIDAL
+// ========================================================
+
+void ondaSenoidal(int t) {
+
+  actualizarOLED("SENOIDAL");
+
+  // Recorre toda la tabla de búsqueda (LUT)
+  // previamente calculada en el setup().
+  for(int i=0; i<N; i++) {
+
+    // Envía cada muestra de la senoide al DAC
+    dac.setVoltage(lutSeno[i], false);
+
+    // Controla la velocidad de reproducción
+    delay(t);
+  }
+}
 ```
 
 ### Reto 2 — Caracterización I-V con FSM (lab-09-iv-led.ino)
 
 ```cpp
-// Pegar aquí el código completo del Reto 2, con comentarios explicando:
-//   - La lógica de cada estado de la FSM
-//   - Las condiciones de transición entre estados
-//   - El cálculo de V_DAC, V_A1, V_LED e I
-//   - El formato de salida CSV
+// ========================================================
+// LAB 09 - ACTIVIDAD 3
+// RETO 2 - CARACTERIZACIÓN I-V DE LEDs
+//
+// Este programa realiza automáticamente la caracterización
+// corriente-voltaje (I-V) de un LED utilizando:
+//
+// • DAC MCP4725 para generar un voltaje creciente.
+// • ADC del Arduino para medir el voltaje en la resistencia.
+// • Pantalla OLED para indicar el estado del sistema.
+// • Máquina de Estados Finitos (FSM).
+// • Comunicación Serial en formato CSV para posteriormente
+//   graficar la curva I-V en Python, Excel o Matlab.
+//
+// Estados de la FSM:
+//   ESPERA
+//   SUBIDA
+//   COMPLETADO
+// ========================================================
+
+
+// ========================================================
+// LIBRERÍAS
+// ========================================================
+
+// Comunicación I2C
+#include <Wire.h>
+
+// Librería del DAC MCP4725
+#include <Adafruit_MCP4725.h>
+
+// Librerías para la pantalla OLED
+#include <Adafruit_SSD1306.h>
+#include <Adafruit_GFX.h>
+
+
+// ========================================================
+// OBJETOS
+// ========================================================
+
+// Objeto para controlar el DAC
+Adafruit_MCP4725 dac;
+
+// Tamaño de la pantalla OLED
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 32
+
+// Objeto de la pantalla OLED
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+
+// ========================================================
+// DEFINICIÓN DE LA MÁQUINA DE ESTADOS (FSM)
+// ========================================================
+
+// Enumeración con los tres estados posibles
+enum Estado {
+
+  // Espera a que el usuario presione el botón
+  ESPERA,
+
+  // Realiza el barrido de voltaje
+  SUBIDA,
+
+  // Finaliza el experimento
+  COMPLETADO
+};
+
+// Estado inicial
+Estado estado = ESPERA;
+
+
+// ========================================================
+// DEFINICIÓN DE PINES
+// ========================================================
+
+// Botón para iniciar y reiniciar la prueba
+const int boton = 2;
+
+
+// ========================================================
+// VARIABLES GLOBALES
+// ========================================================
+
+// Guarda el estado anterior del botón para detectar
+// únicamente una pulsación
+bool ultimoBoton = HIGH;
+
+// Valor enviado al DAC
+int dacValue = 0;
+
+
+// ========================================================
+// SETUP
+// ========================================================
+
+void setup() {
+
+  // Inicializa el puerto serial
+  Serial.begin(115200);
+
+  // Inicializa el bus I2C
+  Wire.begin();
+
+  // Configura el botón utilizando Pull-Up interno
+  pinMode(boton, INPUT_PULLUP);
+
+  // Inicializa el DAC
+  // Cambiar la dirección a 0x62 si es necesario
+  dac.begin(0x60);
+
+  // Inicializa la pantalla OLED
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+
+  display.clearDisplay();
+
+  display.setTextSize(1);
+
+  display.setTextColor(SSD1306_WHITE);
+
+  // Mensaje inicial
+  mostrarEstado("INICIANDO");
+
+  delay(1000);
+}
+
+
+// ========================================================
+// LOOP PRINCIPAL
+// ========================================================
+
+void loop() {
+
+  // Lee el estado del botón
+  bool lectura = digitalRead(boton);
+
+  // Ejecuta el estado correspondiente de la FSM
+  switch(estado) {
+
+    // ====================================================
+    // ESTADO ESPERA
+    // ====================================================
+
+    case ESPERA:
+
+      // Mantiene el DAC en 0 V
+      dac.setVoltage(0, false);
+
+      // Muestra el estado actual
+      mostrarEstado("ESPERA");
+
+      // Si el botón fue presionado
+      if(ultimoBoton == HIGH && lectura == LOW) {
+
+        // Envía la cabecera del archivo CSV
+        Serial.println("V_DAC_V,V_A1_V,V_LED_V,I_mA");
+
+        // Reinicia el valor del DAC
+        dacValue = 0;
+
+        // Cambia al estado de medición
+        estado = SUBIDA;
+
+        // Pequeño debounce
+        delay(50);
+      }
+
+      break;
+
+
+    // ====================================================
+    // ESTADO SUBIDA
+    // ====================================================
+
+    case SUBIDA:
+
+      // Indica el estado actual en la OLED
+      mostrarEstado("SUBIDA");
+
+      // Envía el valor actual al DAC
+      dac.setVoltage(dacValue, false);
+
+
+      // ================================================
+      // CÁLCULO DEL VOLTAJE DEL DAC
+      // ================================================
+
+      // Convierte el valor digital (0-4095)
+      // al voltaje correspondiente (0-5 V)
+      float vDAC = (dacValue / 4095.0) * 5.0;
+
+
+      // ================================================
+      // LECTURA DEL ADC
+      // ================================================
+
+      // Lee el voltaje presente en el pin A1
+      int adc = analogRead(A1);
+
+      // Convierte la lectura ADC a voltios
+      float vA1 = (adc / 1023.0) * 5.0;
+
+
+      // ================================================
+      // VOLTAJE EN EL LED
+      // ================================================
+
+      // El voltaje del LED corresponde a la diferencia
+      // entre el voltaje generado por el DAC y el voltaje
+      // medido en la resistencia.
+      float vLED = vDAC - vA1;
+
+
+      // ================================================
+      // CÁLCULO DE LA CORRIENTE
+      // ================================================
+
+      // Aplicando la Ley de Ohm:
+      //
+      // I = V/R
+      //
+      // La resistencia utilizada es de 220 Ω.
+      //
+      // Se multiplica por 1000 para expresar
+      // la corriente en miliamperios.
+      float corriente = (vA1 / 220.0) * 1000.0;
+
+
+      // ================================================
+      // ENVÍO DE DATOS EN FORMATO CSV
+      // ================================================
+
+      // Cada línea contiene:
+      //
+      // Voltaje DAC
+      // Voltaje resistencia
+      // Voltaje LED
+      // Corriente
+      //
+      // separados por comas para facilitar
+      // la importación en Excel o Python.
+
+      Serial.print(vDAC, 4);
+      Serial.print(",");
+
+      Serial.print(vA1, 4);
+      Serial.print(",");
+
+      Serial.print(vLED, 4);
+      Serial.print(",");
+
+      Serial.println(corriente, 4);
+
+
+      // ================================================
+      // SIGUIENTE PASO DEL BARRIDO
+      // ================================================
+
+      // Incrementa el valor del DAC para aumentar
+      // progresivamente el voltaje aplicado.
+      dacValue += 20;
+
+
+      // Si se alcanza el máximo del DAC,
+      // termina el experimento.
+      if(dacValue >= 4095) {
+
+        estado = COMPLETADO;
+      }
+
+      // Tiempo entre mediciones
+      delay(10);
+
+      break;
+
+
+    // ====================================================
+    // ESTADO COMPLETADO
+    // ====================================================
+
+    case COMPLETADO:
+
+      // Apaga la salida del DAC
+      dac.setVoltage(0, false);
+
+      // Indica que el experimento terminó
+      mostrarEstado("COMPLETADO");
+
+      // Espera que el usuario presione nuevamente
+      // el botón para volver al estado inicial.
+      if(ultimoBoton == HIGH && lectura == LOW) {
+
+        estado = ESPERA;
+
+        delay(50);
+      }
+
+      break;
+  }
+
+  // Guarda el estado actual del botón
+  // para detectar el siguiente flanco.
+  ultimoBoton = lectura;
+}
+
+
+// ========================================================
+// FUNCIÓN PARA MOSTRAR EL ESTADO EN LA OLED
+// ========================================================
+
+void mostrarEstado(String texto) {
+
+  // Borra la pantalla
+  display.clearDisplay();
+
+  // Escribe el título
+  display.setCursor(0,0);
+
+  display.println("FSM I-V LED");
+
+  // Escribe el estado actual
+  display.setCursor(0,15);
+
+  display.println(texto);
+
+  // Actualiza la pantalla
+  display.display();
+}
 ```
 
 ---
@@ -201,10 +835,10 @@ original ni el I2C Scanner. Comente cada bloque funcional.
 
 ### Dificultad 1
 
-- **Síntoma observado:**
-- **Causa identificada:**
-- **Solución aplicada:**
-- **Lección aprendida:**
+- **Síntoma observado:**La señal presentaba pequeños escalones o zonas casi constantes debido al número limitado de muestras de la tabla de búsqueda (LUT) y a la velocidad de actualización del DAC.
+- **Causa identificada:** Este fenómeno se conoce técnicamente como el efecto de escalera o efecto de retención de orden cero (Zero-Order Hold o ZOH), y es una característica inherente a cualquier sistema de conversión digital a analógico (DAC).
+- **Solución aplicada:** Se colocó un filtro de reconstrucción a la salida del DAC. Este filtro se encarga de atenuar las altas frecuencias que generan los bordes afilados de los escalones, "suavizando" la señal para que recupere la forma curva y continua de la onda original.
+- **Lección aprendida:** Muchas veces los errores se llegan a ver en dispositivo equivocado, por lo que es importante revisar hasta la raiz del software y hardware para poder encontrar la causa del error. En este caso, el error se veía en el osciloscopio, pero la causa era el DAC y su efecto ZOH.
 
 ### Dificultad 2
 
@@ -224,4 +858,5 @@ medir la respuesta I-V resultante sin necesidad de un barrido por software paso 
 paso. Describa qué modificaciones requerirían el hardware y el código, y qué ventaja
 ofrecería este enfoque frente a la implementación actual.
 
-> [Respuesta aquí]
+La integración de los módulos de generación de señales y caracterización permite crear un trazador de curvas dinámico en tiempo real, donde se utiliza una señal triangular continua generada por el DAC para excitar el LED mientras el ADC lee simultáneamente el voltaje y la corriente a alta velocidad. Para implementar esta extensión en el hardware, es necesario añadir un amplificador operacional como seguidor de voltaje a la salida del DAC, el cual proporcionará la corriente requerida para encender el LED, además de utilizar dos canales del ADC: uno para medir el voltaje directo del semiconductor y otro para calcular indirectamente la corriente leyendo la caída de voltaje sobre una resistencia limitadora.
+A nivel de código, se debe eliminar el bucle de barrido con retardos bloqueantes y reemplazarlo por temporizadores de hardware (Timers) y acceso directo a memoria (DMA); esto posibilita actualizar el DAC y capturar los datos del ADC de forma sincronizada y determinista sin saturar el procesador, enviando un flujo continuo de datos a Python para su graficación . Este enfoque ofrece muchas ventajas frente a la implementación estática actual, ya que reduce el tiempo de caracterización a fracciones de segundo, minimiza la deriva térmica que podría alterar el voltaje umbral del semiconductor durante un barrido lento, y permite analizar efectos dinámicos, como la capacitancia parásita de la unión p-n, al comparar posibles histéresis entre los ciclos de subida y bajada de la onda.
