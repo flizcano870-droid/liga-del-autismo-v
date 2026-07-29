@@ -492,5 +492,135 @@ Continuar con el sistema de riego, hacer mediciones preliminares con tierra ya e
 ### Fuente de voltaje
 ![Alimentación](Imagenes%20bitácora/Semana%204/Semana4_alimentación.jpeg)
 
+# Semana [5] - [15/07/2026]
+
+## Objetivo de la sesión
+
+* Finalizar la calibración de todos los sensores del sistema.
+* Ajustar los umbrales de activación para cada actuador.
+* Integrar todos los parámetros calibrados en el código principal del Arduino.
+* Verificar el correcto funcionamiento individual de cada módulo.
 
 ---
+
+## Qué hicimos
+
+* Se realizaron múltiples pruebas para ajustar los umbrales del sensor de calidad de aire (MQ), humedad del suelo, temperatura, luminosidad y distancia (nivel del agua del balde).
+* Se modificó el código del Arduino para incorporar los valores finales obtenidos durante la calibración.
+* Se verificó el funcionamiento individual de cada actuador (bomba de agua, ventilador e iluminación) utilizando las nuevas condiciones programadas.
+* Se realizaron pequeñas correcciones en el cableado para facilitar el mantenimiento y mejorar la organización interna del sistema.
+
+---
+
+## Resultados obtenidos
+
+* Todos los sensores quedaron calibrados con umbrales definidos para la operación automática.
+* El sistema respondió correctamente al superar los valores de activación establecidos.
+* El código principal quedó completamente integrado con la lógica de control de todos los sensores.
+
+---
+
+## ❌ Qué falló / dificultades encontradas
+
+* Algunos sensores presentaban fluctuaciones grandes entre mediciones consecutivas, por lo que fue necesario realizar varias pruebas antes de definir los valores finales.
+* Fue necesario reajustar algunos umbrales para evitar activaciones innecesarias ocasionadas por el ruido propio de los sensores.
+
+---
+
+## ✅ Qué decidimos
+
+* Mantener un margen de seguridad en los umbrales para reducir falsas activaciones.
+* Realizar una prueba final con todos los componentes funcionando simultáneamente antes de considerar terminado el proyecto.
+
+---
+
+## 📌 Tareas pendientes
+
+- [x] Finalizar la calibración de todos los sensores.
+- [x] Integrar los valores definitivos al código principal.
+- [x] Verificar el funcionamiento individual de todos los actuadores.
+- [x] Realizar la prueba integral del sistema completo.
+
+---
+
+## 🚀 Plan para la próxima sesión
+
+* Ejecutar una prueba de funcionamiento continuo con todos los sensores y actuadores conectados.
+* Verificar la estabilidad de la fuente de alimentación bajo carga.
+* Validar el comportamiento general del sistema antes de la entrega del proyecto.
+
+---
+
+## 📷 Evidencias
+
+### Calibración final de sensores
+
+![Calibración](Imagenes%20bitácora/Semana5/Semana5_1.jpeg)
+
+---
+
+# Semana [6] - [22/07/2026]
+
+## Objetivo de la sesión
+
+* Realizar la validación final del sistema completo.
+* Comprobar el funcionamiento simultáneo de todos los sensores y actuadores.
+* Verificar la estabilidad del código definitivo.
+* Preparar el sistema para la entrega final del proyecto.
+
+---
+
+## Qué hicimos
+
+* Se conectaron todos los actuadores del sistema utilizando la fuente de alimentación definitiva.
+* Se ejecutaron pruebas completas simulando diferentes condiciones ambientales para verificar la respuesta automática del sistema.
+* Se realizaron los últimos ajustes al código para optimizar la estabilidad y el comportamiento general del controlador.
+* Se efectuó una prueba de funcionamiento continuo con todos los sensores y actuadores operando simultáneamente para comprobar la estabilidad del sistema.
+
+---
+
+## Resultados obtenidos
+
+* El sistema funcionó correctamente con todos los módulos conectados al mismo tiempo.
+* La lógica de control respondió de acuerdo con los umbrales establecidos durante las sesiones anteriores.
+* No se presentaron caídas significativas de voltaje ni reinicios del Arduino durante las pruebas.
+* Se obtuvo una versión final completamente funcional del código y del montaje.
+* El prototipo quedó listo para su presentación y entrega.
+
+---
+
+## ❌ Qué falló / dificultades encontradas
+
+* Durante las primeras pruebas fue necesario corregir pequeños detalles de sincronización en el código para evitar activaciones repetitivas de algunos actuadores.
+* Se realizaron ajustes menores en la organización del cableado para facilitar el montaje definitivo.
+* El sensor de temperatura, pese a todos los ajustes realizados (promedios, capacitores, inteercambio de sensor) persistio con medidas mas altas de el valor real, esto se atribuyó al ruido del sistema y la baja calidad del sensor
+---
+
+## ✅ Qué decidimos
+
+* Mantener la configuración final obtenida durante las pruebas, ya que presentó un funcionamiento estable y confiable.
+* Dar por concluido el desarrollo del prototipo al cumplir los objetivos planteados para el sistema automático de monitoreo y control.
+* En un posible futuro obtener un mejor sensor de temperatura, que fue el sensor que mas problemas presentó
+
+---
+
+## 📌 Tareas pendientes
+
+- [x] Validar el funcionamiento del sistema completo.
+- [x] Finalizar el código del Arduino.
+- [x] Comprobar la estabilidad de la fuente de alimentación.
+- [x] Preparar el prototipo para la entrega final.
+
+---
+
+## 🚀 Plan para la próxima sesión
+
+* Presentación y entrega del proyecto.
+
+---
+
+## 📷 Evidencias
+
+### Ejemplo del sistema detectando un estado crítico
+
+![Montaje final](Imagenes%20bitácora/Semana6/Semana6_1.jpeg)
